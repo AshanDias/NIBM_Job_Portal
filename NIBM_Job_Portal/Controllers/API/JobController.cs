@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace NIBM_Job_Portal.Controllers.API
 {
+  
     [Route("api/[controller]")]
     [ApiController]
     public class JobController : ControllerBase
@@ -21,7 +22,11 @@ namespace NIBM_Job_Portal.Controllers.API
             _jobService = jobService;
         }
         
-
+        /// <summary>
+        /// Search the job by job title
+        /// </summary>
+        /// <param name="request">Required the job titile</param>
+        /// <returns></returns>
         [HttpGet]
         [Route("SearchJobByTitle")]
         public async Task<List<Job>> SearchJobByTitle(JobRequestModel request)
@@ -29,6 +34,11 @@ namespace NIBM_Job_Portal.Controllers.API
             return await _jobService.SearchJobByTitle(request.title);
         }
 
+        /// <summary>
+        /// Search the job by job category
+        /// </summary>
+        /// <param name="request">Required the category id</param>
+        /// <returns></returns>
         [HttpGet]
         [Route("SearchJobByCategory")]
         public async Task<List<Job>> SearchJobByCategory(JobRequestModel request)
