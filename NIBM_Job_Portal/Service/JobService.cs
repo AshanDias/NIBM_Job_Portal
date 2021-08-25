@@ -25,7 +25,7 @@ namespace NIBM_Job_Portal.Service
         public async Task<List<Job>> SearchJobByTitle(string title)
         {
 
-            return await _dbContext.Job.Where(x => x.Position == title).ToListAsync();
+            return await _dbContext.Job.Where(x => x.Position.Contains(title)).ToListAsync();
         }
     }
 }

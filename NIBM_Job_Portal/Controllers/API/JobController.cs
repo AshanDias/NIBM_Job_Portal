@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NIBM_Job_Portal.Interface;
 using NIBM_Job_Portal.Models;
 using NIBM_Job_Portal.Models.API;
@@ -29,9 +30,10 @@ namespace NIBM_Job_Portal.Controllers.API
         /// <returns></returns>
         [HttpGet]
         [Route("SearchJobByTitle")]
-        public async Task<List<Job>> SearchJobByTitle(JobRequestModel request)
+        public async Task<List<Job>> SearchJobByTitle(string title)
         {
-            return await _jobService.SearchJobByTitle(request.title);
+            return await _jobService.SearchJobByTitle(title);
+
         }
 
         /// <summary>
@@ -41,9 +43,9 @@ namespace NIBM_Job_Portal.Controllers.API
         /// <returns></returns>
         [HttpGet]
         [Route("SearchJobByCategory")]
-        public async Task<List<Job>> SearchJobByCategory(JobRequestModel request)
+        public async Task<List<Job>> SearchJobByCategory(int categoryId)
         {
-            return await _jobService.SearchJobByCategory(request.categoryId);
+            return await _jobService.SearchJobByCategory(categoryId);
         }
 
 
