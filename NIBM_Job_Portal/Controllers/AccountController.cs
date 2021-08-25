@@ -17,7 +17,7 @@ using System.Text.Encodings.Web;
 
 namespace NIBM_Job_Portal.Controllers
 {
-    [Route("Identity/[controller]")]
+  
     public class AccountController : Controller
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -42,6 +42,8 @@ namespace NIBM_Job_Portal.Controllers
 
 
         [HttpGet]
+        [Route("Identity/[controller]/Register")]
+
         public async Task<IActionResult> Register(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
@@ -95,7 +97,7 @@ namespace NIBM_Job_Portal.Controllers
         }
 
         [HttpGet]
-        [Route("Login")]
+        [Route("Identity/[controller]/Login")]
         public async Task<IActionResult> Login()
         {
             return View();
