@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,6 +33,15 @@ namespace NIBM_Job_Portal
             services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(Configuration.GetConnectionString
                                                                 ("DefaultConnection"), serverVersion));
 
+
+            //services.AddIdentity<ApplicationUser, IdentityRole>()
+            //     .AddEntityFrameworkStores<ApplicationDbContext>()
+            //     .AddDefaultTokenProviders();
+
+            services.AddDefaultIdentity<ApplicationUser>()
+           .AddEntityFrameworkStores<ApplicationDbContext>()
+           .AddDefaultUI()
+           .AddDefaultTokenProviders();
 
             services.AddScoped<IJobService, JobService>();
             services.AddControllers();
