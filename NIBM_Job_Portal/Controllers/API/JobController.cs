@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NIBM_Job_Portal.Interface;
+using NIBM_Job_Portal.Models;
+using NIBM_Job_Portal.Models.API;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,36 +15,27 @@ namespace NIBM_Job_Portal.Controllers.API
     [ApiController]
     public class JobController : ControllerBase
     {
-        // GET: api/<JobController>
+        private readonly IJobService _jobService;
+        public JobController(IJobService jobService)
+        {
+            _jobService = jobService;
+        }
+        
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        [Route("SearchJobByTitle")]
+        public async Task<List<Job>> SearchJobByTitle(JobRequestModel request)
         {
-            return new string[] { "value1", "value2" };
+            return await _jobService.SearchJobByTitle(request.title);
         }
 
-        // GET api/<JobController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet]
+        [Route("SearchJobByCategory")]
+        public async Task<List<Job>> SearchJobByCategory(JobRequestModel request)
         {
-            return "value";
+            return await _jobService.SearchJobByCategory(request.categoryId);
         }
 
-        // POST api/<JobController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
 
-        // PUT api/<JobController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<JobController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }

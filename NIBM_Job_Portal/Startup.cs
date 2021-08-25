@@ -5,7 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NIBM_Job_Portal.Interface;
 using NIBM_Job_Portal.Models;
+using NIBM_Job_Portal.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +31,9 @@ namespace NIBM_Job_Portal
             var serverVersion = new MySqlServerVersion(new Version(8, 0, 25));
             services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(Configuration.GetConnectionString
                                                                 ("DefaultConnection"), serverVersion));
+
+
+            services.AddScoped<IJobService, JobService>();
           
         }
 
