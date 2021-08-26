@@ -14,6 +14,9 @@ namespace NIBM_Job_Portal.Models
         public int JobCategoryId { get; set; }
         public string Description { get; set; }
         public string jobFlyer { get; set; }
+        public int CompanyId { get; set; }
         public JobCategory JobCategory { get; set; }
+        public Company Company { get; set; }
+
     }
 }
