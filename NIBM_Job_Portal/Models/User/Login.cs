@@ -10,6 +10,7 @@ namespace NIBM_Job_Portal.Models.User
     {
         [Required]
       //  [EmailAddress]
+      [Display(Name = "Username Or NIC")]
         public string Email { get; set; }
 
         [Required]

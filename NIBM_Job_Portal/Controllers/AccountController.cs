@@ -107,9 +107,21 @@ namespace NIBM_Job_Portal.Controllers
                     return View("Login");
                 }
             }
-            return null;
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                return View("Login");
+            }
+           
         }
 
+        [HttpPost]
+        [Route("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+           await _signInManager.SignOutAsync();
+            return RedirectToAction("Login","Account");
+        }
 
     }
 }
