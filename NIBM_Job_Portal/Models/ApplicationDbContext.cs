@@ -17,5 +17,6 @@ namespace NIBM_Job_Portal.Models
 
         public DbSet<Job> Job { get; set; }
         public DbSet<JobCategory> JobCategory { get; set; }
+        public DbSet<Industry> Industry { get; set; }
     }
 }
