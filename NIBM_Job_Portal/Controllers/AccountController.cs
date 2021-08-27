@@ -17,7 +17,7 @@ using System.Text.Encodings.Web;
 
 namespace NIBM_Job_Portal.Controllers
 {
-  
+
     public class AccountController : Controller
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -47,7 +47,7 @@ namespace NIBM_Job_Portal.Controllers
         public async Task<IActionResult> Register(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
-         
+
             return View();
         }
 
@@ -67,33 +67,19 @@ namespace NIBM_Job_Portal.Controllers
                     _logger.LogInformation("User created a new account with password.");
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
-                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    //var callbackUrl = Url.Page(
-                    //    "/Account/ConfirmEmail",
-                    //    pageHandler: null,
-                    //    values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
-                    //    protocol: Request.Scheme);
-
-                    //await _emailSender.SendEmailAsync(register.Email, "Confirm your email",
-                    //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                    //if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                    //{
-                    //    return RedirectToPage("RegisterConfirmation", new { email = register.Email, returnUrl = returnUrl });
-                    //}
-                    //else
-                    //{
-                    //    await _signInManager.SignInAsync(user, isPersistent: false);
-                    //    return RedirectToAction("Index", "Home");
-                    //}
                 }
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
+                else
+                { 
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                    return View("Register");
+                } 
             }
-            return null;
+
+            ModelState.AddModelError(string.Empty, "Invalid user details.");
+            return View("Register");
         }
 
         [HttpGet]
@@ -113,26 +99,29 @@ namespace NIBM_Job_Portal.Controllers
                 var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, login.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index","Home");
+                    return RedirectToAction("Index", "Home");
                 }
-                //if (result.RequiresTwoFactor)
-                //{
-                //    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
-                //}
-                //if (result.IsLockedOut)
-                //{
-                //    _logger.LogWarning("User account locked out.");
-                //    return RedirectToPage("./Lockout");
-                //}
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return View("Login");
                 }
             }
-                return null;
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                return View("Login");
+            }
+           
         }
 
+        [HttpPost]
+        [Route("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+           await _signInManager.SignOutAsync();
+            return RedirectToAction("Login","Account");
+        }
 
     }
 }
