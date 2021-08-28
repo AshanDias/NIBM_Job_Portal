@@ -23,8 +23,37 @@ namespace NIBM_Job_Portal.Controllers
         [HttpPost]
         public IActionResult UpdateCompany(Company company)
         {
+            if (company.Logo_path != null)
+            {
+                if (company.ExistingCompanyLogo != null)
+                {
+                    string filePath = Path.Combine(webHostEnvironment.WebRootPath, "Uploads", company.ExistingCompanyLogo);
+                    System.IO.File.Delete(filePath);
+                }
+
+                company.Logo_path = ProcessUploadedFile(company);
+            }
             _comapnyService.UpdateCompany(company);
             return View();
+        }
+
+
+        private string ProcessUploadedFile(Company company)
+        {
+            string uniqueFileName = null;
+
+            if (company.Logo_path != null)
+            {
+                string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "Uploads");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + company.CompanyLogo.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    company.CompanyLogo.CopyTo(fileStream);
+                }
+            }
+
+            return uniqueFileName;
         }
 
     }
