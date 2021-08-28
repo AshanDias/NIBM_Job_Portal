@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NIBM_Job_Portal.Models
 {
-    public class Company : CompanyLogo
+    public class Company : EditCompanyLogo
     {
         [Key]
         public int Id { get; set; }

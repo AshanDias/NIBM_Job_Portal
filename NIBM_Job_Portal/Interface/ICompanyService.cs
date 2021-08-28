@@ -9,5 +9,7 @@ namespace NIBM_Job_Portal.Interface
     public interface ICompanyService
     {
         void UpdateCompany(Company company);
+
+        Company GetCompany(int Id);
     }
 }

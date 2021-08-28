@@ -15,6 +15,11 @@ namespace NIBM_Job_Portal.Service
             _dbContext = dbContext;
         }
 
+        public Company GetCompany(int Id)
+        {
+            return _dbContext.Company.FirstOrDefault(x => x.Id == Id);
+        }
+
         public void UpdateCompany(Company company)
         {
             _dbContext.Company.Update(company);

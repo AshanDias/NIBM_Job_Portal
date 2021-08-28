@@ -20,6 +20,17 @@ namespace NIBM_Job_Portal.Controllers
             webHostEnvironment = hostEnvironment;
         }
 
+        [HttpGet]
+        public IActionResult GetCompany(int id)
+        {
+            if (id > 0)
+            {
+                return NotFound();
+            }
+
+            return View(_comapnyService.GetCompany(id));
+        }
+
         [HttpPost]
         public IActionResult UpdateCompany(Company company)
         {
