@@ -8,7 +8,7 @@ namespace NIBM_Job_Portal.Models
 {
     public class EditCompanyLogo : UploadCompanyLogo
     {
-        public int Id { get; set; }
+        public int ExistingCompanyLogoId { get; set; }
         public string ExistingCompanyLogo { get; set; }
     }
 }
