@@ -21,14 +21,11 @@ namespace NIBM_Job_Portal.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetCompany(int id)
+        public IActionResult Index()
         {
-            if (id > 0)
-            {
-                return NotFound();
-            }
+           
 
-            return View(_comapnyService.GetCompany(id));
+            return View();
         }
 
         [HttpPost]
@@ -36,11 +33,11 @@ namespace NIBM_Job_Portal.Controllers
         {
             if (company.Logo_path != null)
             {
-                if (company.ExistingCompanyLogo != null)
-                {
-                    string filePath = Path.Combine(webHostEnvironment.WebRootPath, "Uploads", company.ExistingCompanyLogo);
-                    System.IO.File.Delete(filePath);
-                }
+                //if (company.ExistingCompanyLogo != null)
+                //{
+                //    string filePath = Path.Combine(webHostEnvironment.WebRootPath, "Uploads", company.ExistingCompanyLogo);
+                //    System.IO.File.Delete(filePath);
+                //}
 
                 company.Logo_path = ProcessUploadedFile(company);
             }
@@ -53,16 +50,16 @@ namespace NIBM_Job_Portal.Controllers
         {
             string uniqueFileName = null;
 
-            if (company.Logo_path != null)
-            {
-                string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "Uploads");
-                uniqueFileName = Guid.NewGuid().ToString() + "_" + company.CompanyLogo.FileName;
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    company.CompanyLogo.CopyTo(fileStream);
-                }
-            }
+            //if (company.Logo_path != null)
+            //{
+            //    string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "Uploads");
+            //    uniqueFileName = Guid.NewGuid().ToString() + "_" + company.CompanyLogo.FileName;
+            //    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            //    using (var fileStream = new FileStream(filePath, FileMode.Create))
+            //    {
+            //        company.CopyTo(fileStream);
+            //    }
+            //}
 
             return uniqueFileName;
         }
