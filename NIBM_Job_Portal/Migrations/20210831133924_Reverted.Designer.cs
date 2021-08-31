@@ -9,8 +9,8 @@ using NIBM_Job_Portal.Models;
 namespace NIBM_Job_Portal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210826141648_ComapnyTable")]
-    partial class ComapnyTable
+    [Migration("20210831133924_Reverted")]
+    partial class Reverted
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -221,7 +221,11 @@ namespace NIBM_Job_Portal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("varchar(255)");
+
                     b.Property<string>("Company_Name")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Contact_1")
@@ -230,10 +234,22 @@ namespace NIBM_Job_Portal.Migrations
                     b.Property<string>("Contact_2")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Contact_No")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Email")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Image")
+                        .HasColumnType("longtext");
+
                     b.Property<int>("IndustryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("JobCategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Logo_path")
@@ -245,9 +261,16 @@ namespace NIBM_Job_Portal.Migrations
                     b.Property<string>("State")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Website")
+                        .HasColumnType("longtext");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("ApplicationUserId");
+
                     b.HasIndex("IndustryId");
+
+                    b.HasIndex("JobCategoryId");
 
                     b.ToTable("Company");
                 });
@@ -363,13 +386,27 @@ namespace NIBM_Job_Portal.Migrations
 
             modelBuilder.Entity("NIBM_Job_Portal.Models.Company", b =>
                 {
+                    b.HasOne("NIBM_Job_Portal.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("NIBM_Job_Portal.Models.Industry", "Industry")
                         .WithMany()
                         .HasForeignKey("IndustryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("NIBM_Job_Portal.Models.JobCategory", "JobCategory")
+                        .WithMany()
+                        .HasForeignKey("JobCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
                     b.Navigation("Industry");
+
+                    b.Navigation("JobCategory");
                 });
 
             modelBuilder.Entity("NIBM_Job_Portal.Models.Job", b =>

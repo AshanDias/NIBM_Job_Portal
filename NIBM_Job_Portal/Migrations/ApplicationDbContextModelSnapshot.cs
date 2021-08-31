@@ -222,16 +222,20 @@ namespace NIBM_Job_Portal.Migrations
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<int>("ApplicationUser_Id")
-                        .HasColumnType("int");
-
                     b.Property<string>("Company_Name")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Contact_1")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Contact_2")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Contact_No")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Description")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Email")
@@ -243,6 +247,9 @@ namespace NIBM_Job_Portal.Migrations
                     b.Property<int>("IndustryId")
                         .HasColumnType("int");
 
+                    b.Property<int>("JobCategoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Logo_path")
                         .HasColumnType("longtext");
 
@@ -252,11 +259,16 @@ namespace NIBM_Job_Portal.Migrations
                     b.Property<string>("State")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Website")
+                        .HasColumnType("longtext");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("IndustryId");
+
+                    b.HasIndex("JobCategoryId");
 
                     b.ToTable("Company");
                 });
@@ -382,9 +394,17 @@ namespace NIBM_Job_Portal.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("NIBM_Job_Portal.Models.JobCategory", "JobCategory")
+                        .WithMany()
+                        .HasForeignKey("JobCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("ApplicationUser");
 
                     b.Navigation("Industry");
+
+                    b.Navigation("JobCategory");
                 });
 
             modelBuilder.Entity("NIBM_Job_Portal.Models.Job", b =>
