@@ -8,9 +8,9 @@ namespace NIBM_Job_Portal.Models.User
 {
     public class Login
     {
-        [Required]
-      //  [EmailAddress]
-      [Display(Name = "Username Or NIC")]
+        [Required, EmailAddress] 
+        [Display(Name = "Email")]
+        //[Display(Name = "Username Or NIC")]
         public string Email { get; set; }
 
         [Required]
