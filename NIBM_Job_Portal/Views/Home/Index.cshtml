@@ -26,12 +26,7 @@
                             Profile
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="fa fa-sign-out feather feather-home" aria-hidden="true"></i>
-                            Logout
-                        </a>
-                    </li>
+
                 </ul>
             </div>
         </nav>
@@ -39,8 +34,7 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
 
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-                <h1 class="h2">Dashboard</h1>
-
+                <h1 class="h2">Profile</h1> 
 
                 <!-- <div class="btn-toolbar mb-2 mb-md-0">
                   <div class="btn-group mr-2">
@@ -56,17 +50,18 @@
 
 
             <div class="row">
-                <form asp-action="SaveData" asp-controller="Home" enctype="multipart/form-data" method="post">
+                <form asp-action="" asp-controller="Home" enctype="multipart/form-data" method="post">
                     <div class="row">
                         <div class="col-lg-4 col-md-4">
                             <img src="~/images/user.jpg" alt="..." class="img-thumbnail" width="200px" height="auto">
-                            <input type="file" asp-for="Image" />
-                            <span asp-validation-for="Image" class="form-text text-muted"></span>
+                           
                         </div>
                         <div class="col-lg-8 col-md-8" style=" display: flex;
                         align-items: center;">
-                            <button class="btn  btn-sm text-light" style="background-color: #2F4189; ">Upload Logo</button>
-                        </div>
+                            <input type="file" asp-for="Image" class="btn btn-sm text-light" style="background-color: #2F4189;" />
+                            <span asp-validation-for="Image" class="form-text text-muted"></span>
+                            @*<button class="btn  btn-sm text-light" style="background-color: #2F4189; ">Upload Logo</button>*@
+                        </div> 
                     </div>
 
                     <div class="row">
@@ -113,19 +108,20 @@
                         <div class="col-lg-6">
                             <div class="form-group">
                                 <label for="">Website</label>
-                                <input type="text" class="form-control" placeholder="http://" asp-for="Website">
-                                <small id="emailHelpId" class="form-text text-muted">Help text</small>
+                                <input type="text" class="form-control" placeholder="http://" asp-for="Website"> 
+                                <span asp-validation-for="Website" class="form-text text-muted"></span>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
                                 <label for="">Job Category</label>
-                                <select class="form-select form-select-sm form-control">
+                                <select asp-for="JobCategoryId" class="form-select form-select-sm form-control">
                                     <option selected>Choose</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
+                                    <option value="1">Cate 1</option>
+                                    <option value="2">Cate 2</option>
+                                    <option value="3">Cate 3</option>
                                 </select>
+                                <span asp-validation-for="JobCategoryId" class="form-text text-muted"></span>
                             </div>
                         </div>
                     </div>
@@ -133,7 +129,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="">Description</label>
-                                <textarea class="form-control" name="" id="" rows="3" placeholder="Description"></textarea>
+                                <textarea class="form-control"  asp-for="Description" rows="3" placeholder="Description"></textarea>
                             </div>
                         </div>
                     </div>
