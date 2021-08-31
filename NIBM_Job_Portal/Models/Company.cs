@@ -22,7 +22,14 @@ namespace NIBM_Job_Portal.Models
         public int IndustryId { get; set; }
         public Industry Industry { get; set; }
 
-        public int ApplicationUser_Id { get; set; }
+        public string Contact_No { get; set; }
+        public string Description { get; set; }
+
+        public string Website { get; set; }
+        public int JobCategoryId { get; set; }
+        public JobCategory JobCategory { get; set; }
+
+        public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
     }
 }

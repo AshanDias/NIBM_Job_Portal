@@ -49,17 +49,35 @@ namespace NIBM_Job_Portal.Controllers
 
         public IActionResult SaveData(CompanyViewModel model)
         {
+            if (ModelState.IsValid)
+            {
+                var res = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             string uniqueFileName = UploadedFile(model);
             Company company = new Company();
             company.Company_Name = model.Company_Name;
             company.Contact_1 = model.Contact_1;
             company.Contact_2 = model.Contact_2;
             company.Image= uniqueFileName;
+            company.ApplicationUserId = res;
+            company.Description = model.Description;
+            company.Website = model.Website;
+            company.Contact_No = model.Contact_No;
+            company.JobCategoryId = 1;
             company.IndustryId = 1;
+
 
             _applicationDbContext.Company.Add(company);
             _applicationDbContext.SaveChanges();
-            return RedirectToAction("Index");
+           return RedirectToAction("Index");
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Invalid details attempt.");
+                return RedirectToAction("Index");
+
+            }
+
+            
         }
 
         public string UploadedFile(CompanyViewModel model)
