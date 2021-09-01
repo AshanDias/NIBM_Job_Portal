@@ -63,7 +63,21 @@ namespace NIBM_Job_Portal.Controllers
         public ActionResult View(int id)
         {
             var data = _applicationDbContext.Job.Where(x => x.Id == id).FirstOrDefault();
-            return View(data);
+
+            if (data != null)
+            {
+                JobViewModel model = new JobViewModel();
+                model.Id = data.Id;
+                model.Position = data.Position;
+                model.JobCategoryId = data.JobCategoryId;
+                model.Description = data.Description;
+                model.CompanyId = data.CompanyId;
+                return View(model);
+            }
+            else
+            {
+                return View();
+            }
         }
 
     }
