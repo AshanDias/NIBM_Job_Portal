@@ -9,6 +9,7 @@ namespace NIBM_Job_Portal.Models
 {
     public class CompanyViewModel
     {
+        public int Id { get; set; }
         [Required]
         public string Company_Name { get; set; }
         public string Logo_path { get; set; }

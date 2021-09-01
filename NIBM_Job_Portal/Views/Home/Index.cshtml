@@ -28,7 +28,17 @@
 
 <div class="row">
 
-    <form asp-action="" asp-controller="Home" enctype="multipart/form-data" method="post">
+    <form asp-action="SaveData" asp-controller="Home" enctype="multipart/form-data" method="post">
+
+        @if (ViewBag.Message != null)
+        {
+
+            <div class="alert alert-success" role="alert">
+                @ViewBag.Message
+            </div>
+        }
+
+        <input type="hidden" class="form-control" asp-for="Id">
 
         <div class="row">
             <div class="col-lg-4 col-md-4">
