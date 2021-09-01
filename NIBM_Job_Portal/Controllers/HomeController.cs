@@ -37,6 +37,7 @@ namespace NIBM_Job_Portal.Controllers
             if (result != null)
             {
                 CompanyViewModel model = new CompanyViewModel();
+                model.Id = model.Id;
                 model.Company_Name = result.Company_Name;
                 model.Contact_No = result.Contact_No;
                 model.Description = result.Description;
@@ -94,6 +95,43 @@ namespace NIBM_Job_Portal.Controllers
 
             }
             
+        }
+
+
+        [HttpPost]
+
+        public IActionResult UpdateData(CompanyViewModel model)
+        {
+
+            //if (ModelState.IsValid)
+            //{
+                var company = _applicationDbContext.Company.Where(x => x.Id == model.Id).FirstOrDefault();
+                string uniqueFileName = UploadedFile(model);
+                if (company != null)
+                {
+                    company.Company_Name = model.Company_Name;
+                    company.Email = model.Email;
+                    company.Image = uniqueFileName;
+                    company.Description = model.Description;
+                    company.Website = model.Website;
+                    company.Contact_No = model.Contact_No;
+                    company.JobCategoryId = model.JobCategoryId;
+                    company.IndustryId = model.IndustryId;
+
+                    _applicationDbContext.Company.Update(company);
+                    _applicationDbContext.SaveChanges();
+
+                }
+
+                return RedirectToAction("Index");
+            //}
+            //else
+            //{
+            //    ModelState.AddModelError(string.Empty, "Invalid details attempt.");
+            //    return RedirectToAction("Index");
+
+            //}
+
         }
 
         public string UploadedFile(CompanyViewModel model)
