@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Firebase.Auth;
+using Firebase.Storage;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +14,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace NIBM_Job_Portal.Controllers
@@ -60,18 +64,17 @@ namespace NIBM_Job_Portal.Controllers
         }
 
         [HttpPost]
-
-        public IActionResult SaveData(CompanyViewModel model)
+        [Route("SaveData")]
+        public async Task<IActionResult> SaveData(CompanyViewModel model)
         {
-
+            string imageUrl = await UploadFileToFirebase(model); 
             if (ModelState.IsValid)
             {
                 var res = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                string uniqueFileName = UploadedFile(model);
                 Company company = new Company();
                 company.Company_Name = model.Company_Name; 
                 company.Email = model.Email;
-                company.Image = uniqueFileName;
+                company.Image = imageUrl;
                 company.ApplicationUserId = res;
                 company.Description = model.Description;
                 company.Website = model.Website;
@@ -96,19 +99,52 @@ namespace NIBM_Job_Portal.Controllers
             
         }
 
-        public string UploadedFile(CompanyViewModel model)
+
+        public async Task<string> UploadFileToFirebase(CompanyViewModel model)
         {
-            string uniqueFileName = null;
-            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads\\images");
-             uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Image.FileName;
-            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
+           
+          
+            var data = getByteStream(model.Image);
+            MemoryStream memoryStream = new MemoryStream(data);
+
+            string ext = System.IO.Path.GetExtension(model.Image.FileName);
+            var auth = new FirebaseAuthProvider(new FirebaseConfig("AIzaSyDx-J0q-QE4CVP_UpZxYMmJ04QKewtIVB8"));
+            var a = await auth.SignInWithEmailAndPasswordAsync("ashandias.info@gmail.com", "Test@123");
+
+            var canceltoken = new CancellationToken();
+            var downloadUrl =await new FirebaseStorage("nibmjobportal.appspot.com")
+                                .Child("company").Child("company_logo").Child(model.Image.FileName).PutAsync(memoryStream, canceltoken);
+
+            return downloadUrl.Trim();
+        }
+
+        public byte[] getByteStream(IFormFile iFormfile) {
+            byte[] baseString = null;
+            using (var ms = new MemoryStream())
             {
-                model.Image.CopyTo(fileStream);
+                iFormfile.CopyTo(ms);
+                 baseString = ms.ToArray();
             }
 
-            return uniqueFileName;
+            return baseString;
+
         }
+
+
+        //TO upload old way
+        //public string UploadedFile(CompanyViewModel model)
+        //{
+        //    string uniqueFileName = null;
+        //    string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads\\images");
+        //     uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Image.FileName;
+        //    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+        //    using (var fileStream = new FileStream(filePath, FileMode.Create))
+        //    {
+        //        model.Image.CopyTo(fileStream);
+        //    }
+
+        //    return uniqueFileName;
+        //}
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
