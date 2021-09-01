@@ -12,5 +12,10 @@ namespace NIBM_Job_Portal.Controllers
         {
             return View("Job-Add");
         }
+
+        public IActionResult JobList()
+        {
+            return View("Job-List");
+        }
     }
 }

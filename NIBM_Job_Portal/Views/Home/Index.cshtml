@@ -1,4 +1,11 @@
 ﻿@model NIBM_Job_Portal.Models.CompanyViewModel
+@section scripts{
+    <script src="@Url.Content("~/js/sideBar.js")" type="text/javascript"></script>
+    <script>
+        changeSideBarButtonStatus("sidebar_dashboard"); 
+    </script> 
+}
+
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -31,7 +38,7 @@
             <div class="col-lg-8 col-md-8" style=" display: flex;
                         align-items: center;">
                 <input type="file" asp-for="Image" class="btn btn-sm text-light" style="background-color: #2F4189;" />
-                <span asp-validation-for="Image" class="form-text text-muted"></span> 
+                <span asp-validation-for="Image" class="form-text text-muted"></span>
             </div>
         </div>
 
@@ -111,3 +118,4 @@
         </div>
     </form>
 </div>
+
