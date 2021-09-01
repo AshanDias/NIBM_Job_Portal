@@ -15,6 +15,7 @@ namespace NIBM_Job_Portal.Models
         public string Description { get; set; }
         public string jobFlyer { get; set; }
         public int CompanyId { get; set; }
+        public DateTime ClosingDate { get; set; }
         public JobCategory JobCategory { get; set; }
         public Company Company { get; set; }
 

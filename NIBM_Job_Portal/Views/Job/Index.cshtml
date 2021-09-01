@@ -33,6 +33,8 @@
                 <th>#</th>
                 <th>Positions</th>
                 <th>Category</th>
+                <th>Company</th>
+                <th>Flyer</th>
                 <th>No of Application</th>
                 <th>Actions</th>
             </tr>
@@ -44,13 +46,15 @@
                 <tr>
                     <td>@item.Id</td>
                     <td>@item.Position</td>
-                    <td>@item.JobCategory</td>
+                    <td>@item.JobCategory.Name</td> 
+                    <td>@item.Company.Company_Name</td>
+                    <td><img src="@item.jobFlyer" alt="..." class="img-thumbnail" width="90px" height="80px"></td>
                     <td class="text-center"> <button class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target=".bd-example-modal-lg">  <i class="fa fa-eye" aria-hidden="true"></i></button></td>
 
                     <td>
                         <div class="row">
-                            <a class="btn btn-sm btn-primary m-1" href="@Url.Action("Edit", "Job", new { id = @item.Id })"> <i class="fa fa-pencil-square" aria-hidden="true"></i></a>
-                            <a class="btn btn-sm btn-danger m-1" asp-area="" asp-controller="Job" asp-action="Delete">  <i class="fa fa-times-circle" aria-hidden="true"></i></a>
+                            <a class="btn btn-sm btn-primary m-1" href="@Url.Action("Create", "Job", new { Id = @item.Id })"> <i class="fa fa-pencil-square" aria-hidden="true"></i></a>
+                            <a class="btn btn-sm btn-danger m-1" href="@Url.Action("Delete", "Job", new { Id = @item.Id })" >  <i class="fa fa-times-circle" aria-hidden="true"></i></a>
 
                         </div>
                     </td>
