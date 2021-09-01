@@ -29,7 +29,15 @@ namespace NIBM_Job_Portal.Controllers
             _applicationDbContext.SaveChanges();
             ViewBag.Message = "Data Insert Successfully";
             return View();
+           
         }
+
+        [HttpGet]
+        public ActionResult Create()
+        {
+            return View();
+        }
+
 
         [HttpGet]
         public ActionResult Edit(int id)
@@ -79,10 +87,6 @@ namespace NIBM_Job_Portal.Controllers
                 return View();
             }
         }
-
-        public IActionResult JobList()
-        {
-            return View("Job-List");
-        }
+ 
     }
 }
