@@ -140,35 +140,9 @@ namespace NIBM_Job_Portal.Controllers
         }
 
 
-        [HttpGet]
-        public ActionResult Edit(int id)
-        {
-           // var data = _applicationDbContext.Job.Where(x => x.Id == id).FirstOrDefault();
-            return View();
-        }
 
-        //[HttpGet]
-        //public ActionResult Edit()
-        //{
-        //    return View();
-        //}
+     
 
-
-        [HttpPost]
-        public ActionResult Update(Job model)
-        {
-            var data = _applicationDbContext.Job.Where(x => x.Id == model.Id).FirstOrDefault();
-            if (data != null)
-            {
-                data.Position = model.Position;
-                data.JobCategoryId = model.JobCategoryId;
-                data.Description = model.Description;
-                data.CompanyId = model.CompanyId;
-                _applicationDbContext.SaveChanges();
-            }
-
-            return RedirectToAction("index");
-        }
 
         [HttpGet]
         public string Delete(int id)
@@ -178,25 +152,7 @@ namespace NIBM_Job_Portal.Controllers
             _applicationDbContext.SaveChanges();
             return "success";
         }
-        public ActionResult View(int id)
-        {
-            var data = _applicationDbContext.Job.Where(x => x.Id == id).FirstOrDefault();
-
-            if (data != null)
-            {
-                JobViewModel model = new JobViewModel();
-                model.Id = data.Id;
-                model.Position = data.Position;
-                model.JobCategoryId = data.JobCategoryId;
-                model.Description = data.Description;
-                model.CompanyId = data.CompanyId;
-                return View(model);
-            }
-            else
-            {
-                return View();
-            }
-        }
+       
  
     }
 }
