@@ -3,143 +3,121 @@
     ViewData["Title"] = "Home Page";
 }
 
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+    <h1 class="h2">Profile</h1>
 
-<div class="container-fluid">
-    <div class="row">
-        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-            <div class="sidebar-sticky">
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">
-                            Dashboard <span class="sr-only">(current)</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="fa fa-briefcase feather feather-home" aria-hidden="true"></i>
-                            Jobs
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="fa fa-user feather feather-home" aria-hidden="true"></i>
-                            Profile
-                        </a>
-                    </li>
+    <!-- <div class="btn-toolbar mb-2 mb-md-0">
+      <div class="btn-group mr-2">
+        <button class="btn btn-sm btn-outline-secondary">Share</button>
+        <button class="btn btn-sm btn-outline-secondary">Export</button>
+      </div>
+      <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+        This week
+      </button>
+    </div> -->
+</div>
 
-                </ul>
+
+<div class="row">
+
+    <form asp-action="" asp-controller="Home" enctype="multipart/form-data" method="post">
+
+        @if (ViewBag.Message != null)
+        {
+
+            <div class="alert alert-success" role="alert">
+                @ViewBag.Message
             </div>
-        </nav>
+        }
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+        <input type="hidden" class="form-control" asp-for="Id">
 
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-                <h1 class="h2">Profile</h1> 
+        <div class="row">
+            <div class="col-lg-4 col-md-4">
+                <img src="~/images/user.jpg" alt="..." class="img-thumbnail" width="200px" height="auto">
 
-                <!-- <div class="btn-toolbar mb-2 mb-md-0">
-                  <div class="btn-group mr-2">
-                    <button class="btn btn-sm btn-outline-secondary">Share</button>
-                    <button class="btn btn-sm btn-outline-secondary">Export</button>
-                  </div>
-                  <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                    This week
-                  </button>
-                </div> -->
             </div>
-
-
-            <div class="row">
-                <form asp-action="SaveData" asp-controller="Home" enctype="multipart/form-data" method="post">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-4">
-                            <img src="~/images/user.jpg" alt="..." class="img-thumbnail" width="200px" height="auto">
-                           
-                        </div>
-                        <div class="col-lg-8 col-md-8" style=" display: flex;
+            <div class="col-lg-8 col-md-8" style=" display: flex;
                         align-items: center;">
-                            <input type="file" asp-for="Image" class="btn btn-sm text-light" style="background-color: #2F4189;" />
-                            <span asp-validation-for="Image" class="form-text text-muted"></span>
-                            @*<button class="btn  btn-sm text-light" style="background-color: #2F4189; ">Upload Logo</button>*@
-                        </div> 
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <label for="">Company Name</label>
-                                <input type="text" class="form-control" asp-for="Company_Name" placeholder="Name"> 
-                                <span asp-validation-for="Company_Name" class="form-text text-muted"></span>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <label for="">Email</label>
-                                <input type="email" class="form-control" asp-for="Email" placeholder="Email">                                 
-                                <span asp-validation-for="Email" class="form-text text-muted"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <label for="">Industry</label>
-                                <select asp-for="IndustryId" class="form-select form-select-sm form-control">
-                                    <option selected>Choose</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
-                                <span asp-validation-for="IndustryId" class="form-text text-muted"></span>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <label for="">Telephon Number</label>
-                                <input type="text" class="form-control" asp-for="Contact_No"
-                                       placeholder="Telephone Number">
-                                <small id="emailHelpId" class="form-text text-muted">Help text</small>
-                                <span asp-validation-for="Contact_No" class="form-text text-muted"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <label for="">Website</label>
-                                <input type="text" class="form-control" placeholder="http://" asp-for="Website"> 
-                                <span asp-validation-for="Website" class="form-text text-muted"></span>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <label for="">Job Category</label>
-                                <select asp-for="JobCategoryId" class="form-select form-select-sm form-control">
-                                    <option selected>Choose</option>
-                                    <option value="1">Cate 1</option>
-                                    <option value="2">Cate 2</option>
-                                    <option value="3">Cate 3</option>
-                                </select>
-                                <span asp-validation-for="JobCategoryId" class="form-text text-muted"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="">Description</label>
-                                <textarea class="form-control"  asp-for="Description" rows="3" placeholder="Description"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 text-center">
-                            <button type="submit" class="btn btn-sm text-light" style="background-color: #2F4189;">Update</button>
-                        </div>
-                    </div>
-                </form>
+                <input type="file" asp-for="Image" class="btn btn-sm text-light" style="background-color: #2F4189;" />
+                <span asp-validation-for="Image" class="form-text text-muted"></span>
             </div>
-        </main>
-    </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="">Company Name</label>
+                    <input type="text" class="form-control" asp-for="Company_Name" placeholder="Name">
+                    <span asp-validation-for="Company_Name" class="form-text text-muted"></span>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="">Email</label>
+                    <input type="email" class="form-control" asp-for="Email" placeholder="Email">
+                    <span asp-validation-for="Email" class="form-text text-muted"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="">Industry</label>
+                    <select asp-for="IndustryId" class="form-select form-select-sm form-control">
+                        <option selected>Choose</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
+                    <span asp-validation-for="IndustryId" class="form-text text-muted"></span>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="">Telephon Number</label>
+                    <input type="text" class="form-control" asp-for="Contact_No"
+                           placeholder="Telephone Number">
+                    <small id="emailHelpId" class="form-text text-muted">Help text</small>
+                    <span asp-validation-for="Contact_No" class="form-text text-muted"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="">Website</label>
+                    <input type="text" class="form-control" placeholder="http://" asp-for="Website">
+                    <span asp-validation-for="Website" class="form-text text-muted"></span>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="">Job Category</label>
+                    <select asp-for="JobCategoryId" class="form-select form-select-sm form-control">
+                        <option selected>Choose</option>
+                        <option value="1">Cate 1</option>
+                        <option value="2">Cate 2</option>
+                        <option value="3">Cate 3</option>
+                    </select>
+                    <span asp-validation-for="JobCategoryId" class="form-text text-muted"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="">Description</label>
+                    <textarea class="form-control" asp-for="Description" rows="3" placeholder="Description"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                <button type="submit" class="btn btn-sm text-light" style="background-color: #2F4189;">Update</button>
+            </div>
+        </div>
+    </form>
 </div>
