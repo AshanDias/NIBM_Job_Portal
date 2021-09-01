@@ -68,9 +68,10 @@ namespace NIBM_Job_Portal.Controllers
         [Route("SaveData")]
         public async Task<IActionResult> SaveData(CompanyViewModel model)
         {
-            string imageUrl = await UploadFileToFirebase(model); 
+            
             if (ModelState.IsValid)
             {
+                string imageUrl = await UploadFileToFirebase(model);
                 var res = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 Company company = new Company();
                 company.Company_Name = model.Company_Name; 
@@ -111,10 +112,14 @@ namespace NIBM_Job_Portal.Controllers
                 var company = _applicationDbContext.Company.Where(x => x.Id == model.Id).FirstOrDefault();
                 if (company != null)
                 {
-                string ImageUrl =await UploadFileToFirebase(model);
+                    if (model.Image != null)
+                    {
+                        string ImageUrl = await UploadFileToFirebase(model);
+                        company.Image = ImageUrl;
+                    }
+                   
                     company.Company_Name = model.Company_Name;
                     company.Email = model.Email;
-                    company.Image = ImageUrl;
                     company.Description = model.Description;
                     company.Website = model.Website;
                     company.Contact_No = model.Contact_No;
