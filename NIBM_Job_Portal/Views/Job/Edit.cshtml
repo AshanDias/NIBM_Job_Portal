@@ -5,7 +5,6 @@
         changeSideBarButtonStatus("sidebar_job");
     </script>
 }
-
 @{
     ViewData["Title"] = "Job";
 }
@@ -19,7 +18,7 @@
               mb-3
               border-bottom
             ">
-    <h2 class="h2">Add Job</h2>
+    <h2 class="h2">Edit Job</h2>
 </div>
 
 <div class="container" style="margin-left: 0px">
@@ -29,8 +28,8 @@
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label for="">Reference #</label>
-                        <input type="text"
-                               class="form-control" placeholder="Reference #" asp-for="Id" disabled />
+                        <input type="text" disabled
+                               class="form-control" placeholder="Reference #" />
                         <span class="form-text text-muted"></span>
                     </div>
                 </div>
@@ -97,7 +96,11 @@
                 <div class="col-12 text-right">
                     <button class="btn btn-sm text-light"
                             style="background-color: #2f4189">
-                        Add
+                        Delete
+                    </button>
+                    <button class="btn btn-sm text-light"
+                            style="background-color: #2f4189">
+                        Update
                     </button>
                 </div>
             </div>

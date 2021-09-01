@@ -10,7 +10,7 @@
 
 @{
     ViewData["Title"] = "Job";
-} 
+}
 
 <div class="
               d-flex
@@ -39,13 +39,30 @@
         </thead>
         <tbody>
 
-            @foreach(var item in Model)
+            @foreach (var item in Model)
             {
                 <tr>
                     <td>@item.Id</td>
                     <td>@item.Position</td>
                     <td>@item.JobCategory</td>
-                    <td class="text-center"> <button class="btn btn-sm btn-outline-primary">  <i class="fa fa-eye" aria-hidden="true"></i></button></td>
+                    <td class="text-center"> <button class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target=".bd-example-modal-lg">  <i class="fa fa-eye" aria-hidden="true"></i></button></td>
+
+                    <td>
+                        <div class="row">
+                            <a class="btn btn-sm btn-primary m-1" href="@Url.Action("Edit", "Job", new { id = @item.Id })"> <i class="fa fa-pencil-square" aria-hidden="true"></i></a>
+                            <a class="btn btn-sm btn-danger m-1" asp-area="" asp-controller="Job" asp-action="Delete">  <i class="fa fa-times-circle" aria-hidden="true"></i></a>
+
+                        </div>
+                    </td>
+                </tr>
+
+            }
+
+            @*<tr>
+                    <td>1</td>
+                    <td>Lorem, ipsum.</td>
+                    <td>Lorem ipsum dolor sit.</td>
+                    <td class="text-center"> <button class="btn btn-sm btn-outline-primary"> 2 <i class="fa fa-eye" aria-hidden="true"></i></button></td>
                     <td>
                         <div class="row">
                             <button class="btn btn-sm btn-primary m-1"> <i class="fa fa-pencil-square" aria-hidden="true"></i> </button>
@@ -53,9 +70,110 @@
                         </div>
                     </td>
                 </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Lorem, ipsum.</td>
+                    <td>Lorem ipsum dolor sit.</td>
+                    <td class="text-center"> <button class="btn btn-sm btn-outline-primary"> 2 <i class="fa fa-eye" aria-hidden="true"></i></button></td>
+                    <td>
+                        <div class="row">
+                            <a class="btn btn-sm btn-primary m-1" asp-area="" asp-controller="Job" asp-action="Edit"> <i class="fa fa-pencil-square" aria-hidden="true"></i></a>
+                            <a class="btn btn-sm btn-danger m-1" asp-area="" asp-controller="Job" asp-action="Index">  <i class="fa fa-times-circle" aria-hidden="true"></i></a>
 
-            }
- 
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Lorem, ipsum.</td>
+                    <td>Lorem ipsum dolor sit.</td>
+                    <td class="text-center"> <button class="btn btn-sm btn-outline-primary"> 2 <i class="fa fa-eye" aria-hidden="true"></i></button></td>
+                    <td>
+                        <div class="row">
+                            <button class="btn btn-sm btn-primary m-1"> <i class="fa fa-pencil-square" aria-hidden="true"></i> </button>
+                            <button class="btn btn-sm btn-danger m-1"> <i class="fa fa-times-circle" aria-hidden="true"></i> </button>
+                        </div>
+                    </td>
+                </tr>*@
         </tbody>
     </table>
+</div>
+
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Received Application</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-3">
+                        <a target="_blank" href="http://www.orimi.com/pdf-test.pdf">
+                            <div class="card">
+                                <div class="card-body">
+                                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+
+                                </div>
+                            </div>
+                        </a>
+                    </div>  <div class="col-3">
+                        <a target="_blank" href="http://www.orimi.com/pdf-test.pdf">
+                            <div class="card">
+                                <div class="card-body">
+                                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+
+                                </div>
+                            </div>
+                        </a>
+                    </div>  <div class="col-3">
+                        <a target="_blank" href="http://www.orimi.com/pdf-test.pdf">
+                            <div class="card">
+                                <div class="card-body">
+                                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+
+                                </div>
+                            </div>
+                        </a>
+                    </div>  <div class="col-3">
+                        <a target="_blank" href="http://www.orimi.com/pdf-test.pdf">
+                            <div class="card">
+                                <div class="card-body">
+                                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+
+                                </div>
+                            </div>
+                        </a>
+                    </div>  <div class="col-3">
+                        <a target="_blank" href="http://www.orimi.com/pdf-test.pdf">
+                            <div class="card">
+                                <div class="card-body">
+                                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+
+                                </div>
+                            </div>
+                        </a>
+                    </div>  <div class="col-3">
+                        <a target="_blank" href="http://www.orimi.com/pdf-test.pdf">
+                            <div class="card">
+                                <div class="card-body">
+                                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>

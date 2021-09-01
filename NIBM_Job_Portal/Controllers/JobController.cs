@@ -45,9 +45,17 @@ namespace NIBM_Job_Portal.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            var data = _applicationDbContext.Job.Where(x => x.Id == id).FirstOrDefault();
-            return View(data);
+           // var data = _applicationDbContext.Job.Where(x => x.Id == id).FirstOrDefault();
+            return View();
         }
+
+        //[HttpGet]
+        //public ActionResult Edit()
+        //{
+        //    return View();
+        //}
+
+
         [HttpPost]
         public ActionResult Update(Job model)
         {
