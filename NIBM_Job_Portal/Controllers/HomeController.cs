@@ -34,15 +34,24 @@ namespace NIBM_Job_Portal.Controllers
             string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads\\images");
              var res=  User.FindFirst(ClaimTypes.NameIdentifier).Value; 
             var result = _applicationDbContext.Company.Include(x=>x.ApplicationUser).Where(x=>x.ApplicationUser.Id==res).FirstOrDefault();
-            CompanyViewModel model = new CompanyViewModel();            
-            model.Company_Name = result.Company_Name;
-            model.Contact_No = result.Contact_No;
-            model.Description = result.Description;
-            model.Email = result.Email;
-            model.IndustryId = result.IndustryId;
-            model.JobCategoryId = result.JobCategoryId;
-            model.Website = result.Website;        
-            return View(model);
+            if (result != null)
+            {
+                CompanyViewModel model = new CompanyViewModel();
+                model.Company_Name = result.Company_Name;
+                model.Contact_No = result.Contact_No;
+                model.Description = result.Description;
+                model.Email = result.Email;
+                model.IndustryId = result.IndustryId;
+                model.JobCategoryId = result.JobCategoryId;
+                model.Website = result.Website;
+                return View(model);
+            }
+            else
+            {
+                return View();
+            }
+                
+           
         }
 
         public IActionResult Privacy()
