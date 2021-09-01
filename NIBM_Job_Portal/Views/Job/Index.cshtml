@@ -54,7 +54,8 @@
                     <td>
                         <div class="row">
                             <a class="btn btn-sm btn-primary m-1" href="@Url.Action("Create", "Job", new { Id = @item.Id })"> <i class="fa fa-pencil-square" aria-hidden="true"></i></a>
-                            <a class="btn btn-sm btn-danger m-1" href="@Url.Action("Delete", "Job", new { Id = @item.Id })" >  <i class="fa fa-times-circle" aria-hidden="true"></i></a>
+                            @*<button id="btn_delete" class="btn btn-sm btn-danger m-1" href="@Url.Action("Delete", "Job", new { Id = @item.Id })" >  <i class="fa fa-times-circle" aria-hidden="true"></i></button>*@
+                            <button  class="btn btn-sm btn-danger m-1" onclick="DeleteData(@item.Id)">  <i class="fa fa-times-circle" aria-hidden="true"></i></button>
 
                         </div>
                     </td>
@@ -181,3 +182,37 @@
         </div>
     </div>
 </div>
+
+<script>
+
+    function  DeleteData(id){
+      
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover !",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+
+                    $.ajax({
+                        url: '@Url.Action("Delete","Job")',
+                        method: 'GET',
+                        data: { Id: id },
+                        success: function (data) {
+                            window.location.reload();
+                        }
+                        
+                    });
+
+                } 
+            });
+
+
+
+    }
+
+
+</script>

@@ -171,13 +171,12 @@ namespace NIBM_Job_Portal.Controllers
         }
 
         [HttpGet]
-        public ActionResult Delete(int id)
+        public string Delete(int id)
         {
             var data = _applicationDbContext.Job.Where(x => x.Id == id).FirstOrDefault();
             _applicationDbContext.Job.Remove(data);
             _applicationDbContext.SaveChanges();
-            ViewBag.Messsage = "Record Delete Successfully";
-            return RedirectToAction("index");
+            return "success";
         }
         public ActionResult View(int id)
         {
