@@ -28,7 +28,7 @@
 
 <div class="row">
 
-    <form asp-action="SaveData" asp-controller="Home" enctype="multipart/form-data" method="post">
+    <form asp-action="Index" asp-controller="Home" enctype="multipart/form-data" method="post">
 
         @if (ViewBag.Message != null)
         {
@@ -42,8 +42,17 @@
 
         <div class="row">
             <div class="col-lg-4 col-md-4">
-                <img src="~/images/user.jpg" alt="..." class="img-thumbnail" width="200px" height="auto">
 
+                @if (Model.Logo_path != null)
+                {
+                    <img src="@Model.Logo_path.ToString()" alt="..." class="img-thumbnail" width="200px" height="auto">
+                }
+                else
+                {
+                    <img src="~/images/user.jpg" alt="..." class="img-thumbnail" width="200px" height="auto">
+                }
+
+                <input type="hidden" class="form-control" asp-for="Logo_path">
             </div>
             <div class="col-lg-8 col-md-8" style=" display: flex;
                         align-items: center;">
@@ -73,12 +82,10 @@
             <div class="col-lg-6">
                 <div class="form-group">
                     <label for="">Industry</label>
-                    <select asp-for="IndustryId" class="form-select form-select-sm form-control">
+                    <select asp-for="IndustryId" asp-items="@(new SelectList(Model.industryList, "Id", "Name"))" class="form-select form-select-sm form-control">
                         <option selected>Choose</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
                     </select>
+                    <input type="hidden" asp-for="IndustryId" />
                     <span asp-validation-for="IndustryId" class="form-text text-muted"></span>
                 </div>
             </div>
@@ -103,12 +110,10 @@
             <div class="col-lg-6">
                 <div class="form-group">
                     <label for="">Job Category</label>
-                    <select asp-for="JobCategoryId" class="form-select form-select-sm form-control">
+                    <select asp-for="JobCategoryId" asp-items="@(new SelectList(Model.jobCategories, "Id", "Name"))" class="form-select form-select-sm form-control">
                         <option selected>Choose</option>
-                        <option value="1">Cate 1</option>
-                        <option value="2">Cate 2</option>
-                        <option value="3">Cate 3</option>
                     </select>
+                    <input type="hidden" asp-for="JobCategoryId" />
                     <span asp-validation-for="JobCategoryId" class="form-text text-muted"></span>
                 </div>
             </div>

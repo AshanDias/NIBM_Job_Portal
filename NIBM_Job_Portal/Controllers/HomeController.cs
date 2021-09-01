@@ -32,16 +32,21 @@ namespace NIBM_Job_Portal.Controllers
             _webHostEnvironment = webHostEnvironment;
             _applicationDbContext = applicationDbContext;
         }
-
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads\\images");
+            ///string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads\\images");
+            var jobCategories =await _applicationDbContext.JobCategory.ToListAsync();
+            var industryList =await _applicationDbContext.Industry.ToListAsync();
              var res=  User.FindFirst(ClaimTypes.NameIdentifier).Value; 
-            var result = _applicationDbContext.Company.Include(x=>x.ApplicationUser).Where(x=>x.ApplicationUser.Id==res).FirstOrDefault();
+            var result =await _applicationDbContext.Company.Include(x=>x.ApplicationUser).Where(x=>x.ApplicationUser.Id==res).FirstOrDefaultAsync();
+            CompanyViewModel model = new CompanyViewModel();
+            model.industryList = industryList;
+            model.jobCategories = jobCategories;
             if (result != null)
             {
-                CompanyViewModel model = new CompanyViewModel();
-                model.Id = model.Id;
+              
+                model.Id = result.Id;
                 model.Company_Name = result.Company_Name;
                 model.Contact_No = result.Contact_No;
                 model.Description = result.Description;
@@ -49,11 +54,13 @@ namespace NIBM_Job_Portal.Controllers
                 model.IndustryId = result.IndustryId;
                 model.JobCategoryId = result.JobCategoryId;
                 model.Website = result.Website;
+                model.Logo_path = result.Logo_path;
                 return View(model);
             }
             else
             {
-                return View();
+               
+                return View(model);
             }
                 
            
@@ -65,18 +72,38 @@ namespace NIBM_Job_Portal.Controllers
         }
 
         [HttpPost]
-        [Route("SaveData")]
-        public async Task<IActionResult> SaveData(CompanyViewModel model)
+        public async Task<IActionResult> Index(CompanyViewModel model)
         {
-            
+            bool IsUpdate = false;
             if (ModelState.IsValid)
             {
-                string imageUrl = await UploadFileToFirebase(model);
+                Company company = null;
+                if (model.Id != 0)
+                {
+                    company = await _applicationDbContext.Company.FindAsync(model.Id);
+                    IsUpdate = true;
+                }
+                else
+                {
+                    company = new Company();
+                }
+              
+               
                 var res = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                Company company = new Company();
+                if (model.Image != null)
+                {
+                    string imageUrl = await UploadFileToFirebase(model);
+                    company.Logo_path = imageUrl;
+
+                }
+                else
+                {
+                    company.Logo_path = model.Logo_path;
+                }
+               
                 company.Company_Name = model.Company_Name; 
                 company.Email = model.Email;
-                company.Image = imageUrl;
+                
                 company.ApplicationUserId = res;
                 company.Description = model.Description;
                 company.Website = model.Website;
@@ -84,63 +111,30 @@ namespace NIBM_Job_Portal.Controllers
                 company.JobCategoryId = model.JobCategoryId;
                 company.IndustryId = model.IndustryId;
 
-                //_applicationDbContext.Company.Add(company);
+               
 
-                //var updateCompany = _applicationDbContext.Company.Where(x => x.ApplicationUserId == res).FirstOrDefault();
-                 
+                if (IsUpdate)
+                {
+                    _applicationDbContext.Company.Update(company);
+                }
+                else
+                {
+                    _applicationDbContext.Company.Add(company);
+                }
 
-                //_applicationDbContext.SaveChanges();
+                _applicationDbContext.SaveChanges();
                 return RedirectToAction("Index");
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Invalid details attempt.");
-                return RedirectToAction("Index");
+                return View(model);
 
             }
             
         }
 
 
-        [HttpPost]
-        public async Task<IActionResult> UpdateData(CompanyViewModel model)
-        {
 
-            //if (ModelState.IsValid)
-            //{
-
-                var company = _applicationDbContext.Company.Where(x => x.Id == model.Id).FirstOrDefault();
-                if (company != null)
-                {
-                    if (model.Image != null)
-                    {
-                        string ImageUrl = await UploadFileToFirebase(model);
-                        company.Image = ImageUrl;
-                    }
-                   
-                    company.Company_Name = model.Company_Name;
-                    company.Email = model.Email;
-                    company.Description = model.Description;
-                    company.Website = model.Website;
-                    company.Contact_No = model.Contact_No;
-                    company.JobCategoryId = model.JobCategoryId;
-                    company.IndustryId = model.IndustryId;
-
-                    _applicationDbContext.Company.Update(company);
-                    _applicationDbContext.SaveChanges();
-
-                }
-
-                return RedirectToAction("Index");
-            //}
-            //else
-            //{
-            //    ModelState.AddModelError(string.Empty, "Invalid details attempt.");
-            //    return RedirectToAction("Index");
-
-            //}
-
-        }
 
 
         public async Task<string> UploadFileToFirebase(CompanyViewModel model)
@@ -174,25 +168,5 @@ namespace NIBM_Job_Portal.Controllers
         }
 
 
-        //TO upload old way
-        //public string UploadedFile(CompanyViewModel model)
-        //{
-        //    string uniqueFileName = null;
-        //    string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads\\images");
-        //     uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Image.FileName;
-        //    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-        //    using (var fileStream = new FileStream(filePath, FileMode.Create))
-        //    {
-        //        model.Image.CopyTo(fileStream);
-        //    }
-
-        //    return uniqueFileName;
-        //}
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
     }
 }

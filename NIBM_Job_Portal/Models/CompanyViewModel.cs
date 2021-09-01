@@ -10,7 +10,7 @@ namespace NIBM_Job_Portal.Models
     public class CompanyViewModel
     {
         public int Id { get; set; }
-        [Required]
+        [Required(ErrorMessage ="Company name is required")]
         public string Company_Name { get; set; }
         public string Logo_path { get; set; }
         [Required]
@@ -19,7 +19,7 @@ namespace NIBM_Job_Portal.Models
         public string Contact_1 { get; set; }
         public string Contact_2 { get; set; }
         public string State { get; set; }
-        [Required]
+        
         public IFormFile Image { get; set; }
         [Required]
         public string Contact_No { get; set; }
@@ -27,9 +27,12 @@ namespace NIBM_Job_Portal.Models
         public string Website { get; set; }
 
         public string Description { get; set; }
-        [Required]
+        [Required(ErrorMessage ="Please Select the industry")]
         public int IndustryId { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Please Select the job category")]
         public int JobCategoryId { get; set; }
+
+        public List<JobCategory> jobCategories { get; set; }
+        public List<Industry> industryList { get; set; }
     }
 }
