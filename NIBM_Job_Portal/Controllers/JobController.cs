@@ -80,5 +80,9 @@ namespace NIBM_Job_Portal.Controllers
             }
         }
 
+        public IActionResult JobList()
+        {
+            return View("Job-List");
+        }
     }
 }

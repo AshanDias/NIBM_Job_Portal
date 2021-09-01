@@ -84,12 +84,12 @@ namespace NIBM_Job_Portal.Controllers
                 company.JobCategoryId = model.JobCategoryId;
                 company.IndustryId = model.IndustryId;
 
-                //_applicationDbContext.Company.Add(company);
+                _applicationDbContext.Company.Add(company);
 
                 //var updateCompany = _applicationDbContext.Company.Where(x => x.ApplicationUserId == res).FirstOrDefault();
-                 
 
-                //_applicationDbContext.SaveChanges();
+
+                _applicationDbContext.SaveChanges();
                 return RedirectToAction("Index");
             }
             else

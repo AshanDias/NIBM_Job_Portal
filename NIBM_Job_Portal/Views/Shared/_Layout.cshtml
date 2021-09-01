@@ -19,56 +19,50 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse form-inline my-2 my-lg-0" id="navbarText">
-            <ul class="navbar-nav flex-grow-1">
-                <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                </li>
+            <ul class="navbar-nav flex-grow-1  d-flex flex-row-reverse">
                 <li class="nav-item">
                     @if (_signManager.IsSignedIn(User))
                     {
 
-                    <form asp-action="Logout" asp-controller="Account" method="post"> 
-                        <button class="nav-link text-dark btn btn-link" style="font-size:14px;text-decoration:none;" type="submit">SignOut</button> 
-                    </form>
+                        <form asp-action="Logout" asp-controller="Account" method="post">
+                            <button class="nav-link text-dark btn btn-link" style="font-size:14px;text-decoration:none;" type="submit"><i class="fa fa-sign-out" aria-hidden="true"></i> &nbsp; SignOut</button>
+                        </form>
 
                     }
                     else
                     {
                         <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">SignIn</a>
                     }
+                </li>
 
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                </li>
 
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                 </li>
             </ul>
+            
         </div>
     </nav>
-   
-    <div class="container-fluid">
+
+    <div class="container-fluid ">
         <div class="row">
             <nav class="col-md-2 d-none d-md-block bg-light sidebar">
                 <div class="sidebar-sticky">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#">
-                                Dashboard <span class="sr-only">(current)</span>
-                            </a>
+                    <ul class="nav flex-column mt-3">
+                        <li class="nav-item btn btn-block btn-outline-secondary">
+                            <a id="sidebar_dashboard" class="nav-link float-left " asp-area="" asp-controller="Home" asp-action="index">  <i class="fa fa-desktop mr-3" aria-hidden="true"></i>Dashboard</a> 
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="Job/index">
-                                <i class="fa fa-briefcase feather feather-home" aria-hidden="true"></i>
-                                Jobs
-                            </a>
+                        <li class="nav-item  btn btn-block btn-outline-secondary">
+                            <a id="sidebar_job" class="nav-link  float-left" asp-area="" asp-controller="Job" asp-action="JobList"> <i class="fa fa-briefcase mr-3" aria-hidden="true"></i>Jobs</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="fa fa-user feather feather-home" aria-hidden="true"></i>
-                                Profile
-                            </a>
-                        </li>
-
+                        <li class="nav-item  btn btn-block btn-outline-secondary">
+                            <a id="sidebar_profile" class="nav-link  float-left" asp-area="" asp-controller="Home" asp-action="index">
+                                <i class="fa fa-user mr-3" aria-hidden="true"></i>Profile
+                            </a> 
+                        </li> 
                     </ul>
                 </div>
             </nav>
