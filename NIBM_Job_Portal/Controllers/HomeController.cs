@@ -102,19 +102,19 @@ namespace NIBM_Job_Portal.Controllers
 
 
         [HttpPost]
-
-        public IActionResult UpdateData(CompanyViewModel model)
+        public async Task<IActionResult> UpdateData(CompanyViewModel model)
         {
 
             //if (ModelState.IsValid)
             //{
+
                 var company = _applicationDbContext.Company.Where(x => x.Id == model.Id).FirstOrDefault();
-                string uniqueFileName = UploadedFile(model);
                 if (company != null)
                 {
+                string ImageUrl =await UploadFileToFirebase(model);
                     company.Company_Name = model.Company_Name;
                     company.Email = model.Email;
-                    company.Image = uniqueFileName;
+                    company.Image = ImageUrl;
                     company.Description = model.Description;
                     company.Website = model.Website;
                     company.Contact_No = model.Contact_No;
