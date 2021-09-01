@@ -25,7 +25,7 @@
                     {
 
                         <form asp-action="Logout" asp-controller="Account" method="post">
-                            <button class="nav-link text-dark btn btn-link" style="font-size:14px;text-decoration:none;" type="submit"><i class="fa fa-sign-out" aria-hidden="true"></i> &nbsp; SignOut</button>
+                            <button class="nav-link text-dark btn btn-link" style="font-size:14px;text-decoration:none;" type="submit"><i class="fa fa-sign-out text-primary" aria-hidden="true"></i> &nbsp; SignOut</button>
                         </form>
 
                     }
@@ -42,8 +42,18 @@
                 <li class="nav-item">
                     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                 </li>
+
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-dark">
+                            <span class="badge badge-success h-75">Hello @User.Identity.Name</span>
+                        </a>
+                    </li>
+                }
             </ul>
-            
+
         </div>
     </nav>
 
@@ -53,7 +63,7 @@
                 <div class="sidebar-sticky">
                     <ul class="nav flex-column mt-3">
                         <li class="nav-item btn btn-block btn-outline-secondary">
-                            <a id="sidebar_dashboard" class="nav-link float-left " asp-area="" asp-controller="Home" asp-action="index">  <i class="fa fa-desktop mr-3" aria-hidden="true"></i>Dashboard</a> 
+                            <a id="sidebar_dashboard" class="nav-link float-left " asp-area="" asp-controller="Home" asp-action="index">  <i class="fa fa-desktop mr-3" aria-hidden="true"></i>Dashboard</a>
                         </li>
                         <li class="nav-item  btn btn-block btn-outline-secondary">
                             <a id="sidebar_job" class="nav-link  float-left" asp-area="" asp-controller="Job" asp-action="Index"> <i class="fa fa-briefcase mr-3" aria-hidden="true"></i>Jobs</a>
@@ -61,8 +71,8 @@
                         <li class="nav-item  btn btn-block btn-outline-secondary">
                             <a id="sidebar_profile" class="nav-link  float-left" asp-area="" asp-controller="Home" asp-action="index">
                                 <i class="fa fa-user mr-3" aria-hidden="true"></i>Profile
-                            </a> 
-                        </li> 
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </nav>
