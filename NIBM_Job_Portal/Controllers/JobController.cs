@@ -38,7 +38,7 @@ namespace NIBM_Job_Portal.Controllers
             return View(data);
         }
         [HttpPost]
-        public ActionResult Edit(Job model)
+        public ActionResult Update(Job model)
         {
             var data = _applicationDbContext.Job.Where(x => x.Id == model.Id).FirstOrDefault();
             if (data != null)

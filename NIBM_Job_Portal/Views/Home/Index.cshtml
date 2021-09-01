@@ -23,6 +23,16 @@
 
     <form asp-action="" asp-controller="Home" enctype="multipart/form-data" method="post">
 
+        @if (ViewBag.Message != null)
+        {
+
+            <div class="alert alert-success" role="alert">
+                @ViewBag.Message
+            </div>
+        }
+
+        <input type="hidden" class="form-control" asp-for="Id">
+
         <div class="row">
             <div class="col-lg-4 col-md-4">
                 <img src="~/images/user.jpg" alt="..." class="img-thumbnail" width="200px" height="auto">
@@ -31,7 +41,7 @@
             <div class="col-lg-8 col-md-8" style=" display: flex;
                         align-items: center;">
                 <input type="file" asp-for="Image" class="btn btn-sm text-light" style="background-color: #2F4189;" />
-                <span asp-validation-for="Image" class="form-text text-muted"></span> 
+                <span asp-validation-for="Image" class="form-text text-muted"></span>
             </div>
         </div>
 

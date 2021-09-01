@@ -37,6 +37,7 @@ namespace NIBM_Job_Portal.Controllers
             if (result != null)
             {
                 CompanyViewModel model = new CompanyViewModel();
+                model.Id = result.Id;
                 model.Company_Name = result.Company_Name;
                 model.Contact_No = result.Contact_No;
                 model.Description = result.Description;
@@ -64,27 +65,93 @@ namespace NIBM_Job_Portal.Controllers
         public IActionResult SaveData(CompanyViewModel model)
         {
 
+            //if (ModelState.IsValid)
+            //{
+            //    var res = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            //    string uniqueFileName = UploadedFile(model);
+            //    Company company = new Company();
+            //    company.Company_Name = model.Company_Name; 
+            //    company.Email = model.Email;
+            //    company.Image = uniqueFileName;
+            //    company.ApplicationUserId = res;
+            //    company.Description = model.Description;
+            //    company.Website = model.Website;
+            //    company.Contact_No = model.Contact_No;
+            //    company.JobCategoryId = model.JobCategoryId;
+            //    company.IndustryId = model.IndustryId;
+
+            //    //_applicationDbContext.Company.Add(company);
+
+            //    //var updateCompany = _applicationDbContext.Company.Where(x => x.ApplicationUserId == res).FirstOrDefault();
+
+
+            //    //_applicationDbContext.SaveChanges();
+            //    return RedirectToAction("Index");
+            //}
+            //else
+            //{
+            //    ModelState.AddModelError(string.Empty, "Invalid details attempt.");
+            //    return RedirectToAction("Index");
+
+            //}
+
+            //if (ModelState.IsValid)
+            //{
+                var company = _applicationDbContext.Company.Where(x => x.Id == model.Id).FirstOrDefault();
+                string uniqueFileName = UploadedFile(model);
+                if (company != null)
+                {
+                    company.Company_Name = model.Company_Name;
+                    company.Email = model.Email;
+                    company.Image = uniqueFileName;
+                    company.Description = model.Description;
+                    company.Website = model.Website;
+                    company.Contact_No = model.Contact_No;
+                    company.JobCategoryId = 1;
+                    company.IndustryId = 1;
+
+                    _applicationDbContext.Company.Update(company);
+                    _applicationDbContext.SaveChanges();
+
+                }
+
+                return RedirectToAction("Index");
+            //}
+            //else
+            //{
+               // ModelState.AddModelError(string.Empty, "Invalid details attempt.");
+               // return RedirectToAction("Index");
+
+           // }
+
+        }
+
+
+        [HttpPost]
+
+        public IActionResult UpdateData(CompanyViewModel model)
+        {
+
             if (ModelState.IsValid)
             {
-                var res = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var company = _applicationDbContext.Company.Where(x => x.Id == model.Id).FirstOrDefault();
                 string uniqueFileName = UploadedFile(model);
-                Company company = new Company();
-                company.Company_Name = model.Company_Name; 
-                company.Email = model.Email;
-                company.Image = uniqueFileName;
-                company.ApplicationUserId = res;
-                company.Description = model.Description;
-                company.Website = model.Website;
-                company.Contact_No = model.Contact_No;
-                company.JobCategoryId = model.JobCategoryId;
-                company.IndustryId = model.IndustryId;
+                if (company != null)
+                {
+                    company.Company_Name = model.Company_Name;
+                    company.Email = model.Email;
+                    company.Image = uniqueFileName;
+                    company.Description = model.Description;
+                    company.Website = model.Website;
+                    company.Contact_No = model.Contact_No;
+                    company.JobCategoryId = model.JobCategoryId;
+                    company.IndustryId = model.IndustryId;
 
-                //_applicationDbContext.Company.Add(company);
+                    _applicationDbContext.Company.Update(company);
+                    _applicationDbContext.SaveChanges();
 
-                //var updateCompany = _applicationDbContext.Company.Where(x => x.ApplicationUserId == res).FirstOrDefault();
-                 
+                }
 
-                //_applicationDbContext.SaveChanges();
                 return RedirectToAction("Index");
             }
             else
@@ -93,7 +160,7 @@ namespace NIBM_Job_Portal.Controllers
                 return RedirectToAction("Index");
 
             }
-            
+
         }
 
         public string UploadedFile(CompanyViewModel model)
