@@ -19,46 +19,55 @@
               mb-3
               border-bottom
             ">
-    <h2 class="h2">Add Job</h2>
+    @if (Model.Id != 0)
+    {
+        <h2 class="h2">Edit Job</h2>
+    }
+    else
+    {
+        <h2 class="h2">Add Job</h2>
+    }
 </div>
 
 <div class="container" style="margin-left: 0px">
     <div class="col-lg-8">
-        <form asp-action="Create" asp-controller="Job" method="post" enctype="multipart/form-data" >
+        <form asp-action="Create" asp-controller="Job" method="post" enctype="multipart/form-data">
 
             <input type="hidden" class="form-control" asp-for="Id">
             <div class="row">
-                <div class="col-lg-4">
-                    <div class="form-group">
-                        <label for="">Reference #</label>
-                        <input type="text"
-                               class="form-control" placeholder="Reference #" asp-for="Id" disabled />
-                        <span class="form-text text-muted"></span>
+                @if (Model.Id != 0)
+                {
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label for="">Reference #</label>
+                            <input type="text"
+                                   class="form-control" placeholder="Reference #" asp-for="Id" disabled />
+                            <span class="form-text text-muted"></span>
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="form-group">
-                        <label for="">Job Category</label>
-                        <select class="form-select form-select-sm form-control" asp-for="JobCategoryId" asp-items="@(new SelectList(Model.jobCategories, "Id", "Name"))">
-                            <option selected>Choose</option>
-                        </select>
-                        <input type="hidden" asp-for="JobCategoryId" />
-                        <span class="form-text text-muted"></span>
+                }
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label for="">Job Category</label>
+                            <select class="form-select form-select-sm form-control" asp-for="JobCategoryId" asp-items="@(new SelectList(Model.jobCategories, "Id", "Name"))">
+                                <option selected value="">Choose</option>
+                            </select>
+                            <input type="hidden" asp-for="JobCategoryId" />
+                            <span asp-validation-for="JobCategoryId" class="form-text text-danger"></span>
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-lg-4">
-                    <div class="form-group">
-                        <label for="">Company</label>
-                        <select class="form-select form-select-sm form-control" asp-for="CompanyId" asp-items="@(new SelectList(Model.companyList, "Id", "Company_Name"))">
-                            <option selected>Choose</option>
-                        </select>
-                        <input type="hidden" asp-for="CompanyId" />
-                        <span asp-validation-for="CompanyId" class="form-text text-muted"></span>
-                        <span class="form-text text-muted"></span>
-                    </div>
+                    @*<div class="col-lg-4">
+                        <div class="form-group">
+                            <label for="">Company</label>
+                            <select class="form-select form-select-sm form-control" asp-for="CompanyId" asp-items="@(new SelectList(Model.companyList, "Id", "Company_Name"))">
+                                <option selected selected value="">Choose</option>
+                            </select>
+                            <input type="hidden" asp-for="CompanyId" />
+                            <span asp-validation-for="CompanyId" class="form-text text-danger"></span>
+                        </div>
+                    </div>*@
                 </div>
-            </div>
 
             <div class="row">
                 <div class="col-lg-6">
@@ -68,17 +77,29 @@
                                class="form-control"
                                asp-for="Position"
                                placeholder="Job Position" />
-                        <span class="form-text text-muted"></span>
+                        <span asp-validation-for="Position" class="form-text text-danger"></span>
                     </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label for="">Closing Date</label>
-                        <input type="date"
-                               class="form-control"
-                               asp-for="ClosingDate"
-                               placeholder="" />
-                        <span class="form-text text-muted"></span>
+                        @if (Model.Id != 0)
+                        {
+                            <input id="clossingDate" type="date" 
+                                   class="form-control"
+                                   asp-for="ClosingDate"
+                                   placeholder="" />
+                        }
+                        else
+                        {
+                            <input id="clossingDate" type="date"
+                                   value="@DateTime.Now.Date"
+                                   class="form-control"
+                                   asp-for="ClosingDate"
+                                   placeholder="" />
+                        }
+
+                    <span asp-validation-for="ClosingDate" class="form-text text-danger"></span>
                     </div>
                 </div>
             </div>
@@ -97,7 +118,7 @@
             </div>
 
             <div class="row">
-                <div class="col-12">
+                <div class="col-lg-6">
                     <div class="form-group">
                         <label for="">Attach Bussiness Flyer</label>
                         <input type="file" class="text-light" asp-for="Image" />
@@ -105,31 +126,35 @@
                     </div>
                     <input type="hidden" class="form-control" asp-for="jobFlyer">
                 </div>
-            </div>
+                <div class="col-lg-6 text-right">
+                    <div class="form-group">
+                        <div class="text-right">
+                            @if (Model.Id != 0)
+                            { 
 
-            <div class="row">
-                <div class="col-8 text-right">
-                    @if (Model.Id != 0)
-                    {
+                                <button class="btn btn-md text-light" type="submit"
+                                        style="background-color: #2f4189">
+                                    Edit
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-md text-light" type="submit"
+                                        style="background-color: #2f4189">
+                                    Add
+                                </button>
+                            }
 
+                        </div>
 
-                        <button class="btn btn-sm text-light" type="submit"
-                                style="background-color: #2f4189">
-                            Edit
-                        </button>
-                    }
-                    else
-                    {
-                        <button class="btn btn-sm text-light" type="submit"
-                                style="background-color: #2f4189">
-                            Add
-                        </button>
-                    }
-
+                    </div>
                 </div>
-                <div class="col-lg-4 col-md-4">
+            </div>
+            <div class="row">
 
-                    @if (Model.jobFlyer != null && Model.Id!=0)
+                <div class="container">
+
+                    @if (Model.jobFlyer != null && Model.Id != 0)
                     {
                         <img src="@Model.jobFlyer.ToString()" alt="..." class="img-thumbnail" width="200px" height="auto">
                     }
@@ -138,9 +163,11 @@
                         <img src="~/images/logo2.png" alt="..." class="img-thumbnail" width="200px" height="auto">
                     }
 
-                  
+
                 </div>
-            </div>
+
+            </div> 
+           
         </form>
     </div>
 </div>

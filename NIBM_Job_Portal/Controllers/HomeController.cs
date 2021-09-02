@@ -71,6 +71,7 @@ namespace NIBM_Job_Portal.Controllers
             return View();
         }
 
+
         [HttpPost]
         public async Task<IActionResult> Index(CompanyViewModel model)
         {
@@ -166,6 +167,15 @@ namespace NIBM_Job_Portal.Controllers
             return baseString;
 
         }
+
+
+
+        public IActionResult Dashboard()
+        {
+            return View();
+        }
+
+
 
 
     }
