@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -34,53 +35,76 @@ namespace NIBM_Job_Portal.Controllers
         [HttpPost]
         public async Task<ActionResult> Create(JobViewModel model)
         {
-           
-            bool IsUpdate = false;
-            Job job = null;
-            if (model.Id != 0)
-            {
+            JobViewModel jobModel = new JobViewModel();
+            var jobCategories = await _applicationDbContext.JobCategory.ToListAsync();
+            var companyList = await _applicationDbContext.Company.ToListAsync();
+            jobModel.jobCategories = jobCategories;
+            jobModel.companyList = companyList;
 
-                job =await _applicationDbContext.Job.FindAsync(model.Id);
-                IsUpdate = true;
+            if (ModelState.IsValid)
+            { 
+                bool IsUpdate = false;
+                Job job = null; 
+                if (model.Id != 0)
+                {
+
+                    job = await _applicationDbContext.Job.FindAsync(model.Id);
+                    IsUpdate = true;
+                }
+                else
+                {
+                    job = new Job();
+                }
+
+                var closingDate = Convert.ToDateTime(model.ClosingDate);
+                var currentDate = DateTime.Now.Date.AddDays(7);
+
+                if (currentDate > closingDate)
+                {
+                    ModelState.AddModelError("ClosingDate", "Closing date must be grater than 7 days after the current date.");
+                    return View("Create", jobModel);
+                }
+
+                if (model.Image != null)
+                {
+                    string imageUrl = await UploadFileToFirebase(model);
+                    job.jobFlyer = imageUrl;
+
+                }
+                else
+                {
+                    job.jobFlyer = model.jobFlyer;
+                }
+
+                var res = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var company = await _applicationDbContext.Company.Where(x => x.ApplicationUserId == res).FirstOrDefaultAsync();
+                job.Description = model.Description;
+                job.CompanyId = company.Id;
+                job.JobCategoryId = (int)model.JobCategoryId;
+                job.Position = model.Position;
+                job.ClosingDate = model.ClosingDate;
+
+                if (IsUpdate)
+                {
+                    _applicationDbContext.Job.Update(job);
+                }
+                else
+                {
+                    _applicationDbContext.Job.Add(job);
+                }
+
+                _applicationDbContext.SaveChanges();
+                return RedirectToAction("Index"); 
+
             }
             else
             {
-                job = new Job();
-            }
 
-            if (model.Image != null)
-            {
-                string imageUrl = await UploadFileToFirebase(model);
-                job.jobFlyer = imageUrl;
+                ModelState.AddModelError(string.Empty, "Invalid Job Details.");
+             
+                return View("Create", jobModel);
+            }  
 
-            }
-            else
-            {
-                job.jobFlyer = model.jobFlyer;
-            }
-
-
-
-            job.Description = model.Description;
-            job.CompanyId = model.CompanyId;
-            job.JobCategoryId = model.JobCategoryId;
-            job.Position = model.Position;
-            job.ClosingDate = model.ClosingDate; 
-
-            if (IsUpdate)
-            {
-                _applicationDbContext.Job.Update(job);
-            }
-            else
-            {
-                _applicationDbContext.Job.Add(job);
-            }
-
-            _applicationDbContext.SaveChanges();
-            return RedirectToAction("Index");
-
-            
-           
         }
 
 
