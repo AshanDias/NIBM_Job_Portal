@@ -3,6 +3,26 @@
     <script src="@Url.Content("~/js/sideBar.js")" type="text/javascript"></script>
     <script>
         changeSideBarButtonStatus("sidebar_job");
+
+        $(document).ready(function ($) {
+            $(function () {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#flyer').attr('src', e.target.result);
+                }
+
+                function readURL(input) {
+                    if (input.files && input.files[0]) {
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                }
+
+                $("#file").change(function () {
+                    readURL(this);
+                });
+            });
+
+        });
     </script>
 }
 
@@ -37,7 +57,7 @@
             <div class="row">
                 @if (Model.Id != 0)
                 {
-                    <div class="col-lg-4">
+                    <div class="col-lg-6">
                         <div class="form-group">
                             <label for="">Reference #</label>
                             <input type="text"
@@ -46,7 +66,7 @@
                         </div>
                     </div>
                 }
-                    <div class="col-lg-4">
+                    <div class="col-lg-6">
                         <div class="form-group">
                             <label for="">Job Category</label>
                             <select class="form-select form-select-sm form-control" asp-for="JobCategoryId" asp-items="@(new SelectList(Model.jobCategories, "Id", "Name"))">
@@ -121,7 +141,7 @@
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label for="">Attach Bussiness Flyer</label>
-                        <input type="file" class="text-light" asp-for="Image" />
+                        <input type="file" id="file" class="text-light" asp-for="Image" />
                         <span class="form-text text-muted"></span>
                     </div>
                     <input type="hidden" class="form-control" asp-for="jobFlyer">
@@ -134,7 +154,7 @@
 
                                 <button class="btn btn-md text-light" type="submit"
                                         style="background-color: #2f4189">
-                                    Edit
+                                    Update
                                 </button>
                             }
                             else
@@ -156,11 +176,11 @@
 
                     @if (Model.jobFlyer != null && Model.Id != 0)
                     {
-                        <img src="@Model.jobFlyer.ToString()" alt="..." class="img-thumbnail" width="200px" height="auto">
+                        <img src="@Model.jobFlyer.ToString()" id="flyer" alt="..." class="img-thumbnail" width="200px" height="auto">
                     }
                     else
                     {
-                        <img src="~/images/logo2.png" alt="..." class="img-thumbnail" width="200px" height="auto">
+                        <img src="~/images/logo2.png" id="flyer" alt="..." class="img-thumbnail" width="200px" height="auto">
                     }
 
 
