@@ -125,7 +125,7 @@
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label for="">Job Category</label>
-                        <select asp-for="JobCategoryId" asp-items="@(new SelectList(Model.jobCategories, "Id", "Name"))" class="form-select form-select-sm form-control">
+                        <select asp-for="JobCategoryId"   asp-items="@(new SelectList(Model.jobCategories, "Id", "Name"))" class="form-select form-select-sm form-control">
                             <option selected>Choose</option>
                         </select>
                         <input type="hidden" asp-for="JobCategoryId" />
