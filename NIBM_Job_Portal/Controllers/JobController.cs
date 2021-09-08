@@ -3,6 +3,7 @@ using Firebase.Storage;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NIBM_Job_Portal.Helpers;
 using NIBM_Job_Portal.Models;
 using System;
 using System.Collections.Generic;
@@ -83,7 +84,7 @@ namespace NIBM_Job_Portal.Controllers
                 job.JobCategoryId = (int)model.JobCategoryId;
                 job.Position = model.Position;
                 job.ClosingDate = model.ClosingDate;
-
+                job.Status =(int) JobStatusEnum.Active;
                 if (IsUpdate)
                 {
                     _applicationDbContext.Job.Update(job);
@@ -172,7 +173,8 @@ namespace NIBM_Job_Portal.Controllers
         public string Delete(int id)
         {
             var data = _applicationDbContext.Job.Where(x => x.Id == id).FirstOrDefault();
-            _applicationDbContext.Job.Remove(data);
+            data.Status =(int) JobStatusEnum.Expired;
+            _applicationDbContext.Job.Update(data);
             _applicationDbContext.SaveChanges();
             return "success";
         }
