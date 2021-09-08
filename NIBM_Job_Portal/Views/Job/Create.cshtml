@@ -3,6 +3,25 @@
     <script src="@Url.Content("~/js/sideBar.js")" type="text/javascript"></script>
     <script>
         changeSideBarButtonStatus("sidebar_job");
+        $(document).ready(function ($) {
+            $(function () {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#profile').attr('src', e.target.result);
+                }
+
+                function readURL(input) {
+                    if (input.files && input.files[0]) {
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                }
+
+                $("#file").change(function () {
+                    readURL(this);
+                });
+            });
+
+        });
     </script>
 }
 
@@ -56,17 +75,7 @@
                             <span asp-validation-for="JobCategoryId" class="form-text text-danger"></span>
                         </div>
                     </div>
-
-                    @*<div class="col-lg-4">
-                        <div class="form-group">
-                            <label for="">Company</label>
-                            <select class="form-select form-select-sm form-control" asp-for="CompanyId" asp-items="@(new SelectList(Model.companyList, "Id", "Company_Name"))">
-                                <option selected selected value="">Choose</option>
-                            </select>
-                            <input type="hidden" asp-for="CompanyId" />
-                            <span asp-validation-for="CompanyId" class="form-text text-danger"></span>
-                        </div>
-                    </div>*@
+                 
                 </div>
 
             <div class="row">
@@ -121,7 +130,7 @@
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label for="">Attach Bussiness Flyer</label>
-                        <input type="file" class="text-light" asp-for="Image" />
+                        <input type="file" id="file"  class="text-light" asp-for="Image" />
                         <span class="form-text text-muted"></span>
                     </div>
                     <input type="hidden" class="form-control" asp-for="jobFlyer">
@@ -156,11 +165,11 @@
 
                     @if (Model.jobFlyer != null && Model.Id != 0)
                     {
-                        <img src="@Model.jobFlyer.ToString()" alt="..." class="img-thumbnail" width="200px" height="auto">
+                        <img id="profile" src="@Model.jobFlyer.ToString()" alt="..." class="img-thumbnail" width="200px" height="auto">
                     }
                     else
                     {
-                        <img src="~/images/logo2.png" alt="..." class="img-thumbnail" width="200px" height="auto">
+                        <img id="profile" src="~/images/logo2.png" alt="..." class="img-thumbnail" width="200px" height="auto">
                     }
 
 
