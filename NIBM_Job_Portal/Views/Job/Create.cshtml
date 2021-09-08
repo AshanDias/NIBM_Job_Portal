@@ -3,11 +3,12 @@
     <script src="@Url.Content("~/js/sideBar.js")" type="text/javascript"></script>
     <script>
         changeSideBarButtonStatus("sidebar_job");
+
         $(document).ready(function ($) {
             $(function () {
                 var reader = new FileReader();
                 reader.onload = function (e) {
-                    $('#profile').attr('src', e.target.result);
+                    $('#flyer').attr('src', e.target.result);
                 }
 
                 function readURL(input) {
@@ -56,7 +57,7 @@
             <div class="row">
                 @if (Model.Id != 0)
                 {
-                    <div class="col-lg-4">
+                    <div class="col-lg-6">
                         <div class="form-group">
                             <label for="">Reference #</label>
                             <input type="text"
@@ -65,7 +66,7 @@
                         </div>
                     </div>
                 }
-                    <div class="col-lg-4">
+                    <div class="col-lg-6">
                         <div class="form-group">
                             <label for="">Job Category</label>
                             <select class="form-select form-select-sm form-control" asp-for="JobCategoryId" asp-items="@(new SelectList(Model.jobCategories, "Id", "Name"))">
@@ -143,7 +144,7 @@
 
                                 <button class="btn btn-md text-light" type="submit"
                                         style="background-color: #2f4189">
-                                    Edit
+                                    Update
                                 </button>
                             }
                             else
@@ -165,11 +166,11 @@
 
                     @if (Model.jobFlyer != null && Model.Id != 0)
                     {
-                        <img id="profile" src="@Model.jobFlyer.ToString()" alt="..." class="img-thumbnail" width="200px" height="auto">
+                        <img src="@Model.jobFlyer.ToString()" id="flyer" alt="..." class="img-thumbnail" width="200px" height="auto">
                     }
                     else
                     {
-                        <img id="profile" src="~/images/logo2.png" alt="..." class="img-thumbnail" width="200px" height="auto">
+                        <img src="~/images/logo2.png" id="flyer" alt="..." class="img-thumbnail" width="200px" height="auto">
                     }
 
 
