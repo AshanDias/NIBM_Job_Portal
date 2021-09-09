@@ -86,6 +86,7 @@ namespace NIBM_Job_Portal.Controllers
         [Route("Identity/[controller]/Login")]
         public async Task<IActionResult> Login()
         {
+            
             return View();
         }
 

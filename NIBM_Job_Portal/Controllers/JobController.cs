@@ -25,7 +25,6 @@ namespace NIBM_Job_Portal.Controllers
         }
         public ActionResult Index()
         {
-            
 
             var jobs = _applicationDbContext.Job.Include(x=>x.JobCategory).Include(x=>x.Company).ToList();
 

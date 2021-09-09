@@ -1,6 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Http
 @inject SignInManager<ApplicationUser> _signManager
-
+@inject UserManager<ApplicationUser> _userManager
+@inject ApplicationDbContext _applicationDbContext
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,7 +61,10 @@
 
         </div>
     </nav>
-
+    @{
+        var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        var user = _applicationDbContext.Users.FirstOrDefault(x => x.Id == id);
+    }
     <div class="container-fluid ">
         <div class="row">
             <nav class="col-md-2 d-none d-md-block bg-light sidebar">
@@ -75,6 +81,12 @@
                                 <i class="fa fa-user mr-3" aria-hidden="true"></i>Profile
                             </a>
                         </li>
+                        @if (user.UserType == 1)
+                        {
+                            <li class="nav-item  btn btn-block btn-outline-secondary">
+                                <a id="sidebar_job" class="nav-link  float-left" asp-area="" asp-controller="" asp-action=""> <i class="fa fa-briefcase mr-3" aria-hidden="true"></i>Admin</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </nav>
