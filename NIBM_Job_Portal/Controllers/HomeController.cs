@@ -70,7 +70,7 @@ namespace NIBM_Job_Portal.Controllers
         {
             return View();
         }
-
+ 
 
         [HttpPost]
         public async Task<IActionResult> Index(CompanyViewModel model)
