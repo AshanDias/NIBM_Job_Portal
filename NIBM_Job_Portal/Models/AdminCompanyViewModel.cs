@@ -17,5 +17,6 @@ namespace NIBM_Job_Portal.Models
         public string Email { get; set; }
         public string DefaultPasssword { get; set; }
 
+        public int Status { get; set; }
     }
 }

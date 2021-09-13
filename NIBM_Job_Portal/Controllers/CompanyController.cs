@@ -21,9 +21,23 @@ namespace NIBM_Job_Portal.Controllers
             _applicationDbContext = applicationDbContext;
             _userManager = userManager;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var result =await _applicationDbContext.Company.ToListAsync();
+            List<AdminCompanyViewModel> model = new List<AdminCompanyViewModel>();
+            foreach (var item in result)
+            {
+                AdminCompanyViewModel model1 = new AdminCompanyViewModel();
+                model1.Id = item.Id;
+                model1.Company_Name = item.Company_Name;
+                model1.Email = item.Email;
+                model1.IndustryId = item.IndustryId;
+                model1.Status = item.IsEnable;
+
+                model.Add(model1);
+            }
+
+            return View(model);
         }
 
         public async Task<IActionResult> Create()
@@ -72,6 +86,26 @@ namespace NIBM_Job_Portal.Controllers
             
 
             return View("Create", model);
+        }
+
+        [HttpPost]
+        [Route("ChangeStatus")]
+        public async Task<bool> ChangeStatus(int status,int Id)
+        {
+            try
+            {
+                Company company = await _applicationDbContext.Company.FindAsync(Id);
+                company.IsEnable =status;
+                _applicationDbContext.Company.Update(company);
+                _applicationDbContext.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+            
+           
         }
     }
 }
