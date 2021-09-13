@@ -1,0 +1,80 @@
+﻿<div class="
+              d-flex
+              justify-content-left
+              flex-wrap flex-md-nowrap
+              align-items-center
+              pb-2
+              mb-3
+              border-bottom
+            ">     
+    <h2 class="h2">Add Company</h2>
+    
+</div>
+
+<div class="row">
+
+    <div class="col-lg-8">
+        <form asp-action="" asp-controller="" enctype="multipart/form-data" method="post"> 
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="">Company ID</label>
+                        @*asp-for=""*@
+                        <input type="text" class="form-control" placeholder="Company ID">
+                        @*asp-validation-for=""*@
+                        <span class="form-text text-muted"></span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="">Company Name</label>
+                        @*asp-for="Email"*@
+                        <input type="email" class="form-control" placeholder="Company Name">
+                        @*asp-validation-for="Email"*@
+                        <span class="form-text text-muted"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label style="visibility:hidden">Email</label>
+                        <select class="form-control" name="" id="">
+                            <option>Company Industry</option>
+                            <option></option>
+                            <option></option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="">Email</label>
+                        @*asp-for="Email"*@
+                        <input type="email" class="form-control" placeholder="Email">
+                        @*asp-validation-for="Email"*@
+                        <span class="form-text text-muted"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="">Password</label>
+                        @*asp-for="Email"*@
+                        <input type="email" class="form-control" placeholder="Default Pasword">
+                        @*asp-validation-for="Email"*@
+                        <span class="form-text text-muted"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row float-right">
+                <button type="button" class="btn btn-sm btn-primary mr-1">Add New</button>
+                <button type="button" class="btn btn-sm btn-primary">Cancel</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-lg-4"></div>
+
+</div>

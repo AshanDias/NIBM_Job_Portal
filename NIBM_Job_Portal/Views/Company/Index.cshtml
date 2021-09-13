@@ -1,0 +1,75 @@
+﻿@*
+     
+*@
+
+<div class="
+              d-flex
+              justify-content-left
+              flex-wrap flex-md-nowrap
+              align-items-center
+              pb-2
+              mb-3
+              border-bottom
+            ">
+    <h2 class="h2">Company Profiles</h2>
+</div>
+
+
+<div class="container" style="margin-left: 0px">
+    <a class="btn btn-sm btn-primary mb-1" asp-area="" asp-controller="Company" asp-action="Create"> <i class="fa fa-plus-circle" aria-hidden="true"></i> Add New Profile</a>
+
+    <table class="table text-center">
+        <thead>
+            <tr>
+                <th>Ref. No</th>
+                <th>Position</th>
+                <th>Category</th>
+                <th>Closing Date</th>
+                <th>Status</th>
+                <th>No of Application</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>1</td>
+                <td>Lorem, ipsum.</td>
+                <td>Lorem ipsum dolor sit.</td>
+                <td class="text-center"> <button class="btn btn-sm btn-outline-primary"> 2 <i class="fa fa-eye" aria-hidden="true"></i></button></td>
+                <td>
+                    <div class="row">
+                        <button class="btn btn-sm btn-primary m-1"> <i class="fa fa-pencil-square" aria-hidden="true"></i> </button>
+                        <button class="btn btn-sm btn-danger m-1"> <i class="fa fa-times-circle" aria-hidden="true"></i> </button>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Lorem, ipsum.</td>
+                <td>Lorem ipsum dolor sit.</td>
+                <td class="text-center"> <button class="btn btn-sm btn-outline-primary"> 2 <i class="fa fa-eye" aria-hidden="true"></i></button></td>
+                <td>
+                    <div class="row">
+                        <a class="btn btn-sm btn-primary m-1" asp-area="" asp-controller="Job" asp-action="Edit"> <i class="fa fa-pencil-square" aria-hidden="true"></i></a>
+                        <a class="btn btn-sm btn-danger m-1" asp-area="" asp-controller="Job" asp-action="Index">  <i class="fa fa-times-circle" aria-hidden="true"></i></a>
+
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Lorem, ipsum.</td>
+                <td>Lorem ipsum dolor sit.</td>
+                <td class="text-center"> <button class="btn btn-sm btn-outline-primary"> 2 <i class="fa fa-eye" aria-hidden="true"></i></button></td>
+                <td>
+                    <div class="row">
+                        <button class="btn btn-sm btn-primary m-1"> <i class="fa fa-pencil-square" aria-hidden="true"></i> </button>
+                        <button class="btn btn-sm btn-danger m-1"> <i class="fa fa-times-circle" aria-hidden="true"></i> </button>
+                    </div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
