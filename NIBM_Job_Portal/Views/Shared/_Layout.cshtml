@@ -4,6 +4,10 @@
 @inject SignInManager<ApplicationUser> _signManager
 @inject UserManager<ApplicationUser> _userManager
 @inject ApplicationDbContext _applicationDbContext
+@{
+    var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+    var user = _applicationDbContext.Users.FirstOrDefault(x => x.Id == id);
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,7 +45,14 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    @if (user.UserType == 1)
+                    {
+                        <a class="nav-link text-dark"><i class="fa fa-university" aria-hidden="true"></i> Company</a>
+                    }
+                    else
+                    { 
+                        <a class="nav-link text-dark"><i class="fa fa-user" aria-hidden="true"></i> Admin</a>
+                    }
                 </li>
 
                 <li class="nav-item">
@@ -61,10 +72,7 @@
 
         </div>
     </nav>
-    @{
-        var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-        var user = _applicationDbContext.Users.FirstOrDefault(x => x.Id == id);
-    }
+
     <div class="container-fluid ">
         <div class="row">
             <nav class="col-md-2 d-none d-md-block bg-light sidebar">
