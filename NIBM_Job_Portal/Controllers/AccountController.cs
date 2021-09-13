@@ -14,6 +14,7 @@ using NIBM_Job_Portal.Models;
 using NIBM_Job_Portal.Models.User;
 using System.Text;
 using System.Text.Encodings.Web;
+using Microsoft.EntityFrameworkCore;
 
 namespace NIBM_Job_Portal.Controllers
 {
@@ -24,19 +25,22 @@ namespace NIBM_Job_Portal.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<Register> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly ApplicationDbContext _applicationDbContext;
         public string ReturnUrl { get; set; }
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
         public AccountController(
              UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<Register> logger,
-            IEmailSender emailSender
+            IEmailSender emailSender,
+            ApplicationDbContext applicationDbContext
             )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _applicationDbContext = applicationDbContext;
 
         }
 
@@ -97,16 +101,27 @@ namespace NIBM_Job_Portal.Controllers
 
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, login.RememberMe, lockoutOnFailure: false);
-                if (result.Succeeded)
+                Company company = await _applicationDbContext.Company.Where(x => x.Email == login.Email).FirstOrDefaultAsync();
+                if (company!=null && company.IsEnable != 0)
                 {
-                    return RedirectToAction("Index", "Home");
+                    var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, login.RememberMe, lockoutOnFailure: false);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                        return View("Login");
+                    }
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Unable to login. Please contact your admin");
                     return View("Login");
                 }
+
+           
             }
             else
             {
