@@ -10,12 +10,15 @@
         case "sidebar_profile":
             $("#sidebar_profile").addClass("active");
             break;
+        case "sidebar_company":
+            $("#sidebar_company").addClass("active");
+            break; 
     } 
 }
 
 function resetActiveClass() {
     //nav - link
-    var arr = ["#sidebar_dashboard", "#sidebar_job","#sidebar_profile"];
+    var arr = ["#sidebar_dashboard", "#sidebar_job", "#sidebar_profile","#sidebar_company"];
     for (var i in arr) {
         $(i).append("nav-link")
 
