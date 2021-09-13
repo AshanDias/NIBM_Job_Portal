@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using NIBM_Job_Portal.Helpers;
 using NIBM_Job_Portal.Models;
 using System;
 using System.Collections.Generic;
@@ -42,7 +43,6 @@ namespace NIBM_Job_Portal.Controllers
             var result =await _applicationDbContext.Company.Include(x=>x.ApplicationUser).Where(x=>x.ApplicationUser.Id==res).FirstOrDefaultAsync();
             CompanyViewModel model = new CompanyViewModel();
             model.industryList = industryList;
-            model.jobCategories = jobCategories;
             if (result != null)
             {
               
@@ -52,7 +52,6 @@ namespace NIBM_Job_Portal.Controllers
                 model.Description = result.Description;
                 model.Email = result.Email;
                 model.IndustryId = result.IndustryId;
-                model.JobCategoryId = result.JobCategoryId;
                 model.Website = result.Website;
                 model.Logo_path = result.Logo_path;
                 return View(model);
@@ -108,8 +107,8 @@ namespace NIBM_Job_Portal.Controllers
                 company.ApplicationUserId = res;
                 company.Description = model.Description;
                 company.Website = model.Website;
+                company.IsEnable =(int) CompanyStatus.Enable;
                 company.Contact_No = model.Contact_No;
-                company.JobCategoryId = model.JobCategoryId;
                 company.IndustryId = model.IndustryId;
 
                
@@ -128,6 +127,7 @@ namespace NIBM_Job_Portal.Controllers
             }
             else
             {
+                model.industryList =await _applicationDbContext.Industry.ToListAsync();
                 return View(model);
 
             }

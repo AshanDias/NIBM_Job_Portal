@@ -29,10 +29,7 @@ namespace NIBM_Job_Portal.Models
         public string Description { get; set; }
         [Required(ErrorMessage ="Please Select the industry")]
         public int IndustryId { get; set; }
-        [Required(ErrorMessage = "Please Select the job category")]
-        public int JobCategoryId { get; set; }
-
-        public List<JobCategory> jobCategories { get; set; }
+      
         public List<Industry> industryList { get; set; }
     }
 }

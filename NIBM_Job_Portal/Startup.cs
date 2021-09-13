@@ -98,7 +98,7 @@ namespace NIBM_Job_Portal
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Dashboard}/{id?}");
+                    pattern: "{controller=Company}/{action=Index}/{id?}");
             });
         }
     }

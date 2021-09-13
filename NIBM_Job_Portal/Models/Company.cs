@@ -13,6 +13,8 @@ namespace NIBM_Job_Portal.Models
         public int Id { get; set; }
         public string Company_Name { get; set; }
         public string Logo_path { get; set; }
+
+        [EmailAddress(ErrorMessage ="Invalid Email Adddress")]
         public string Email { get; set; }
         public string Physical_Address { get; set; }
         public string Contact_1 { get; set; }
@@ -25,9 +27,8 @@ namespace NIBM_Job_Portal.Models
         public string Contact_No { get; set; }
         public string Description { get; set; }
 
+        public int IsEnable { get; set; }
         public string Website { get; set; }
-        public int JobCategoryId { get; set; }
-        public JobCategory JobCategory { get; set; }
 
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
