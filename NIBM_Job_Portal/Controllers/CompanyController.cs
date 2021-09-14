@@ -55,7 +55,7 @@ namespace NIBM_Job_Portal.Controllers
             if (ModelState.IsValid)
             {
                 //Create User
-
+                model.DefaultPasssword = "Test@123";
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await _userManager.CreateAsync(user, model.DefaultPasssword);
                 if (result.Succeeded)
