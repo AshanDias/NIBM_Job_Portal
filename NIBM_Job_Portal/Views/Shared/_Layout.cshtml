@@ -82,7 +82,7 @@
                         <li class="nav-item btn btn-block btn-outline-secondary">
                             <a id="sidebar_dashboard" class="nav-link float-left " asp-area="" asp-controller="Home" asp-action="Dashboard">  <i class="fa fa-desktop mr-3" aria-hidden="true"></i>Dashboard</a>
                         </li>
-                        @if (user.UserType == 0)
+                        @if (user.UserType == 1)
                         {
                             <li class="nav-item  btn btn-block btn-outline-secondary">
                                 <a id="sidebar_job" class="nav-link  float-left" asp-area="" asp-controller="Job" asp-action="Index"> <i class="fa fa-briefcase mr-3" aria-hidden="true"></i>Jobs</a>
@@ -95,7 +95,7 @@
                             </a>
                         </li>
 
-                        @if (user.UserType == 1)
+                        @if (user.UserType == 0)
                         {
                             <li class="nav-item  btn btn-block btn-outline-secondary">
                                 <a id="sidebar_company" class="nav-link  float-left" asp-area="" asp-controller="Company" asp-action="Index"> <i class="fa fa-briefcase mr-3" aria-hidden="true"></i>Company</a>
