@@ -23,9 +23,7 @@ namespace NIBM_Job_Portal.Models
         [Required]
         [Display(Name = "Email is required")]
         public string Email { get; set; }
-
-        [Required]
-        [DataType(DataType.Password)]
+ 
         public string DefaultPasssword { get; set; }
 
         public int Status { get; set; }
