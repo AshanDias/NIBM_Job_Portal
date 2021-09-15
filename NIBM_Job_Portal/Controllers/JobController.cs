@@ -162,11 +162,7 @@ namespace NIBM_Job_Portal.Controllers
 
             return View(model);
         }
-
-
-
-     
-
+         
 
         [HttpGet]
         public string Delete(int id)
@@ -177,7 +173,17 @@ namespace NIBM_Job_Portal.Controllers
             _applicationDbContext.SaveChanges();
             return "success";
         }
-       
- 
+
+        public ActionResult JobApplications(int id)
+        { 
+            return View();
+
+        }
+
+        public ActionResult ApplicationDetails(int id)
+        {
+            return View();
+
+        }
     }
 }
