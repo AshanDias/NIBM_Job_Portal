@@ -1,0 +1,148 @@
+﻿
+@{
+    ViewData["Title"] = "ApplicationDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="
+              d-flex
+              justify-content-between
+              flex-wrap flex-md-nowrap
+              align-items-center
+              pb-2
+              mb-3
+              border-bottom
+            ">
+    <h1 class="h2">Applicant Summery</h1>  
+    <a href="@Url.Action("JobApplications", "Job", new { Id = 1})"class="btn btn-primary btn-sm">
+        <i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i>  back
+    </a>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3">
+            <img src="~/images/user.jpg"
+                 alt="..."
+                 class="img-thumbnail" />
+        </div>
+        <div class="col-lg-9">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <h4 class="card-title">Applicant Details & Skils</h4>
+                        </div>
+                        <div class="col-lg-6 float-right">
+                            <a href="https://www.facebook.com/" target="_blank">
+                                <img src="~/images/logos/fblogo.png"
+                                     alt="fblogo"
+                                     width="40px;"
+                                     class="img-fluid p-1" />
+                            </a>
+
+                            <a href="https://www.linkedin.com/" target="_blank">
+                                <img src="~/images/logos/in.png"
+                                     alt="fblogo"
+                                     width="40px;"
+                                     class="img-fluid p-1" />
+                            </a>
+                            <a href="https://github.com/" target="_blank">
+                                <img src="~/images/logos/github.png"
+                                     alt="fblogo"
+                                     width="40px;"
+                                     class="img-fluid p-1" />
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <table class="table table-responsive">
+                                <tbody>
+                                    <tr>
+                                        <td>Name</td>
+                                        <td>Lorem, ipsum dolor.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Age</td>
+                                        <td>24</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Email</td>
+                                        <td>test@gmail.com</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-lg-6">
+                            <span class="badge badge-success ml-1 shadow-lg"
+                                  style="min-width: 3rem">C#</span>
+                            <span class="badge badge-success ml-1 shadow-lg"
+                                  style="min-width: 3rem">Dotnet Core</span>
+                            <span class="badge badge-success ml-1 shadow-lg"
+                                  style="min-width: 3rem">Java</span>
+                            <span class="badge badge-success ml-1 shadow-lg"
+                                  style="min-width: 3rem">Ionic</span>
+                            <span class="badge badge-success ml-1 shadow-lg"
+                                  style="min-width: 3rem">PHP</span>
+                            <span class="badge badge-success ml-1 shadow-lg"
+                                  style="min-width: 3rem">Laravel</span>
+                            <span class="badge badge-success ml-1 shadow-lg"
+                                  style="min-width: 3rem">MSSQL/ MySql</span>
+                            <span class="badge badge-success ml-1 shadow-lg"
+                                  style="min-width: 3rem">TeamCity</span>
+                            <span class="badge badge-success ml-1 shadow-lg"
+                                  style="min-width: 3rem">Docker</span>
+                            <span class="badge badge-success ml-1 shadow-lg"
+                                  style="min-width: 3rem">Management Skils</span>
+                            <span class="badge badge-success ml-1 shadow-lg"
+                                  style="min-width: 3rem">Leadership</span>
+                            <span class="badge badge-success ml-1 shadow-lg"
+                                  style="min-width: 3rem">Problem solving</span>
+                            <span class="badge badge-success ml-1 shadow-lg"
+                                  style="min-width: 3rem">Teamwork</span>
+                            <span class="badge badge-success ml-1 shadow-lg"
+                                  style="min-width: 3rem">Communication</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col">
+            <h6 for="">Height Qualifications</h6>
+            <div class="col">
+                <div class="row">
+                    <div class="alert alert-success ml-1" role="alert">
+                        A simple success alert—check it out!
+                    </div>
+                    <div class="alert alert-success ml-1" role="alert">
+                        A simple success alert—check it out!
+                    </div>
+                    <div class="alert alert-success ml-1" role="alert">
+                        A simple success alert—check it out!
+                    </div>
+                    <div class="alert alert-success ml-1" role="alert">
+                        A simple success alert—check it out!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <h6 for="">Description</h6>
+                <textarea class="form-control shadow-md"
+                          name=""
+                          id=""
+                          rows="4"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+

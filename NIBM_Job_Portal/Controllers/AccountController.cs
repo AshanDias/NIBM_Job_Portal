@@ -139,5 +139,12 @@ namespace NIBM_Job_Portal.Controllers
             return RedirectToAction("Login","Account");
         }
 
+
+        public ActionResult ForgotPassword()
+        {            
+            return View();
+        }
+         
+
     }
 }
