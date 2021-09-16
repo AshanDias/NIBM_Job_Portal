@@ -7,6 +7,6 @@ namespace NIBM_Job_Portal.Interface
 {
     public interface IEmailService
     {
-        public Task Send(string email);
+        public Task Send(string email,string callbackUrl);
     }
 }

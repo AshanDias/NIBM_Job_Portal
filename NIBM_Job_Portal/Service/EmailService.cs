@@ -14,13 +14,13 @@ namespace ATM_Early_Detection.Service
     public class EmailService : IEmailService
     {
 
-        public Task Send(string email)
+        public Task Send(string email,string callbackUrl)
         {
             var fromAddress = new MailAddress("nibmjobportal@gmail.com", "NIBM Job Portal");
             var toAddress = new MailAddress(email, "User");
             const string fromPassword = "NibmJob2021";
             const string subject = "Subject";
-            string callbackUrl = "";
+          
           
             
             //string body = "This ATM need some atttention!   " + list_atm + " ";
