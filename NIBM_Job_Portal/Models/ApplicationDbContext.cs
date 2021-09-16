@@ -21,6 +21,7 @@ namespace NIBM_Job_Portal.Models
         public DbSet<Company> Company { get; set; }
 
         public DbSet<Company> UploadCompanyLogo { get; set; }
+        public DbSet<StudentJobPost> StudentJobPost { get; set; }
 
     }
 }

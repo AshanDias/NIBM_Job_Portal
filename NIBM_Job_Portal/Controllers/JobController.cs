@@ -174,15 +174,17 @@ namespace NIBM_Job_Portal.Controllers
             return "success";
         }
 
-        public ActionResult JobApplications(int id)
-        { 
-            return View();
+        public async Task<IActionResult> JobApplications(int id)
+        {
+            List<StudentJobPost> SJP = await _applicationDbContext.StudentJobPost.ToListAsync();
+            return View(SJP);
 
         }
 
-        public ActionResult ApplicationDetails(int id)
+        public async Task<IActionResult> ApplicationDetails(int id)
         {
-            return View();
+            StudentJobPost model = await _applicationDbContext.StudentJobPost.FirstOrDefaultAsync(x=>x.Id==id);
+            return View(model);
 
         }
     }
