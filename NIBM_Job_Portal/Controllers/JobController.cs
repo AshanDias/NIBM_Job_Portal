@@ -8,7 +8,9 @@ using NIBM_Job_Portal.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,7 +28,7 @@ namespace NIBM_Job_Portal.Controllers
         public ActionResult Index()
         {
 
-            var jobs = _applicationDbContext.Job.Include(x=>x.JobCategory).Include(x=>x.Company).ToList();
+            var jobs = _applicationDbContext.Job.Include(x => x.JobCategory).Include(x => x.Company).ToList();
 
             return View(jobs);
 
@@ -42,9 +44,9 @@ namespace NIBM_Job_Portal.Controllers
             jobModel.companyList = companyList;
 
             if (ModelState.IsValid)
-            { 
+            {
                 bool IsUpdate = false;
-                Job job = null; 
+                Job job = null;
                 if (model.Id != 0)
                 {
 
@@ -83,7 +85,7 @@ namespace NIBM_Job_Portal.Controllers
                 job.JobCategoryId = (int)model.JobCategoryId;
                 job.Position = model.Position;
                 job.ClosingDate = model.ClosingDate;
-                job.Status =(int) JobStatusEnum.Active;
+                job.Status = (int)JobStatusEnum.Active;
                 if (IsUpdate)
                 {
                     _applicationDbContext.Job.Update(job);
@@ -94,16 +96,16 @@ namespace NIBM_Job_Portal.Controllers
                 }
 
                 _applicationDbContext.SaveChanges();
-                return RedirectToAction("Index"); 
+                return RedirectToAction("Index");
 
             }
             else
             {
 
                 ModelState.AddModelError(string.Empty, "Invalid Job Details.");
-             
+
                 return View("Create", jobModel);
-            }  
+            }
 
         }
 
@@ -140,7 +142,7 @@ namespace NIBM_Job_Portal.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> CreateAsync(int Id=0)
+        public async Task<ActionResult> CreateAsync(int Id = 0)
         {
             JobViewModel model = new JobViewModel();
             var jobCategories = await _applicationDbContext.JobCategory.ToListAsync();
@@ -162,13 +164,13 @@ namespace NIBM_Job_Portal.Controllers
 
             return View(model);
         }
-         
+
 
         [HttpGet]
         public string Delete(int id)
         {
             var data = _applicationDbContext.Job.Where(x => x.Id == id).FirstOrDefault();
-            data.Status =(int) JobStatusEnum.Expired;
+            data.Status = (int)JobStatusEnum.Expired;
             _applicationDbContext.Job.Update(data);
             _applicationDbContext.SaveChanges();
             return "success";
@@ -176,16 +178,127 @@ namespace NIBM_Job_Portal.Controllers
 
         public async Task<IActionResult> JobApplications(int id)
         {
-            List<StudentJobPost> SJP = await _applicationDbContext.StudentJobPost.ToListAsync();
+            List<StudentJobPost> SJP = await _applicationDbContext.StudentJobPost.Include(x => x.Job).ToListAsync();
             return View(SJP);
 
         }
 
         public async Task<IActionResult> ApplicationDetails(int id)
         {
-            StudentJobPost model = await _applicationDbContext.StudentJobPost.FirstOrDefaultAsync(x=>x.Id==id);
+            StudentJobPost model = await _applicationDbContext.StudentJobPost.FirstOrDefaultAsync(x => x.Id == id);
             return View(model);
 
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> DownloadAll()
+        {
+            //List<string> cvs = new List<string>();
+            List<byte[]> cvs = new List<byte[]>();
+
+            var studentPost = await _applicationDbContext.StudentJobPost.ToListAsync();
+            foreach (var item in studentPost)
+            {
+                WebClient wc = new WebClient();
+                cvs.Add(wc.DownloadData(item.CV));
+
+            }
+
+            using (var compressedFileStream = new MemoryStream(cvs[0]))
+            {
+                //Create an archive and store the stream in memory.
+                using (var zipArchive = new ZipArchive(compressedFileStream, ZipArchiveMode.Create, true))
+                {
+                    foreach (var caseAttachmentModel in cvs)
+                    {
+                        //Create a zip entry for each attachment
+                        var zipEntry = zipArchive.CreateEntry("AllCvFiles");
+
+                        //Get the stream of the attachment
+                        using (var originalFileStream = new MemoryStream(caseAttachmentModel))
+                        using (var zipEntryStream = zipEntry.Open())
+                        {
+                            //Copy the attachment stream to the zip entry stream
+                            originalFileStream.CopyTo(zipEntryStream);
+                        }
+                    }
+                }
+
+                return new FileContentResult(compressedFileStream.ToArray(), "application/zip") { FileDownloadName = "Filename.zip" };
+            }
+
+        }
+
+
+        public void URLD()
+        {
+            //Create a stream for the file
+            //Stream stream = null;
+
+            ////This controls how many bytes to read at a time and send to the client
+            //int bytesToRead = 10000;
+
+            //// Buffer to read bytes in chunk size specified above
+            //byte[] buffer = new Byte[bytesToRead];
+
+            //// The number of bytes read
+            //try
+            //{
+            //    //Create a WebRequest to get the file
+            //    HttpWebRequest fileReq = (HttpWebRequest)HttpWebRequest.Create(url);
+
+            //    //Create a response for this request
+            //    HttpWebResponse fileResp = (HttpWebResponse)fileReq.GetResponse();
+
+            //    if (fileReq.ContentLength > 0)
+            //        fileResp.ContentLength = fileReq.ContentLength;
+
+            //    //Get the Stream returned from the response
+            //    stream = fileResp.GetResponseStream();
+                
+            //   // prepare the response to the client. resp is the client Response
+            //   var resp = HttpContext.Current.Response;
+            //    //Indicate the type of data being sent
+            //    resp.ContentType = "application/octet-stream";
+
+            //    //Name the file 
+            //    resp.AddHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+            //    resp.AddHeader("Content-Length", fileResp.ContentLength.ToString());
+
+            //    int length;
+            //    do
+            //    {
+            //        // Verify that the client is connected.
+            //        if (resp.IsClientConnected)
+            //        {
+            //            // Read data into the buffer.
+            //            length = stream.Read(buffer, 0, bytesToRead);
+
+            //            // and write it out to the response's output stream
+            //            resp.OutputStream.Write(buffer, 0, length);
+
+            //            // Flush the data
+            //            resp.Flush();
+
+            //            //Clear the buffer
+            //            buffer = new Byte[bytesToRead];
+            //        }
+            //        else
+            //        {
+            //            // cancel the download if client has disconnected
+            //            length = -1;
+            //        }
+            //    } while (length > 0); //Repeat until no data is read
+            //}
+            //finally
+            //{
+            //    if (stream != null)
+            //    {
+            //        //Close the input stream
+            //        stream.Close();
+            //    }
+            //}
         }
     }
 }
