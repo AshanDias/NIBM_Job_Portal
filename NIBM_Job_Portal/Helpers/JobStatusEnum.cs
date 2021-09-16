@@ -16,4 +16,10 @@ namespace NIBM_Job_Portal.Helpers
         Disable=0
     }
 
+    public enum UserTypeEnum
+    {
+        Admin=1,
+        User=0
+    }
+
 }

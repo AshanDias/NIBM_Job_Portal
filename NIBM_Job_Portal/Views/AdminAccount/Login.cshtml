@@ -25,6 +25,7 @@
             <h3>Sign In <sup><i class="fa fa-users" aria-hidden="true"></i></sup> </h3>
             <form id="account" method="post" asp-action="AdminOnLogin" asp-controller="AdminAccount">
                 <hr />
+                <div asp-validation-summary="All" class="text-white"></div>
                 <div class="form-group">
                     @*asp-for=""*@
                     <input asp-for="Email" placeholder="Email" class="form-control" />
@@ -38,7 +39,7 @@
                         <input asp-for="Password" placeholder="Password" id="txtPWD" class="form-control icon-input" />
                         <a><i class='fa fa-eye-slash times-icon' id="btnShowPassword" aria-hidden='true'></i></a>
                         @*asp-validation-for=""*@
-                        <span asp-validation-for="Password"  class="text-light"></span>
+                        <span asp-validation-for="Password" class="text-light"></span>
                     </div>
                 </div>
                 <div class="row">
