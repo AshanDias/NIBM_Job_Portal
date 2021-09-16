@@ -178,6 +178,11 @@ namespace NIBM_Job_Portal.Controllers
             return View();
         }
 
+        public ActionResult ResetPassword()
+        {
+            return View();
+        }
+
 
     }
 }
