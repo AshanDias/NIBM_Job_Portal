@@ -140,11 +140,44 @@ namespace NIBM_Job_Portal.Controllers
         }
 
 
-        public ActionResult ForgotPassword()
+        public IActionResult ForgotPassword()
         {            
             return View();
         }
-         
+
+
+        [HttpPost]
+        [Route("ForgotPasswordPost")]
+        public async Task<IActionResult> ForgotPasswordPost(ForgotPasswordModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                var callbackUrl = Url.Page(
+                    "/Account/ResetPassword",
+                    pageHandler: null,
+                    values: new { area = "Identity", code },
+                    protocol: Request.Scheme);
+                return View();
+            }
+            else
+            {
+                ModelState.AddModelError("", "Invalid email address");
+
+                return View("ForgotPassword");
+            }
+           
+        }
+
+        [HttpGet]
+
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+
 
     }
 }
