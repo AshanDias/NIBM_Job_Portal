@@ -179,8 +179,10 @@ namespace NIBM_Job_Portal.Controllers
 
         public async Task<IActionResult> JobApplications(int id)
         {
-            List<StudentJobPost> SJP = await _applicationDbContext.StudentJobPost.Include(x => x.Job).ToListAsync();
-            return View(SJP);
+            JobApplicationViewModel model = new JobApplicationViewModel();
+            model.StudentJobPost = await _applicationDbContext.StudentJobPost.Include(x => x.Job).ToListAsync();
+            model.files = new List<FileModel>();
+            return View(model);
 
         }
 
@@ -230,6 +232,55 @@ namespace NIBM_Job_Portal.Controllers
 
         }
 
+        [HttpPost]
+        [Route("DownloadSelected")]
+        public async Task<string> DownloadSelected(string[] data)
+        {
 
+            int i = 0;
+            //var studentPost = await _applicationDbContext.StudentJobPost.ToListAsync();
+            List<string> studentPost = new List<string>();
+            foreach (var item in data)
+            {
+             var res= await _applicationDbContext.StudentJobPost.Where(x => x.Id == Convert.ToInt32(item)).FirstOrDefaultAsync();
+                studentPost.Add(res.CV);
+            }
+
+
+            foreach (var item in studentPost)
+            {
+                i++;
+                var client = new HttpClient();
+                var result = await client.GetAsync(item);
+                byte[] filecontent = await result.Content.ReadAsByteArrayAsync();
+                string filepath = "TempCV/CV" + i + ".pdf";
+                System.IO.File.WriteAllBytes(filepath, filecontent);
+
+            }
+            string startupPath = System.IO.Directory.GetCurrentDirectory();
+            string[] fileEntries = Directory.GetFiles(startupPath + "\\TempCV");
+            using (ZipFile zip = new ZipFile())
+            {
+                zip.AlternateEncodingUsage = ZipOption.AsNecessary;
+                zip.AddDirectoryByName("Student CV List");
+                foreach (var file in fileEntries)
+                {
+
+                    zip.AddFile(file, "Student CV List");
+
+                }
+                string zipName = String.Format("Students_CV_{0}.zip", DateTime.Now.ToString("yyyy-MMM-dd-HHmmss"));
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    zip.Save(memoryStream);
+                    return Convert.ToBase64String(memoryStream.ToArray(), 0, memoryStream.ToArray().Length);
+                    //return File(memoryStream.ToArray(), "application/zip", zipName);
+                }
+            }
+
+           
+        }
+
+     
     }
 }
