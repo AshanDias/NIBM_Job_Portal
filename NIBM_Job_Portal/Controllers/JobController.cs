@@ -8,12 +8,13 @@ using NIBM_Job_Portal.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using Ionic.Zip;
 
 namespace NIBM_Job_Portal.Controllers
 {
@@ -194,111 +195,41 @@ namespace NIBM_Job_Portal.Controllers
         [HttpGet]
         public async Task<IActionResult> DownloadAll()
         {
-            //List<string> cvs = new List<string>();
-            List<byte[]> cvs = new List<byte[]>();
-
+            int i = 0;
             var studentPost = await _applicationDbContext.StudentJobPost.ToListAsync();
             foreach (var item in studentPost)
             {
-                WebClient wc = new WebClient();
-                cvs.Add(wc.DownloadData(item.CV));
-
+                i++;
+                var client = new HttpClient();
+                var result = await client.GetAsync(item.CV);
+                byte[] filecontent = await result.Content.ReadAsByteArrayAsync();
+                string filepath = "TempCV/CV" + i + ".pdf";
+                System.IO.File.WriteAllBytes(filepath, filecontent);
+              
             }
-
-            using (var compressedFileStream = new MemoryStream(cvs[0]))
+            string startupPath = System.IO.Directory.GetCurrentDirectory();
+            string[] fileEntries = Directory.GetFiles(startupPath+"\\TempCV");
+            using (ZipFile zip = new ZipFile())
             {
-                //Create an archive and store the stream in memory.
-                using (var zipArchive = new ZipArchive(compressedFileStream, ZipArchiveMode.Create, true))
+                zip.AlternateEncodingUsage = ZipOption.AsNecessary;
+                zip.AddDirectoryByName("Student CV List");
+                foreach (var file in fileEntries)
                 {
-                    foreach (var caseAttachmentModel in cvs)
-                    {
-                        //Create a zip entry for each attachment
-                        var zipEntry = zipArchive.CreateEntry("AllCvFiles");
-
-                        //Get the stream of the attachment
-                        using (var originalFileStream = new MemoryStream(caseAttachmentModel))
-                        using (var zipEntryStream = zipEntry.Open())
-                        {
-                            //Copy the attachment stream to the zip entry stream
-                            originalFileStream.CopyTo(zipEntryStream);
-                        }
-                    }
+                   
+                        zip.AddFile(file, "Student CV List");
+                   
                 }
-
-                return new FileContentResult(compressedFileStream.ToArray(), "application/zip") { FileDownloadName = "Filename.zip" };
+                string zipName = String.Format("Students_CV_{0}.zip", DateTime.Now.ToString("yyyy-MMM-dd-HHmmss"));
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    zip.Save(memoryStream);
+                    return File(memoryStream.ToArray(), "application/zip", zipName);
+                }
             }
 
+
         }
 
 
-        public void URLD()
-        {
-            //Create a stream for the file
-            //Stream stream = null;
-
-            ////This controls how many bytes to read at a time and send to the client
-            //int bytesToRead = 10000;
-
-            //// Buffer to read bytes in chunk size specified above
-            //byte[] buffer = new Byte[bytesToRead];
-
-            //// The number of bytes read
-            //try
-            //{
-            //    //Create a WebRequest to get the file
-            //    HttpWebRequest fileReq = (HttpWebRequest)HttpWebRequest.Create(url);
-
-            //    //Create a response for this request
-            //    HttpWebResponse fileResp = (HttpWebResponse)fileReq.GetResponse();
-
-            //    if (fileReq.ContentLength > 0)
-            //        fileResp.ContentLength = fileReq.ContentLength;
-
-            //    //Get the Stream returned from the response
-            //    stream = fileResp.GetResponseStream();
-                
-            //   // prepare the response to the client. resp is the client Response
-            //   var resp = HttpContext.Current.Response;
-            //    //Indicate the type of data being sent
-            //    resp.ContentType = "application/octet-stream";
-
-            //    //Name the file 
-            //    resp.AddHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-            //    resp.AddHeader("Content-Length", fileResp.ContentLength.ToString());
-
-            //    int length;
-            //    do
-            //    {
-            //        // Verify that the client is connected.
-            //        if (resp.IsClientConnected)
-            //        {
-            //            // Read data into the buffer.
-            //            length = stream.Read(buffer, 0, bytesToRead);
-
-            //            // and write it out to the response's output stream
-            //            resp.OutputStream.Write(buffer, 0, length);
-
-            //            // Flush the data
-            //            resp.Flush();
-
-            //            //Clear the buffer
-            //            buffer = new Byte[bytesToRead];
-            //        }
-            //        else
-            //        {
-            //            // cancel the download if client has disconnected
-            //            length = -1;
-            //        }
-            //    } while (length > 0); //Repeat until no data is read
-            //}
-            //finally
-            //{
-            //    if (stream != null)
-            //    {
-            //        //Close the input stream
-            //        stream.Close();
-            //    }
-            //}
-        }
     }
 }
