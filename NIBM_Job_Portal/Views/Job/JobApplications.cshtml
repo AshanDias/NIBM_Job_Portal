@@ -94,16 +94,22 @@
     }
 
     function DownloadSingle() {
-        $.ajax({
+        if (data.length > 0) {
+
+
+            $.ajax({
                 url: '@Url.Action("DownloadSelected", "Job")',
                 method: 'POST',
                 data: { data: data },
                 success: function (r) {
-                   
+
                     window.location.href = 'data:application/zip;base64,' + r;
-                   
+
                 }
-         });
+            });
+        } else {
+            alert("Please select items to download!");
+        }
     }
 
 

@@ -219,12 +219,18 @@ namespace NIBM_Job_Portal.Controllers
                 {
                    
                         zip.AddFile(file, "Student CV List");
-                   
+                      
                 }
                 string zipName = String.Format("Students_CV_{0}.zip", DateTime.Now.ToString("yyyy-MMM-dd-HHmmss"));
+             
                 using (MemoryStream memoryStream = new MemoryStream())
                 {
                     zip.Save(memoryStream);
+
+                    foreach (var item in fileEntries)
+                    {
+                        System.IO.File.Delete(item);
+                    }
                     return File(memoryStream.ToArray(), "application/zip", zipName);
                 }
             }
@@ -273,8 +279,12 @@ namespace NIBM_Job_Portal.Controllers
                 using (MemoryStream memoryStream = new MemoryStream())
                 {
                     zip.Save(memoryStream);
+                    foreach (var item in fileEntries)
+                    {
+                        System.IO.File.Delete(item);
+                    }
                     return Convert.ToBase64String(memoryStream.ToArray(), 0, memoryStream.ToArray().Length);
-                    //return File(memoryStream.ToArray(), "application/zip", zipName);
+                   
                 }
             }
 
