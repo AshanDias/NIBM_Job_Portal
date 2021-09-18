@@ -28,11 +28,21 @@ namespace NIBM_Job_Portal.Controllers
         }
         public ActionResult Index()
         {
+            var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var user = _applicationDbContext.Users.FirstOrDefault(x => x.Id == id);
+            if(user.UserType == 1)
+            {
+                var jobs = _applicationDbContext.Job.Include(x => x.JobCategory).Include(x => x.Company).ToList();
 
-            var jobs = _applicationDbContext.Job.Include(x => x.JobCategory).Include(x => x.Company).ToList();
+                return View(jobs);
+            }
+            else
+            {
+                var jobs = _applicationDbContext.Job.Where(x => x.Status != (int)JobStatusEnum.AdminDisabled).Include(x => x.JobCategory).Include(x => x.Company).ToList();
 
-            return View(jobs);
+                return View(jobs);
 
+            }
         }
 
         [HttpPost]
@@ -291,6 +301,23 @@ namespace NIBM_Job_Portal.Controllers
            
         }
 
-     
+        public string ChangeState(int id)
+        {
+            var data = _applicationDbContext.Job.Where(x => x.Id == id).FirstOrDefault();
+            if(data.Status == (int)JobStatusEnum.AdminDisabled)
+            {
+                data.Status = (int)JobStatusEnum.Active;
+            }
+            else
+            {
+                data.Status = (int)JobStatusEnum.AdminDisabled;
+            }
+            
+            _applicationDbContext.Job.Update(data);
+            _applicationDbContext.SaveChanges();
+            return "success";
+        }
+
+
     }
 }

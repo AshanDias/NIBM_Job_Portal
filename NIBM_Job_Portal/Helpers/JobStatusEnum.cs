@@ -8,7 +8,8 @@ namespace NIBM_Job_Portal.Helpers
     public enum JobStatusEnum
     {
         Active=0,
-        Expired= 1
+        Expired= 1,
+        AdminDisabled=2
     }
 
     public enum CompanyStatus {
