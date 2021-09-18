@@ -40,24 +40,25 @@ namespace NIBM_Job_Portal.Controllers
 
             return View(model);
         }
-
+        [HttpGet]
+        [Route("Create")]
         public async Task<IActionResult> Create()
         {
            AdminCompanyViewModel model = new AdminCompanyViewModel();
             model.Industry =await _applicationDbContext.Industry.ToListAsync();
+            string RandomPasssword = RandomPassword();
+            model.DefaultPasssword = RandomPasssword;
             return View(model);
         }
 
         [HttpPost]
-        [Route("onCreate")]
-        public async Task<IActionResult> onCreate(AdminCompanyViewModel model)
+        [Route("Create")]
+        public async Task<IActionResult> Create(AdminCompanyViewModel model)
         {
             model.Industry =await _applicationDbContext.Industry.ToListAsync();
             if (ModelState.IsValid)
             {
-                string RandomPasssword = RandomPassword();
-                //Create User
-                model.DefaultPasssword = RandomPasssword;
+              
 
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email,TemporyPassword=model.DefaultPasssword };
                 var result = await _userManager.CreateAsync(user, model.DefaultPasssword);
