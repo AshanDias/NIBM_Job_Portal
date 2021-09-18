@@ -301,18 +301,13 @@ namespace NIBM_Job_Portal.Controllers
            
         }
 
-        public string ChangeState(int id)
+        public string ChangeState(int id,int status)
         {
             var data = _applicationDbContext.Job.Where(x => x.Id == id).FirstOrDefault();
-            if(data.Status == (int)JobStatusEnum.AdminDisabled)
+            if(data.Status != (int)JobStatusEnum.Expired)
             {
-                data.Status = (int)JobStatusEnum.Active;
+                data.Status = status;
             }
-            else
-            {
-                data.Status = (int)JobStatusEnum.AdminDisabled;
-            }
-            
             _applicationDbContext.Job.Update(data);
             _applicationDbContext.SaveChanges();
             return "success";

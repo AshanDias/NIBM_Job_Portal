@@ -150,7 +150,7 @@
                     $.ajax({
                         url: '@Url.Action("ChangeState","Job")',
                         method: 'GET',
-                        data: { Id: id },
+                        data: { Id: id ,status : 0},
                         success: function (data) {
                             window.location.reload();
                         }
@@ -163,7 +163,7 @@
                     $.ajax({
                         url: '@Url.Action("ChangeState", "Job")',
                         method: 'GET',
-                        data: { Id: id },
+                        data: { Id: id, status: 2},
                         success: function (data) {
                             window.location.reload();
                         }
