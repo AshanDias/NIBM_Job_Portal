@@ -2,8 +2,7 @@
 @section scripts{
     <script src="@Url.Content("~/js/sideBar.js")" type="text/javascript"></script>
     <script>
-        changeSideBarButtonStatus("sidebar_profile");
-
+        changeSideBarButtonStatus("sidebar_profile"); 
 
         $(document).ready(function ($) {
             $(function () {
@@ -19,11 +18,37 @@
                 }
 
                 $("#file").change(function () {
-                    readURL(this);
+                    readURL(this); 
                 });
             });
 
         });
+
+        $("#txtTeleNo").keyup(function (event) {
+            if (phone_validate(this.value)) {             
+            }
+            else {
+                // shows validation msg if validation is false
+                $("#txtTeleNo").val(this.value.slice(0, -1));
+               event.preventDefault();
+            }
+        });
+
+/*
+        $("#txtTeleNo").on("input", function () { 
+            if (phone_validate($(this).val())) {
+               // $('.error_Msg').hide();  // hides error msg if validation is true
+            }
+            else {
+                $("#txtTeleNo") // shows validation msg if validation is false
+                event.preventDefault();
+            }
+        });*/
+
+        function phone_validate(phno) {
+            var regexPattern = new RegExp(/^[0-9-+]+$/);    // regular expression pattern
+            return regexPattern.test(phno);
+        }
     </script> 
 }
 
@@ -56,11 +81,11 @@
 
                     @if (Model.Logo_path != null)
                     {
-                        <img id="profile" src="@Model.Logo_path.ToString()" alt="..." class="img-thumbnail" width="200px" height="auto">
+                        <img id="profile" src="@Model.Logo_path.ToString()" alt="..." accept="image/*" class="img-thumbnail" width="200px" height="auto">
                     }
                     else
                     {
-                        <img id="profile" src="~/images/user.jpg" alt="..." class="img-thumbnail" width="200px" height="auto">
+                        <img id="profile" src="~/images/user.jpg" alt="..." accept="image/*" class="img-thumbnail" width="200px" height="auto">
                     }
 
                     <input type="hidden" class="form-control" asp-for="Logo_path">
@@ -107,7 +132,7 @@
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label for="">Telephone Number</label>
-                        <input type="text" class="form-control" asp-for="Contact_No"
+                        <input type="text" class="form-control" asp-for="Contact_No" id="txtTeleNo" maxlength="10"
                                placeholder="Telephone Number"> 
                         <span asp-validation-for="Contact_No" class="form-text text-danger"></span>
                     </div>
