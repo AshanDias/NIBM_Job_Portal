@@ -1,4 +1,4 @@
-﻿
+﻿@model StudentJobPost
 @{
     ViewData["Title"] = "ApplicationDetails";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -62,48 +62,40 @@
                                 <tbody>
                                     <tr>
                                         <td>Name</td>
-                                        <td>Lorem, ipsum dolor.</td>
+                                        <td>@Model.Name</td>
                                     </tr>
                                     <tr>
                                         <td>Age</td>
-                                        <td>24</td>
+                                        <td>@Model.Age</td>
                                     </tr>
                                     <tr>
                                         <td>Email</td>
-                                        <td>test@gmail.com</td>
+                                        <td>@Model.Email</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                         <div class="col-lg-6">
                             <span class="badge badge-success ml-1 shadow-lg"
-                                  style="min-width: 3rem">C#</span>
+                                  style="min-width: 3rem">@Model.Sk1</span>
                             <span class="badge badge-success ml-1 shadow-lg"
-                                  style="min-width: 3rem">Dotnet Core</span>
+                                  style="min-width: 3rem">@Model.Sk2</span>
                             <span class="badge badge-success ml-1 shadow-lg"
-                                  style="min-width: 3rem">Java</span>
+                                  style="min-width: 3rem">@Model.Sk3</span>
                             <span class="badge badge-success ml-1 shadow-lg"
-                                  style="min-width: 3rem">Ionic</span>
+                                  style="min-width: 3rem">@Model.Sk4</span>
                             <span class="badge badge-success ml-1 shadow-lg"
-                                  style="min-width: 3rem">PHP</span>
+                                  style="min-width: 3rem">@Model.Sk5</span>
                             <span class="badge badge-success ml-1 shadow-lg"
-                                  style="min-width: 3rem">Laravel</span>
+                                  style="min-width: 3rem">@Model.Sk6</span>
                             <span class="badge badge-success ml-1 shadow-lg"
-                                  style="min-width: 3rem">MSSQL/ MySql</span>
+                                  style="min-width: 3rem">@Model.Sk7</span>
                             <span class="badge badge-success ml-1 shadow-lg"
-                                  style="min-width: 3rem">TeamCity</span>
+                                  style="min-width: 3rem">@Model.Sk8</span>
                             <span class="badge badge-success ml-1 shadow-lg"
-                                  style="min-width: 3rem">Docker</span>
+                                  style="min-width: 3rem">@Model.Sk9</span>
                             <span class="badge badge-success ml-1 shadow-lg"
-                                  style="min-width: 3rem">Management Skils</span>
-                            <span class="badge badge-success ml-1 shadow-lg"
-                                  style="min-width: 3rem">Leadership</span>
-                            <span class="badge badge-success ml-1 shadow-lg"
-                                  style="min-width: 3rem">Problem solving</span>
-                            <span class="badge badge-success ml-1 shadow-lg"
-                                  style="min-width: 3rem">Teamwork</span>
-                            <span class="badge badge-success ml-1 shadow-lg"
-                                  style="min-width: 3rem">Communication</span>
+                                  style="min-width: 3rem">@Model.Sk10</span>
                         </div>
                     </div>
                 </div>
@@ -117,16 +109,16 @@
             <div class="col">
                 <div class="row">
                     <div class="alert alert-success ml-1" role="alert">
-                        A simple success alert—check it out!
+                        @Model.Ql1
                     </div>
                     <div class="alert alert-success ml-1" role="alert">
-                        A simple success alert—check it out!
+                        @Model.Ql2
                     </div>
                     <div class="alert alert-success ml-1" role="alert">
-                        A simple success alert—check it out!
+                        @Model.Ql3
                     </div>
                     <div class="alert alert-success ml-1" role="alert">
-                        A simple success alert—check it out!
+                        @Model.Ql4
                     </div>
                 </div>
             </div>
@@ -138,8 +130,8 @@
             <div class="form-group">
                 <h6 for="">Description</h6>
                 <textarea class="form-control shadow-md"
-                          name=""
-                          id=""
+                          name="" disabled
+                          id="" asp-for="Description"
                           rows="4"></textarea>
             </div>
         </div>

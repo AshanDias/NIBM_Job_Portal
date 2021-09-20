@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NIBM_Job_Portal.Controllers
 {
-    public class TNC : Controller
+    public class TNCController : Controller
     {
         public IActionResult Index()
         {

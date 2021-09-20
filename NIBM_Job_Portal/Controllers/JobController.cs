@@ -9,9 +9,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using Ionic.Zip;
 
 namespace NIBM_Job_Portal.Controllers
 {
@@ -25,11 +28,21 @@ namespace NIBM_Job_Portal.Controllers
         }
         public ActionResult Index()
         {
+            var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var user = _applicationDbContext.Users.FirstOrDefault(x => x.Id == id);
+            if(user.UserType == 1)
+            {
+                var jobs = _applicationDbContext.Job.Include(x => x.JobCategory).Include(x => x.Company).ToList();
 
-            var jobs = _applicationDbContext.Job.Include(x=>x.JobCategory).Include(x=>x.Company).ToList();
+                return View(jobs);
+            }
+            else
+            {
+                var jobs = _applicationDbContext.Job.Where(x => x.Status != (int)JobStatusEnum.AdminDisabled).Include(x => x.JobCategory).Include(x => x.Company).ToList();
 
-            return View(jobs);
+                return View(jobs);
 
+            }
         }
 
         [HttpPost]
@@ -42,9 +55,9 @@ namespace NIBM_Job_Portal.Controllers
             jobModel.companyList = companyList;
 
             if (ModelState.IsValid)
-            { 
+            {
                 bool IsUpdate = false;
-                Job job = null; 
+                Job job = null;
                 if (model.Id != 0)
                 {
 
@@ -83,7 +96,7 @@ namespace NIBM_Job_Portal.Controllers
                 job.JobCategoryId = (int)model.JobCategoryId;
                 job.Position = model.Position;
                 job.ClosingDate = model.ClosingDate;
-                job.Status =(int) JobStatusEnum.Active;
+                job.Status = (int)JobStatusEnum.Active;
                 if (IsUpdate)
                 {
                     _applicationDbContext.Job.Update(job);
@@ -94,16 +107,16 @@ namespace NIBM_Job_Portal.Controllers
                 }
 
                 _applicationDbContext.SaveChanges();
-                return RedirectToAction("Index"); 
+                return RedirectToAction("Index");
 
             }
             else
             {
 
                 ModelState.AddModelError(string.Empty, "Invalid Job Details.");
-             
+
                 return View("Create", jobModel);
-            }  
+            }
 
         }
 
@@ -140,7 +153,7 @@ namespace NIBM_Job_Portal.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> CreateAsync(int Id=0)
+        public async Task<ActionResult> CreateAsync(int Id = 0)
         {
             JobViewModel model = new JobViewModel();
             var jobCategories = await _applicationDbContext.JobCategory.ToListAsync();
@@ -162,28 +175,144 @@ namespace NIBM_Job_Portal.Controllers
 
             return View(model);
         }
-         
+
 
         [HttpGet]
         public string Delete(int id)
         {
             var data = _applicationDbContext.Job.Where(x => x.Id == id).FirstOrDefault();
-            data.Status =(int) JobStatusEnum.Expired;
+            data.Status = (int)JobStatusEnum.Expired;
             _applicationDbContext.Job.Update(data);
             _applicationDbContext.SaveChanges();
             return "success";
         }
 
-        public ActionResult JobApplications(int id)
-        { 
-            return View();
-
-        }
-
-        public ActionResult ApplicationDetails(int id)
+        public async Task<IActionResult> JobApplications(int id)
         {
-            return View();
+            JobApplicationViewModel model = new JobApplicationViewModel();
+            model.StudentJobPost = await _applicationDbContext.StudentJobPost.Include(x => x.Job).ToListAsync();
+            model.files = new List<FileModel>();
+            return View(model);
 
         }
+
+        public async Task<IActionResult> ApplicationDetails(int id)
+        {
+            StudentJobPost model = await _applicationDbContext.StudentJobPost.FirstOrDefaultAsync(x => x.Id == id);
+            return View(model);
+
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> DownloadAll()
+        {
+            int i = 0;
+            var studentPost = await _applicationDbContext.StudentJobPost.ToListAsync();
+            foreach (var item in studentPost)
+            {
+                i++;
+                var client = new HttpClient();
+                var result = await client.GetAsync(item.CV);
+                byte[] filecontent = await result.Content.ReadAsByteArrayAsync();
+                string filepath = "TempCV/CV" + i + ".pdf";
+                System.IO.File.WriteAllBytes(filepath, filecontent);
+              
+            }
+            string startupPath = System.IO.Directory.GetCurrentDirectory();
+            string[] fileEntries = Directory.GetFiles(startupPath+"\\TempCV");
+            using (ZipFile zip = new ZipFile())
+            {
+                zip.AlternateEncodingUsage = ZipOption.AsNecessary;
+                zip.AddDirectoryByName("Student CV List");
+                foreach (var file in fileEntries)
+                {
+                   
+                        zip.AddFile(file, "Student CV List");
+                      
+                }
+                string zipName = String.Format("Students_CV_{0}.zip", DateTime.Now.ToString("yyyy-MMM-dd-HHmmss"));
+             
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    zip.Save(memoryStream);
+
+                    foreach (var item in fileEntries)
+                    {
+                        System.IO.File.Delete(item);
+                    }
+                    return File(memoryStream.ToArray(), "application/zip", zipName);
+                }
+            }
+
+
+        }
+
+        [HttpPost]
+        [Route("DownloadSelected")]
+        public async Task<string> DownloadSelected(string[] data)
+        {
+
+            int i = 0;
+            //var studentPost = await _applicationDbContext.StudentJobPost.ToListAsync();
+            List<string> studentPost = new List<string>();
+            foreach (var item in data)
+            {
+             var res= await _applicationDbContext.StudentJobPost.Where(x => x.Id == Convert.ToInt32(item)).FirstOrDefaultAsync();
+                studentPost.Add(res.CV);
+            }
+
+
+            foreach (var item in studentPost)
+            {
+                i++;
+                var client = new HttpClient();
+                var result = await client.GetAsync(item);
+                byte[] filecontent = await result.Content.ReadAsByteArrayAsync();
+                string filepath = "TempCV/CV" + i + ".pdf";
+                System.IO.File.WriteAllBytes(filepath, filecontent);
+
+            }
+            string startupPath = System.IO.Directory.GetCurrentDirectory();
+            string[] fileEntries = Directory.GetFiles(startupPath + "\\TempCV");
+            using (ZipFile zip = new ZipFile())
+            {
+                zip.AlternateEncodingUsage = ZipOption.AsNecessary;
+                zip.AddDirectoryByName("Student CV List");
+                foreach (var file in fileEntries)
+                {
+
+                    zip.AddFile(file, "Student CV List");
+
+                }
+                string zipName = String.Format("Students_CV_{0}.zip", DateTime.Now.ToString("yyyy-MMM-dd-HHmmss"));
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    zip.Save(memoryStream);
+                    foreach (var item in fileEntries)
+                    {
+                        System.IO.File.Delete(item);
+                    }
+                    return Convert.ToBase64String(memoryStream.ToArray(), 0, memoryStream.ToArray().Length);
+                   
+                }
+            }
+
+           
+        }
+
+        public string ChangeState(int id,int status)
+        {
+            var data = _applicationDbContext.Job.Where(x => x.Id == id).FirstOrDefault();
+            if(data.Status != (int)JobStatusEnum.Expired)
+            {
+                data.Status = status;
+            }
+            _applicationDbContext.Job.Update(data);
+            _applicationDbContext.SaveChanges();
+            return "success";
+        }
+
+
     }
 }

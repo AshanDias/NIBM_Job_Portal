@@ -1,3 +1,4 @@
+using ATM_Early_Detection.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -46,6 +47,7 @@ namespace NIBM_Job_Portal
             services.AddScoped<IJobService, JobService>();
             services.AddControllers();
             services.AddSwaggerGen();
+            services.AddScoped<IEmailService, EmailService>();
 
             services.AddAuthentication();
 

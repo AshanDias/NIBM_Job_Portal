@@ -15,6 +15,7 @@ using NIBM_Job_Portal.Models.User;
 using System.Text;
 using System.Text.Encodings.Web;
 using Microsoft.EntityFrameworkCore;
+using NIBM_Job_Portal.Interface;
 
 namespace NIBM_Job_Portal.Controllers
 {
@@ -26,6 +27,7 @@ namespace NIBM_Job_Portal.Controllers
         private readonly ILogger<Register> _logger;
         private readonly IEmailSender _emailSender;
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IEmailService _emailService;
         public string ReturnUrl { get; set; }
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
         public AccountController(
@@ -33,7 +35,8 @@ namespace NIBM_Job_Portal.Controllers
             SignInManager<ApplicationUser> signInManager,
             ILogger<Register> logger,
             IEmailSender emailSender,
-            ApplicationDbContext applicationDbContext
+            ApplicationDbContext applicationDbContext,
+            IEmailService emailService
             )
         {
             _userManager = userManager;
@@ -41,6 +44,7 @@ namespace NIBM_Job_Portal.Controllers
             _logger = logger;
             _emailSender = emailSender;
             _applicationDbContext = applicationDbContext;
+            _emailService = emailService;
 
         }
 
@@ -140,15 +144,84 @@ namespace NIBM_Job_Portal.Controllers
         }
 
 
-        public ActionResult ForgotPassword()
+        public IActionResult ForgotPassword()
         {            
             return View();
         }
 
-        public ActionResult ResetPassword()
+
+        [HttpPost]
+        [Route("ForgotPasswordPost")]
+        public async Task<IActionResult> ForgotPasswordPost(ForgotPasswordModel model)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var callbackUrl = Url.Page(
+                    "/Account/ResetPassword",
+                    pageHandler: null,
+                    values: new { area = "", code },
+                    protocol: Request.Scheme);
+
+                callbackUrl = callbackUrl.Replace("ForgotPasswordPost", "ResetPassword");
+                callbackUrl += "&&email="+model.Email;
+                await _emailService.Send(model.Email, callbackUrl);
+                ViewData["status"] = "Password Reset link sent to your email address. Please check your email!.";
+                return View("ForgotPassword");
+            }
+            else
+            {
+                ModelState.AddModelError("", "Invalid email address");
+
+                return View("ForgotPassword");
+            }
+           
         }
+
+        [HttpGet]
+
+        public IActionResult ResetPassword(string code,string email)
+        {
+           
+            ResetPasswordModel mode = new ResetPasswordModel();
+            mode.Code = code;
+            mode.Email = email;
+            return View(mode);
+        }
+
+        [HttpPost]
+        [Route("ResetPasswordPost")]
+        public async Task<IActionResult> ResetPasswordPost(ResetPasswordModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user == null)
+                {
+                    ModelState.AddModelError("", "User not found");
+                    return RedirectToAction("ResetPassword", model);
+                }
+
+                var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Login");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Unable reset password!");
+                    return RedirectToAction("ResetPassword", model);
+                }
+              
+            }
+            else
+            {
+                ModelState.AddModelError("","Error");
+                return RedirectToAction("ResetPassword", model);
+            }
+        }
+
 
 
     }
