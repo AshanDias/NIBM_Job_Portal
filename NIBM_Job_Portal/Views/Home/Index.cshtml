@@ -108,8 +108,7 @@
                     <div class="form-group">
                         <label for="">Telephone Number</label>
                         <input type="text" class="form-control" asp-for="Contact_No"
-                               placeholder="Telephone Number">
-                        <small id="emailHelpId" class="form-text text-muted">Help text</small>
+                               placeholder="Telephone Number"> 
                         <span asp-validation-for="Contact_No" class="form-text text-muted"></span>
                     </div>
                 </div>
@@ -123,11 +122,14 @@
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    <div class="form-group">
-                        <label for="">Address</label>
-                        <input type="text" class="form-control" placeholder="Address" asp-for="Physical_Address">
-                        <span asp-validation-for="Website" class="form-text text-muted"></span>
-                    </div>
+                    @if (Model.Company_Name != null) { 
+                        <div class="form-group">
+                            <label for="">Address</label>
+                            <input type="text" class="form-control" placeholder="Address" asp-for="Physical_Address">
+                            <span asp-validation-for="Physical_Address" class="form-text text-muted"></span>
+                        </div>
+                    }
+                        
                 </div>
             </div>
             <div class="row">
