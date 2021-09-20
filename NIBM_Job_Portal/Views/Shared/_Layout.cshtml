@@ -4,6 +4,7 @@
 @inject SignInManager<ApplicationUser> _signManager
 @inject UserManager<ApplicationUser> _userManager
 @inject ApplicationDbContext _applicationDbContext
+@using NIBM_Job_Portal.Helpers
 @{
     var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
     var user = _applicationDbContext.Users.FirstOrDefault(x => x.Id == id);
@@ -45,12 +46,12 @@
                 </li>
 
                 <li class="nav-item">
-                    @if (user.UserType == 1)
+                    @if (user.UserType == (int)UserTypeEnum.User)
                     {
-                        <a class="nav-link text-dark"><i class="fa fa-university" aria-hidden="true"></i> Company</a>
+                        <a class="nav-link text-dark"><i class="fa fa-university" aria-hidden="true"></i> User</a>
                     }
                     else
-                    { 
+                    {
                         <a class="nav-link text-dark"><i class="fa fa-user" aria-hidden="true"></i> Admin</a>
                     }
                 </li>
@@ -82,17 +83,19 @@
                         <li class="nav-item btn btn-block btn-outline-secondary">
                             <a id="sidebar_dashboard" class="nav-link float-left " asp-area="" asp-controller="Home" asp-action="Dashboard">  <i class="fa fa-desktop mr-3" aria-hidden="true"></i>Dashboard</a>
                         </li>
-                            <li class="nav-item  btn btn-block btn-outline-secondary">
-                                <a id="sidebar_job" class="nav-link  float-left" asp-area="" asp-controller="Job" asp-action="Index"> <i class="fa fa-briefcase mr-3" aria-hidden="true"></i>Jobs</a>
-                            </li>
-
                         <li class="nav-item  btn btn-block btn-outline-secondary">
-                            <a id="sidebar_profile" class="nav-link  float-left" asp-area="" asp-controller="Home" asp-action="index">
-                                <i class="fa fa-user mr-3" aria-hidden="true"></i>Profile
-                            </a>
+                            <a id="sidebar_job" class="nav-link  float-left" asp-area="" asp-controller="Job" asp-action="Index"> <i class="fa fa-briefcase mr-3" aria-hidden="true"></i>Jobs</a>
                         </li>
 
-                        @if (user.UserType == 1)
+                        @if (user.UserType == (int)UserTypeEnum.User)
+                        {
+                            <li class="nav-item  btn btn-block btn-outline-secondary">
+                                <a id="sidebar_profile" class="nav-link  float-left" asp-area="" asp-controller="Home" asp-action="index">
+                                    <i class="fa fa-user mr-3" aria-hidden="true"></i>Profile
+                                </a>
+                            </li>
+                        }
+                        @if (user.UserType == (int)UserTypeEnum.Admin)
                         {
                             <li class="nav-item  btn btn-block btn-outline-secondary">
                                 <a id="sidebar_company" class="nav-link  float-left" asp-area="" asp-controller="Company" asp-action="Index"> <i class="fa fa-briefcase mr-3" aria-hidden="true"></i>Company</a>
