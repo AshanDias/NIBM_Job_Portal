@@ -16,9 +16,15 @@
                         reader.readAsDataURL(input.files[0]);
                     }
                 }
+                
 
                 $("#file").change(function () {
-                    readURL(this);
+                    var ext = $('#file').val().split('.').pop().toLowerCase();
+                    if ($.inArray(ext, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+                        alert('Invalid file Type!');
+                    } else {
+                        readURL(this);
+                    }
                 });
             });
 
@@ -131,7 +137,7 @@
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label for="">Attach Bussiness Flyer</label>
-                        <input type="file" id="file"  class="text-light" asp-for="Image" />
+                        <input type="file" id="file" accept="image/*"  class="text-light" asp-for="Image" />
                         <span class="form-text text-muted"></span>
                     </div>
                     <input type="hidden" class="form-control" asp-for="jobFlyer">
