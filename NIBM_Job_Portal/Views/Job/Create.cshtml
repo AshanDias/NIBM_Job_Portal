@@ -16,9 +16,15 @@
                         reader.readAsDataURL(input.files[0]);
                     }
                 }
+                
 
                 $("#file").change(function () {
-                    readURL(this);
+                    var ext = $('#file').val().split('.').pop().toLowerCase();
+                    if ($.inArray(ext, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+                        alert('Invalid file Type!');
+                    } else {
+                        readURL(this);
+                    }
                 });
             });
 

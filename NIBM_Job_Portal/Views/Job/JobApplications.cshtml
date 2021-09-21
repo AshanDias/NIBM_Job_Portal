@@ -6,7 +6,7 @@
     </script>
 }
 @{
-    ViewData["Title"] = "JobApplications";
+    ViewData["Title"] = ViewBag.Title;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -19,7 +19,7 @@
               mb-3
               border-bottom
             ">
-    <h2 class="h2">@Model.StudentJobPost.FirstOrDefault().Job.Position Applicants</h2>
+    <h2 class="h2">@ViewData["Title"] Applicants</h2>
 </div>
 
 <div class="container" style="margin-left: 0px">

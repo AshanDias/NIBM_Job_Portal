@@ -189,9 +189,11 @@ namespace NIBM_Job_Portal.Controllers
 
         public async Task<IActionResult> JobApplications(int id)
         {
+            Job job = await _applicationDbContext.Job.FirstOrDefaultAsync(x => x.Id == id);
             JobApplicationViewModel model = new JobApplicationViewModel();
-            model.StudentJobPost = await _applicationDbContext.StudentJobPost.Include(x => x.Job).ToListAsync();
+            model.StudentJobPost = await _applicationDbContext.StudentJobPost.Include(x => x.Job).Where(x => x.JobId == id).ToListAsync();
             model.files = new List<FileModel>();
+            ViewBag.Title = job.Position;
             return View(model);
 
         }
