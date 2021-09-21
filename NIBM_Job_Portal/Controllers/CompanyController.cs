@@ -44,6 +44,7 @@ namespace NIBM_Job_Portal.Controllers
         [Route("Create")]
         public async Task<IActionResult> Create()
         {
+            string pwd = RandomPassword();
            AdminCompanyViewModel model = new AdminCompanyViewModel();
             model.Industry =await _applicationDbContext.Industry.ToListAsync();
             string RandomPasssword = RandomPassword();

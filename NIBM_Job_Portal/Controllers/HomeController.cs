@@ -54,6 +54,7 @@ namespace NIBM_Job_Portal.Controllers
                 model.IndustryId = result.IndustryId;
                 model.Website = result.Website;
                 model.Logo_path = result.Logo_path;
+                model.Physical_Address = result.Physical_Address;
                 return View(model);
             }
             else
@@ -103,7 +104,7 @@ namespace NIBM_Job_Portal.Controllers
                
                 company.Company_Name = model.Company_Name; 
                 company.Email = model.Email;
-                
+                company.Physical_Address = model.Physical_Address;
                 company.ApplicationUserId = res;
                 company.Description = model.Description;
                 company.Website = model.Website;
