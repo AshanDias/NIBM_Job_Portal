@@ -157,18 +157,28 @@ namespace NIBM_Job_Portal.Controllers
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
-                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var callbackUrl = Url.Page(
-                    "/Account/ResetPassword",
-                    pageHandler: null,
-                    values: new { area = "", code },
-                    protocol: Request.Scheme);
+                if (user != null)
+                {
+                    var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    var callbackUrl = Url.Page(
+                        "/Account/ResetPassword",
+                        pageHandler: null,
+                        values: new { area = "", code },
+                        protocol: Request.Scheme);
 
-                callbackUrl = callbackUrl.Replace("ForgotPasswordPost", "ResetPassword");
-                callbackUrl += "&&email="+model.Email;
-                await _emailService.Send(model.Email, callbackUrl);
-                ViewData["status"] = "Password Reset link sent to your email address. Please check your email!.";
-                return View("ForgotPassword");
+                    callbackUrl = callbackUrl.Replace("ForgotPasswordPost", "ResetPassword");
+                    callbackUrl += "&&email=" + model.Email;
+                    await _emailService.Send(model.Email, callbackUrl);
+                    ViewData["status"] = "Password Reset link sent to your email address. Please check your email!.";
+                    return View("ForgotPassword");
+                }
+                else
+                {
+                    ModelState.AddModelError("","Invalid email address");
+                    ViewData["error"] = "User not found! Please enter the correct email address.";
+                    return View("ForgotPassword");
+                }
+                
             }
             else
             {
