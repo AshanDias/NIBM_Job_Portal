@@ -42,9 +42,12 @@
                 </tr>
             </thead>
             <tbody>
-                
-                @foreach (var item in Model.StudentJobPost)
+                @if (Model != null)
                 {
+
+
+                    foreach (var item in Model.StudentJobPost)
+                    {
 
                     <tr>
                         <td style="width:10px;" class="pl-5">
@@ -62,12 +65,16 @@
                         </td>
                     </tr>
 
-                  
-
-                }
 
 
+                    }
 
+
+            }
+            else
+            {
+                <p>Record Not found!</p>
+            }
 
             </tbody>
         </table>
