@@ -124,3 +124,28 @@
     @RenderSection("Scripts", required: false)
 </body>
 </html>
+<script>
+
+    $(document).ready(function () {
+
+        setInterval(function () {
+               $.ajax({
+                   url: '@Url.Action("MnageUser", "Account")',
+                   method: 'GET',
+                   data: {},
+                   success: function (data) {
+                       console.log(data);
+                       if (data == true) {
+                           window.location.reload();
+                       }
+
+                   }
+
+               });
+
+        }, 3000);
+
+
+    });
+
+</script>

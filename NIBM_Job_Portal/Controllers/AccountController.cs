@@ -16,6 +16,8 @@ using System.Text;
 using System.Text.Encodings.Web;
 using Microsoft.EntityFrameworkCore;
 using NIBM_Job_Portal.Interface;
+using System.Security.Claims;
+using NIBM_Job_Portal.Helpers;
 
 namespace NIBM_Job_Portal.Controllers
 {
@@ -230,6 +232,24 @@ namespace NIBM_Job_Portal.Controllers
                 ModelState.AddModelError("","Error");
                 return RedirectToAction("ResetPassword", model);
             }
+        }
+
+        [HttpGet]
+        [Route("MnageUser")]
+        public bool  MnageUser()
+        {
+            var user = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var result = _applicationDbContext.Company.Where(x => x.ApplicationUserId == user && x.IsEnable == (int)CompanyStatus.Disable).Any();
+            if (result)
+            {
+                _signInManager.SignOutAsync();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+          
         }
 
 
