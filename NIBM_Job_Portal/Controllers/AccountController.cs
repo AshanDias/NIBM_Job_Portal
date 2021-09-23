@@ -16,6 +16,8 @@ using System.Text;
 using System.Text.Encodings.Web;
 using Microsoft.EntityFrameworkCore;
 using NIBM_Job_Portal.Interface;
+using System.Security.Claims;
+using NIBM_Job_Portal.Helpers;
 
 namespace NIBM_Job_Portal.Controllers
 {
@@ -157,18 +159,28 @@ namespace NIBM_Job_Portal.Controllers
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
-                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var callbackUrl = Url.Page(
-                    "/Account/ResetPassword",
-                    pageHandler: null,
-                    values: new { area = "", code },
-                    protocol: Request.Scheme);
+                if (user != null)
+                {
+                    var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    var callbackUrl = Url.Page(
+                        "/Account/ResetPassword",
+                        pageHandler: null,
+                        values: new { area = "", code },
+                        protocol: Request.Scheme);
 
-                callbackUrl = callbackUrl.Replace("ForgotPasswordPost", "ResetPassword");
-                callbackUrl += "&&email="+model.Email;
-                await _emailService.Send(model.Email, callbackUrl);
-                ViewData["status"] = "Password Reset link sent to your email address. Please check your email!.";
-                return View("ForgotPassword");
+                    callbackUrl = callbackUrl.Replace("ForgotPasswordPost", "ResetPassword");
+                    callbackUrl += "&&email=" + model.Email;
+                    await _emailService.Send(model.Email, callbackUrl);
+                    ViewData["status"] = "Password Reset link sent to your email address. Please check your email!.";
+                    return View("ForgotPassword");
+                }
+                else
+                {
+                    ModelState.AddModelError("","Invalid email address");
+                    ViewData["error"] = "User not found! Please enter the correct email address.";
+                    return View("ForgotPassword");
+                }
+                
             }
             else
             {
@@ -220,6 +232,24 @@ namespace NIBM_Job_Portal.Controllers
                 ModelState.AddModelError("","Error");
                 return RedirectToAction("ResetPassword", model);
             }
+        }
+
+        [HttpGet]
+        [Route("MnageUser")]
+        public bool  MnageUser()
+        {
+            var user = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var result = _applicationDbContext.Company.Where(x => x.ApplicationUserId == user && x.IsEnable == (int)CompanyStatus.Disable).Any();
+            if (result)
+            {
+                _signInManager.SignOutAsync();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+          
         }
 
 
