@@ -107,8 +107,18 @@ namespace NIBM_Job_Portal.Controllers
 
             if (ModelState.IsValid)
             {
-                Company company = await _applicationDbContext.Company.Where(x => x.Email == login.Email).FirstOrDefaultAsync();
-                if (company!=null && company.IsEnable != 0)
+
+
+                Company company = await _applicationDbContext.Company.Include(x => x.ApplicationUser).Where(x => x.Email == login.Email).FirstOrDefaultAsync();
+                ApplicationUser applicationUser = null;
+                if (company == null)
+                {
+                    applicationUser = await _userManager.FindByEmailAsync(login.Email);
+
+
+                }
+
+                if (applicationUser != null || (company != null && company.IsEnable != 0))
                 {
                     var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, login.RememberMe, lockoutOnFailure: false);
                     if (result.Succeeded)
