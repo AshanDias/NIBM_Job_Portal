@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NIBM_Job_Portal.Models;
 
 namespace NIBM_Job_Portal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210903150144_added job status column")]
+    partial class addedjobstatuscolumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -194,18 +196,12 @@ namespace NIBM_Job_Portal.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("TemporyPassword")
-                        .HasColumnType("longtext");
-
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("varchar(256)");
-
-                    b.Property<int>("UserType")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -252,7 +248,7 @@ namespace NIBM_Job_Portal.Migrations
                     b.Property<int>("IndustryId")
                         .HasColumnType("int");
 
-                    b.Property<int>("IsEnable")
+                    b.Property<int>("JobCategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Logo_path")
@@ -272,6 +268,8 @@ namespace NIBM_Job_Portal.Migrations
                     b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("IndustryId");
+
+                    b.HasIndex("JobCategoryId");
 
                     b.ToTable("Company");
                 });
@@ -340,82 +338,6 @@ namespace NIBM_Job_Portal.Migrations
                     b.ToTable("JobCategory");
                 });
 
-            modelBuilder.Entity("NIBM_Job_Portal.Models.StudentJobPost", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("Age")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CV")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Date")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("JobId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Ql1")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Ql2")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Ql3")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Ql4")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Sk1")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Sk10")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Sk2")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Sk3")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Sk4")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Sk5")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Sk6")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Sk7")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Sk8")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Sk9")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("JobId");
-
-                    b.ToTable("StudentJobPost");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -479,9 +401,17 @@ namespace NIBM_Job_Portal.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("NIBM_Job_Portal.Models.JobCategory", "JobCategory")
+                        .WithMany()
+                        .HasForeignKey("JobCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("ApplicationUser");
 
                     b.Navigation("Industry");
+
+                    b.Navigation("JobCategory");
                 });
 
             modelBuilder.Entity("NIBM_Job_Portal.Models.Job", b =>
@@ -501,17 +431,6 @@ namespace NIBM_Job_Portal.Migrations
                     b.Navigation("Company");
 
                     b.Navigation("JobCategory");
-                });
-
-            modelBuilder.Entity("NIBM_Job_Portal.Models.StudentJobPost", b =>
-                {
-                    b.HasOne("NIBM_Job_Portal.Models.Job", "Job")
-                        .WithMany()
-                        .HasForeignKey("JobId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Job");
                 });
 #pragma warning restore 612, 618
         }

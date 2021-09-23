@@ -8,5 +8,7 @@ namespace NIBM_Job_Portal.Models
 {
     public class ApplicationUser : IdentityUser
     {
+        public int UserType { get; set; }
+        public string TemporyPassword { get; set; }
     }
 }

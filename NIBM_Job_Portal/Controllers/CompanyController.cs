@@ -1,68 +1,148 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using NIBM_Job_Portal.Interface;
+using Microsoft.EntityFrameworkCore;
+using NIBM_Job_Portal.Helpers;
 using NIBM_Job_Portal.Models;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace NIBM_Job_Portal.Controllers
 {
+    [Authorize]
     public class CompanyController : Controller
     {
-        private readonly ICompanyService _comapnyService;
-        private readonly IWebHostEnvironment webHostEnvironment;
-        public CompanyController(ICompanyService comapnyService, IWebHostEnvironment hostEnvironment)
+        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly UserManager<ApplicationUser> _userManager;
+        public CompanyController(ApplicationDbContext applicationDbContext, UserManager<ApplicationUser> userManager)
         {
-            _comapnyService = comapnyService;
-            webHostEnvironment = hostEnvironment;
+            _applicationDbContext = applicationDbContext;
+            _userManager = userManager;
         }
-
-        [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-           
+            var result =await _applicationDbContext.Company.ToListAsync();
+            List<AdminCompanyViewModel> model = new List<AdminCompanyViewModel>();
+            foreach (var item in result)
+            {
+                AdminCompanyViewModel model1 = new AdminCompanyViewModel();
+                model1.Id = item.Id;
+                model1.Company_Name = item.Company_Name;
+                model1.Email = item.Email;
+                model1.IndustryId = item.IndustryId;
+                model1.Status = item.IsEnable;
 
-            return View();
+                model.Add(model1);
+            }
+
+            return View(model);
+        }
+        [HttpGet]
+        [Route("Create")]
+        public async Task<IActionResult> Create()
+        {
+            string pwd = RandomPassword();
+           AdminCompanyViewModel model = new AdminCompanyViewModel();
+            model.Industry =await _applicationDbContext.Industry.ToListAsync();
+            string RandomPasssword = RandomPassword();
+            model.DefaultPasssword = RandomPasssword;
+            return View(model);
         }
 
         [HttpPost]
-        public IActionResult UpdateCompany(Company company)
+        [Route("Create")]
+        public async Task<IActionResult> Create(AdminCompanyViewModel model)
         {
-            if (company.Logo_path != null)
+            model.Industry =await _applicationDbContext.Industry.ToListAsync();
+            if (ModelState.IsValid)
             {
-                //if (company.ExistingCompanyLogo != null)
-                //{
-                //    string filePath = Path.Combine(webHostEnvironment.WebRootPath, "Uploads", company.ExistingCompanyLogo);
-                //    System.IO.File.Delete(filePath);
-                //}
+              
 
-                company.Logo_path = ProcessUploadedFile(company);
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email,TemporyPassword=model.DefaultPasssword };
+                var result = await _userManager.CreateAsync(user, model.DefaultPasssword);
+                if (result.Succeeded)
+                {
+                    
+                    Company company = new Company();
+                    company.Company_Name = model.Company_Name;
+                    company.IndustryId = model.IndustryId;
+                    company.IsEnable = (int)CompanyStatus.Enable;
+                    company.Email = model.Email;
+                    company.ApplicationUserId = user.Id;
+                    _applicationDbContext.Company.Add(company);
+                    _applicationDbContext.SaveChanges();
+
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "error");
+                    return View("Create", model);
+                }
+
             }
-            _comapnyService.UpdateCompany(company);
-            return View();
+            else
+            {
+                ModelState.AddModelError("", "error");
+            }
+            
+
+            return View("Create", model);
         }
 
-
-        private string ProcessUploadedFile(Company company)
+        [HttpPost]
+        [Route("ChangeStatus")]
+        public async Task<bool> ChangeStatus(int status,int Id)
         {
-            string uniqueFileName = null;
-
-            //if (company.Logo_path != null)
-            //{
-            //    string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "Uploads");
-            //    uniqueFileName = Guid.NewGuid().ToString() + "_" + company.CompanyLogo.FileName;
-            //    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-            //    using (var fileStream = new FileStream(filePath, FileMode.Create))
-            //    {
-            //        company.CopyTo(fileStream);
-            //    }
-            //}
-
-            return uniqueFileName;
+            try
+            {
+                Company company = await _applicationDbContext.Company.FindAsync(Id);
+                company.IsEnable =status;
+                _applicationDbContext.Company.Update(company);
+                _applicationDbContext.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+            
+           
         }
 
+
+        public string RandomPassword()
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.Append(RandomString(4, true));
+            builder.Append(RandomNumber(1, 10));
+            builder.Append("@");
+            builder.Append(RandomString(2, false));
+            return builder.ToString();
+        }
+
+        public string RandomString(int size, bool lowerCase)
+        {
+            StringBuilder builder = new StringBuilder();
+            Random random = new Random();
+            char ch;
+            for (int i = 0; i < size; i++)
+            {
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                builder.Append(ch);
+            }
+            if (lowerCase)
+                return builder.ToString().ToLower();
+            return builder.ToString();
+        }
+
+        public int RandomNumber(int min, int max)
+        {
+            Random random = new Random();
+            return random.Next(min, max);
+        }
     }
 }

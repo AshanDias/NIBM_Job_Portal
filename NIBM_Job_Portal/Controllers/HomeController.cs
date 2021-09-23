@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Firebase.Auth;
+using Firebase.Storage;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using NIBM_Job_Portal.Helpers;
 using NIBM_Job_Portal.Models;
 using System;
 using System.Collections.Generic;
@@ -11,6 +15,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace NIBM_Job_Portal.Controllers
@@ -28,58 +33,151 @@ namespace NIBM_Job_Portal.Controllers
             _webHostEnvironment = webHostEnvironment;
             _applicationDbContext = applicationDbContext;
         }
-
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads\\images");
-             var res=  User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            
-           
-            var result = _applicationDbContext.Company.Include(x=>x.ApplicationUser).Where(x=>x.ApplicationUser.Id==res).FirstOrDefault();
+            ///string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads\\images");
+            var jobCategories =await _applicationDbContext.JobCategory.ToListAsync();
+            var industryList =await _applicationDbContext.Industry.ToListAsync();
+             var res=  User.FindFirst(ClaimTypes.NameIdentifier).Value; 
+            var result =await _applicationDbContext.Company.Include(x=>x.ApplicationUser).Where(x=>x.ApplicationUser.Id==res).FirstOrDefaultAsync();
             CompanyViewModel model = new CompanyViewModel();
-            return View(model);
+            model.industryList = industryList;
+            if (result != null)
+            {
+              
+                model.Id = result.Id;
+                model.Company_Name = result.Company_Name;
+                model.Contact_No = result.Contact_No;
+                model.Description = result.Description;
+                model.Email = result.Email;
+                model.IndustryId = result.IndustryId;
+                model.Website = result.Website;
+                model.Logo_path = result.Logo_path;
+                model.Physical_Address = result.Physical_Address;
+                return View(model);
+            }
+            else
+            {
+               
+                return View(model);
+            }
+                
+           
         }
 
         public IActionResult Privacy()
         {
             return View();
         }
+ 
 
         [HttpPost]
-
-        public IActionResult SaveData(CompanyViewModel model)
+        public async Task<IActionResult> Index(CompanyViewModel model)
         {
-            string uniqueFileName = UploadedFile(model);
-            Company company = new Company();
-            company.Company_Name = model.Company_Name;
-            company.Contact_1 = model.Contact_1;
-            company.Contact_2 = model.Contact_2;
-            company.Image= uniqueFileName;
-            company.IndustryId = 1;
+            bool IsUpdate = false;
+            if (ModelState.IsValid)
+            {
+                Company company = null;
+                if (model.Id != 0)
+                {
+                    company = await _applicationDbContext.Company.FindAsync(model.Id);
+                    IsUpdate = true;
+                }
+                else
+                {
+                    company = new Company();
+                }
+              
+               
+                var res = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                if (model.Image != null)
+                {
+                    string imageUrl = await UploadFileToFirebase(model);
+                    company.Logo_path = imageUrl;
 
-            _applicationDbContext.Company.Add(company);
-            _applicationDbContext.SaveChanges();
-            return RedirectToAction("Index");
+                }
+                else
+                {
+                    company.Logo_path = model.Logo_path;
+                }
+               
+                company.Company_Name = model.Company_Name; 
+                company.Email = model.Email;
+                company.Physical_Address = model.Physical_Address;
+                company.ApplicationUserId = res;
+                company.Description = model.Description;
+                company.Website = model.Website;
+                company.IsEnable =(int) CompanyStatus.Enable;
+                company.Contact_No = model.Contact_No;
+                company.IndustryId = model.IndustryId;
+
+               
+
+                if (IsUpdate)
+                {
+                    _applicationDbContext.Company.Update(company);
+                }
+                else
+                {
+                    _applicationDbContext.Company.Add(company);
+                }
+
+                _applicationDbContext.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                model.industryList =await _applicationDbContext.Industry.ToListAsync();
+                return View(model);
+
+            }
+            
         }
 
-        public string UploadedFile(CompanyViewModel model)
+
+
+
+
+        public async Task<string> UploadFileToFirebase(CompanyViewModel model)
         {
-            string uniqueFileName = null;
-            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads\\images");
-             uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Image.FileName;
-            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
+           
+          
+            var data = getByteStream(model.Image);
+            MemoryStream memoryStream = new MemoryStream(data);
+
+            string ext = System.IO.Path.GetExtension(model.Image.FileName);
+            var auth = new FirebaseAuthProvider(new FirebaseConfig("AIzaSyDx-J0q-QE4CVP_UpZxYMmJ04QKewtIVB8"));
+            var a = await auth.SignInWithEmailAndPasswordAsync("ashandias.info@gmail.com", "Test@123");
+
+            var canceltoken = new CancellationToken();
+            var downloadUrl =await new FirebaseStorage("nibmjobportal.appspot.com")
+                                .Child("company").Child("company_logo").Child(model.Image.FileName).PutAsync(memoryStream, canceltoken);
+
+            return downloadUrl.Trim();
+        }
+
+        public byte[] getByteStream(IFormFile iFormfile) {
+            byte[] baseString = null;
+            using (var ms = new MemoryStream())
             {
-                model.Image.CopyTo(fileStream);
+                iFormfile.CopyTo(ms);
+                 baseString = ms.ToArray();
             }
 
-            return uniqueFileName;
+            return baseString;
+
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+
+
+        public IActionResult Dashboard()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View();
         }
+
+
+
+
     }
 }

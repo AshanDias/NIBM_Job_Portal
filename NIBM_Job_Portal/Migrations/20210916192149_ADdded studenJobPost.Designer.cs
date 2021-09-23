@@ -9,8 +9,8 @@ using NIBM_Job_Portal.Models;
 namespace NIBM_Job_Portal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210825142857_identityScema")]
-    partial class identityScema
+    [Migration("20210916192149_ADdded studenJobPost")]
+    partial class ADddedstudenJobPost
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -196,12 +196,18 @@ namespace NIBM_Job_Portal.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("TemporyPassword")
+                        .HasColumnType("longtext");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("varchar(256)");
+
+                    b.Property<int>("UserType")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -215,10 +221,87 @@ namespace NIBM_Job_Portal.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("NIBM_Job_Portal.Models.Company", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Company_Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Contact_1")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Contact_2")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Contact_No")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("IndustryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IsEnable")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Logo_path")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Physical_Address")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("State")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Website")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("IndustryId");
+
+                    b.ToTable("Company");
+                });
+
+            modelBuilder.Entity("NIBM_Job_Portal.Models.Industry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Industry");
+                });
+
             modelBuilder.Entity("NIBM_Job_Portal.Models.Job", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ClosingDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("CompanyId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -230,10 +313,15 @@ namespace NIBM_Job_Portal.Migrations
                     b.Property<string>("Position")
                         .HasColumnType("longtext");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.Property<string>("jobFlyer")
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
 
                     b.HasIndex("JobCategoryId");
 
@@ -252,6 +340,76 @@ namespace NIBM_Job_Portal.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("JobCategory");
+                });
+
+            modelBuilder.Entity("NIBM_Job_Portal.Models.StudentJobPost", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Date")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("JobId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Ql1")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Ql2")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Ql3")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Ql4")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Sk1")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Sk10")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Sk2")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Sk3")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Sk4")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Sk5")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Sk6")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Sk7")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Sk8")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Sk9")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JobId");
+
+                    b.ToTable("StudentJobPost");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -305,15 +463,51 @@ namespace NIBM_Job_Portal.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("NIBM_Job_Portal.Models.Company", b =>
+                {
+                    b.HasOne("NIBM_Job_Portal.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("NIBM_Job_Portal.Models.Industry", "Industry")
+                        .WithMany()
+                        .HasForeignKey("IndustryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Industry");
+                });
+
             modelBuilder.Entity("NIBM_Job_Portal.Models.Job", b =>
                 {
+                    b.HasOne("NIBM_Job_Portal.Models.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("NIBM_Job_Portal.Models.JobCategory", "JobCategory")
                         .WithMany()
                         .HasForeignKey("JobCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Company");
+
                     b.Navigation("JobCategory");
+                });
+
+            modelBuilder.Entity("NIBM_Job_Portal.Models.StudentJobPost", b =>
+                {
+                    b.HasOne("NIBM_Job_Portal.Models.Job", "Job")
+                        .WithMany()
+                        .HasForeignKey("JobId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Job");
                 });
 #pragma warning restore 612, 618
         }

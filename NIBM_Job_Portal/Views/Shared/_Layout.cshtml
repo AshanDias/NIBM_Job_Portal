@@ -1,6 +1,14 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Http
 @inject SignInManager<ApplicationUser> _signManager
-
+@inject UserManager<ApplicationUser> _userManager
+@inject ApplicationDbContext _applicationDbContext
+@using NIBM_Job_Portal.Helpers
+@{
+    var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+    var user = _applicationDbContext.Users.FirstOrDefault(x => x.Id == id);
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,70 +19,133 @@
     <link rel="stylesheet" href="~/css/signin.css" />
     <link rel="stylesheet" href="~/css/home.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </head>
 <body>
-    <header>
+    <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light border-bottom">
+        <a class="navbar" href="#"> <img src="~/images/logo2.png" alt="..." width="100px" height="auto"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse form-inline my-2 my-lg-0" id="navbarText">
+            <ul class="navbar-nav flex-grow-1  d-flex flex-row-reverse">
+                <li class="nav-item">
+                    @if (_signManager.IsSignedIn(User))
+                    {
 
-        <nav class="navbar navbar-expand-sm sticky-top navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <img src="~/images/logo2.png" alt="..." width="200px" height="auto">
+                        <form asp-action="Logout" asp-controller="Account" method="post">
+                            <button class="nav-link text-dark btn btn-link" style="font-size:14px;text-decoration:none;" type="submit"><i class="fa fa-sign-out text-primary" aria-hidden="true"></i> &nbsp; SignOut</button>
+                        </form>
 
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    }
+                    else
+                    {
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">SignIn</a>
+                    }
+                </li>
+
+                <li class="nav-item">
+                    @if (user.UserType == (int)UserTypeEnum.User)
+                    {
+                        <a class="nav-link text-dark"><i class="fa fa-university" aria-hidden="true"></i> User</a>
+                    }
+                    else
+                    {
+                        <a class="nav-link text-dark"><i class="fa fa-user" aria-hidden="true"></i> Admin</a>
+                    }
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                </li>
+
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-dark">
+                            <span class="badge badge-success h-75">Hello @User.Identity.Name</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+
+        </div>
+    </nav>
+
+    <div class="container-fluid ">
+        <div class="row">
+            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+                <div class="sidebar-sticky">
+                    <ul class="nav flex-column mt-3">
+
+                        <li class="nav-item btn btn-block btn-outline-secondary">
+                            <a id="sidebar_dashboard" class="nav-link float-left " asp-area="" asp-controller="Home" asp-action="Dashboard">  <i class="fa fa-desktop mr-3" aria-hidden="true"></i>Dashboard</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <li class="nav-item  btn btn-block btn-outline-secondary">
+                            <a id="sidebar_job" class="nav-link  float-left" asp-area="" asp-controller="Job" asp-action="Index"> <i class="fa fa-briefcase mr-3" aria-hidden="true"></i>Jobs</a>
                         </li>
-                        <li class="nav-item">
-                            @if (_signManager.IsSignedIn(User))
-                            {
 
-                                <form asp-action="Logout" asp-controller="Account" method="post">
-                                    <button class="btn btn-link text-dark" style="font-size:14px;padding:8px;text-decoration:none;" type="submit">SignOut</button>
-                                </form>
-
-
-
-                            }
-                            else
-                            {
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">SignIn</a>
-                            }
-
-
-                        </li>
+                        @if (user.UserType == (int)UserTypeEnum.User)
+                        {
+                            <li class="nav-item  btn btn-block btn-outline-secondary">
+                                <a id="sidebar_profile" class="nav-link  float-left" asp-area="" asp-controller="Home" asp-action="index">
+                                    <i class="fa fa-user mr-3" aria-hidden="true"></i>Profile
+                                </a>
+                            </li>
+                        }
+                        @if (user.UserType == (int)UserTypeEnum.Admin)
+                        {
+                            <li class="nav-item  btn btn-block btn-outline-secondary">
+                                <a id="sidebar_company" class="nav-link  float-left" asp-area="" asp-controller="Company" asp-action="Index"> <i class="fa fa-briefcase mr-3" aria-hidden="true"></i>Company</a>
+                            </li>
+                        }
                     </ul>
                 </div>
-            </div>
+            </nav>
 
-
-
-            <p>@User.Identity.Name</p>
-
-
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+                @RenderBody()
+            </main>
+        </div>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2021 - NIBM_Job_Portal - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+
+    @*<footer class="border-top footer text-muted">
+                <div class="container">
+                    &copy; 2021 - NIBM_Job_Portal - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                </div>
+        </footer>*@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/fontawesome.js"></script> 
+    <script src="~/js/fontawesome.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>
+<script>
+
+    $(document).ready(function () {
+
+        setInterval(function () {
+               $.ajax({
+                   url: '@Url.Action("MnageUser", "Account")',
+                   method: 'GET',
+                   data: {},
+                   success: function (data) {
+                       console.log(data);
+                       if (data == true) {
+                           window.location.reload();
+                       }
+
+                   }
+
+               });
+
+        }, 3000);
+
+
+    });
+
+</script>

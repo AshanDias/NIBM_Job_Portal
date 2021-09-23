@@ -14,6 +14,10 @@ using NIBM_Job_Portal.Models;
 using NIBM_Job_Portal.Models.User;
 using System.Text;
 using System.Text.Encodings.Web;
+using Microsoft.EntityFrameworkCore;
+using NIBM_Job_Portal.Interface;
+using System.Security.Claims;
+using NIBM_Job_Portal.Helpers;
 
 namespace NIBM_Job_Portal.Controllers
 {
@@ -24,19 +28,25 @@ namespace NIBM_Job_Portal.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<Register> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IEmailService _emailService;
         public string ReturnUrl { get; set; }
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
         public AccountController(
              UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<Register> logger,
-            IEmailSender emailSender
+            IEmailSender emailSender,
+            ApplicationDbContext applicationDbContext,
+            IEmailService emailService
             )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _applicationDbContext = applicationDbContext;
+            _emailService = emailService;
 
         }
 
@@ -86,6 +96,7 @@ namespace NIBM_Job_Portal.Controllers
         [Route("Identity/[controller]/Login")]
         public async Task<IActionResult> Login()
         {
+            
             return View();
         }
 
@@ -96,16 +107,27 @@ namespace NIBM_Job_Portal.Controllers
 
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, login.RememberMe, lockoutOnFailure: false);
-                if (result.Succeeded)
+                Company company = await _applicationDbContext.Company.Where(x => x.Email == login.Email).FirstOrDefaultAsync();
+                if (company!=null && company.IsEnable != 0)
                 {
-                    return RedirectToAction("Index", "Home");
+                    var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, login.RememberMe, lockoutOnFailure: false);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                        return View("Login");
+                    }
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Unable to login. Please contact your admin");
                     return View("Login");
                 }
+
+           
             }
             else
             {
@@ -122,6 +144,115 @@ namespace NIBM_Job_Portal.Controllers
            await _signInManager.SignOutAsync();
             return RedirectToAction("Login","Account");
         }
+
+
+        public IActionResult ForgotPassword()
+        {            
+            return View();
+        }
+
+
+        [HttpPost]
+        [Route("ForgotPasswordPost")]
+        public async Task<IActionResult> ForgotPasswordPost(ForgotPasswordModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user != null)
+                {
+                    var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    var callbackUrl = Url.Page(
+                        "/Account/ResetPassword",
+                        pageHandler: null,
+                        values: new { area = "", code },
+                        protocol: Request.Scheme);
+
+                    callbackUrl = callbackUrl.Replace("ForgotPasswordPost", "ResetPassword");
+                    callbackUrl += "&&email=" + model.Email;
+                    await _emailService.Send(model.Email, callbackUrl);
+                    ViewData["status"] = "Password Reset link sent to your email address. Please check your email!.";
+                    return View("ForgotPassword");
+                }
+                else
+                {
+                    ModelState.AddModelError("","Invalid email address");
+                    ViewData["error"] = "User not found! Please enter the correct email address.";
+                    return View("ForgotPassword");
+                }
+                
+            }
+            else
+            {
+                ModelState.AddModelError("", "Invalid email address");
+
+                return View("ForgotPassword");
+            }
+           
+        }
+
+        [HttpGet]
+
+        public IActionResult ResetPassword(string code,string email)
+        {
+           
+            ResetPasswordModel mode = new ResetPasswordModel();
+            mode.Code = code;
+            mode.Email = email;
+            return View(mode);
+        }
+
+        [HttpPost]
+        [Route("ResetPasswordPost")]
+        public async Task<IActionResult> ResetPasswordPost(ResetPasswordModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user == null)
+                {
+                    ModelState.AddModelError("", "User not found");
+                    return RedirectToAction("ResetPassword", model);
+                }
+
+                var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Login");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Unable reset password!");
+                    return RedirectToAction("ResetPassword", model);
+                }
+              
+            }
+            else
+            {
+                ModelState.AddModelError("","Error");
+                return RedirectToAction("ResetPassword", model);
+            }
+        }
+
+        [HttpGet]
+        [Route("MnageUser")]
+        public bool  MnageUser()
+        {
+            var user = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var result = _applicationDbContext.Company.Where(x => x.ApplicationUserId == user && x.IsEnable == (int)CompanyStatus.Disable).Any();
+            if (result)
+            {
+                _signInManager.SignOutAsync();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+          
+        }
+
+
 
     }
 }

@@ -9,8 +9,8 @@ using NIBM_Job_Portal.Models;
 namespace NIBM_Job_Portal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210830164131_company logo migrations")]
-    partial class companylogomigrations
+    [Migration("20210913155203_Added company status")]
+    partial class Addedcompanystatus
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -203,6 +203,9 @@ namespace NIBM_Job_Portal.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("varchar(256)");
 
+                    b.Property<int>("UserType")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -224,9 +227,6 @@ namespace NIBM_Job_Portal.Migrations
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<int>("ApplicationUser_Id")
-                        .HasColumnType("int");
-
                     b.Property<string>("Company_Name")
                         .HasColumnType("longtext");
 
@@ -234,6 +234,12 @@ namespace NIBM_Job_Portal.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Contact_2")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Contact_No")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Description")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Email")
@@ -245,6 +251,12 @@ namespace NIBM_Job_Portal.Migrations
                     b.Property<int>("IndustryId")
                         .HasColumnType("int");
 
+                    b.Property<int>("IsEnable")
+                        .HasColumnType("int");
+
+                    b.Property<int>("JobCategoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Logo_path")
                         .HasColumnType("longtext");
 
@@ -254,11 +266,16 @@ namespace NIBM_Job_Portal.Migrations
                     b.Property<string>("State")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Website")
+                        .HasColumnType("longtext");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("IndustryId");
+
+                    b.HasIndex("JobCategoryId");
 
                     b.ToTable("Company");
                 });
@@ -283,6 +300,9 @@ namespace NIBM_Job_Portal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("ClosingDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<int>("CompanyId")
                         .HasColumnType("int");
 
@@ -294,6 +314,9 @@ namespace NIBM_Job_Portal.Migrations
 
                     b.Property<string>("Position")
                         .HasColumnType("longtext");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<string>("jobFlyer")
                         .HasColumnType("longtext");
@@ -384,9 +407,17 @@ namespace NIBM_Job_Portal.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("NIBM_Job_Portal.Models.JobCategory", "JobCategory")
+                        .WithMany()
+                        .HasForeignKey("JobCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("ApplicationUser");
 
                     b.Navigation("Industry");
+
+                    b.Navigation("JobCategory");
                 });
 
             modelBuilder.Entity("NIBM_Job_Portal.Models.Job", b =>
