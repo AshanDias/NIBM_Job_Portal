@@ -89,6 +89,7 @@ namespace NIBM_Job_Portal.Controllers
                 {
                     company = await _applicationDbContext.Company.FindAsync(model.Id);
                     IsUpdate = true;
+
                 }
                 else
                 {

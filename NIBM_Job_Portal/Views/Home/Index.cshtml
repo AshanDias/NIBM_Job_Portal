@@ -105,7 +105,8 @@
                 <div class="col-lg-6  mt-3">
                     <div class="form-group">
                         <label for="">Company Name</label>
-                        <input type="text" class="form-control" asp-for="Company_Name" placeholder="Name">
+                        <input type="text" disabled class="form-control" value="@Model.Company_Name" placeholder="Name">
+                        <input type="hidden"  asp-for="Company_Name">
                         <span asp-validation-for="Company_Name" class="form-text text-danger"></span>
                     </div>
                 </div>
