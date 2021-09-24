@@ -36,11 +36,17 @@ namespace NIBM_Job_Portal.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            var res = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var users =await _applicationDbContext.Users.FindAsync(res);
+             if (users.UserType == (int)UserTypeEnum.Admin)
+            {
+                return RedirectToActionPermanent("Dashboard", "Home");
+            }
             ///string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads\\images");
             var jobCategories =await _applicationDbContext.JobCategory.ToListAsync();
             var industryList =await _applicationDbContext.Industry.ToListAsync();
-             var res=  User.FindFirst(ClaimTypes.NameIdentifier).Value; 
-            var result =await _applicationDbContext.Company.Include(x=>x.ApplicationUser).Where(x=>x.ApplicationUser.Id==res).FirstOrDefaultAsync();
+            var result = await _applicationDbContext.Company.Include(x => x.ApplicationUser).Where(x => x.ApplicationUser.Id == res).FirstOrDefaultAsync();
+
             CompanyViewModel model = new CompanyViewModel();
             model.industryList = industryList;
             if (result != null)
@@ -83,6 +89,7 @@ namespace NIBM_Job_Portal.Controllers
                 {
                     company = await _applicationDbContext.Company.FindAsync(model.Id);
                     IsUpdate = true;
+
                 }
                 else
                 {

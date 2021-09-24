@@ -28,7 +28,8 @@ namespace NIBM_Job_Portal.Models
         public string Description { get; set; }
 
         public int IsEnable { get; set; }
-        public string Website { get; set; }
+
+         public string Website { get; set; }
 
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }

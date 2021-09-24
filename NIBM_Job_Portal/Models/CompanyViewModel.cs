@@ -23,7 +23,9 @@ namespace NIBM_Job_Portal.Models
         public IFormFile Image { get; set; }
         [Required]
         public string Contact_No { get; set; }
+
         [Required]
+        [RegularExpression(@"[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)", ErrorMessage = "Invali URL!")]
         public string Website { get; set; }
 
         public string Description { get; set; }

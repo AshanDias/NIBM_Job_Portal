@@ -30,20 +30,31 @@ namespace NIBM_Job_Portal.Controllers
         }
         public ActionResult Index()
         {
-            var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var user = _applicationDbContext.Users.FirstOrDefault(x => x.Id == id);
-            if(user.UserType == 1)
+            List<Job> jobs = null;
+            try
             {
-                var jobs = _applicationDbContext.Job.Include(x => x.JobCategory).Include(x => x.Company).ToList();
 
+              
+                var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var user = _applicationDbContext.Users.FirstOrDefault(x => x.Id == id);
+                if (user.UserType == 1)
+                {
+                     jobs = _applicationDbContext.Job.Include(x => x.JobCategory).Include(x => x.Company).ToList();
+
+                   // return View(jobs);
+                }
+                else
+                {
+                     jobs = _applicationDbContext.Job.Include(x => x.JobCategory).Include(x => x.Company).Where(x => x.Status != (int)JobStatusEnum.AdminDisabled && x.Company.ApplicationUserId == user.Id).ToList();
+
+                   // return View(jobs);
+
+                }
                 return View(jobs);
             }
-            else
+            catch
             {
-                var jobs = _applicationDbContext.Job.Where(x => x.Status != (int)JobStatusEnum.AdminDisabled).Include(x => x.JobCategory).Include(x => x.Company).ToList();
-
                 return View(jobs);
-
             }
         }
 
