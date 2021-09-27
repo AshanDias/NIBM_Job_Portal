@@ -46,10 +46,17 @@ namespace NIBM_Job_Portal.Controllers
                 else
                 {
                      jobs = _applicationDbContext.Job.Include(x => x.JobCategory).Include(x => x.Company).Where(x => x.Status != (int)JobStatusEnum.AdminDisabled && x.Company.ApplicationUserId == user.Id).OrderBy(x=>x.Status).ToList();
-
+                           
+                    
                    // return View(jobs);
 
                 }
+
+                foreach (var item in jobs)
+                {
+                    item.count = _applicationDbContext.StudentJobPost.Where(x => x.JobId == item.Id).Count();
+                }
+                
                 return View(jobs);
             }
             catch

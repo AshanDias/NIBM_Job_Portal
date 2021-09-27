@@ -48,6 +48,7 @@
                 <th>Category</th>
                 <th>Closing Date</th>
                 <th>Status</th>
+                <th>Count</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -58,45 +59,45 @@
 
                 foreach (var item in Model)
                 {
-                    <tr>
-                        <td>@item.Id</td>
-                        <td>@item.Position</td>
-                        <td>@item.JobCategory.Name</td>
-                        <td>@item.ClosingDate.ToShortDateString()</td>
-                        <td>
-                            @if (item.Status == (int)JobStatusEnum.Active)
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Position</td>
+                <td>@item.JobCategory.Name</td>
+                <td>@item.ClosingDate.ToShortDateString()</td>
+                <td>
+                    @if (item.Status == (int)JobStatusEnum.Active)
+                    {
+                        <span class="text-success">Active</span>
+                    }
+                    else if (item.Status == (int)JobStatusEnum.Expired)
+                    {
+                        <span class="text-danger">Archived</span>
+                    }
+                    else
+                    {
+                        <span class="text-danger">Disabled By Admin</span>
+                    }
+
+                </td>
+                <td>@item.count</td>
+                <td class="">
+                    <div class="row">
+                        <div class="col text-center">
+                            @if (user.UserType == (int)UserTypeEnum.User)
                             {
-                                <span class="text-success">Active</span>
-                            }
-                            else if (item.Status == (int)JobStatusEnum.Expired)
-                            {
-                            <span class="text-danger">Archived</span>
+                                <a class="btn btn-sm btn-primary m-1" href="@Url.Action("JobApplications", "Job", new { Id = @item.Id })"> <i class="fa fa-eye" aria-hidden="true"></i></a>
+                                <a class="btn btn-sm btn-primary m-1" href="@Url.Action("Create", "Job", new { Id = @item.Id })"> <i class="fa fa-pencil-square" aria-hidden="true"></i></a>
+                                <button class="btn btn-sm btn-danger m-1" onclick="DeleteData(@item.Id)">  <i class="fa fa-times-circle" aria-hidden="true"></i></button>
                             }
                             else
                             {
-                                <span class="text-danger">Disabled By Admin</span>
+                                <button class="btn btn-sm btn-primary m-1" onclick="Enable(@item.Id)"> <i class="fa fa-pencil-square" aria-hidden="true"></i> Enable </button>
+                                <button class="btn btn-sm btn-danger m-1" onclick="Disable(@item.Id)"> <i class="fa fa-times-circle" aria-hidden="true"></i> Disable </button>
                             }
-
-                        </td>
-
-                        <td class="">
-                            <div class="row">
-                                <div class="col text-center">
-                                    @if (user.UserType == (int)UserTypeEnum.User)
-                                    {
-                                        <a class="btn btn-sm btn-primary m-1" href="@Url.Action("JobApplications", "Job", new { Id = @item.Id })"> <i class="fa fa-eye" aria-hidden="true"></i></a>
-                                        <a class="btn btn-sm btn-primary m-1" href="@Url.Action("Create", "Job", new { Id = @item.Id })"> <i class="fa fa-pencil-square" aria-hidden="true"></i></a>
-                                        <button class="btn btn-sm btn-danger m-1" onclick="DeleteData(@item.Id)">  <i class="fa fa-times-circle" aria-hidden="true"></i></button>
-                                    }
-                                    else
-                                    {
-                                        <button class="btn btn-sm btn-primary m-1" onclick="Enable(@item.Id)"> <i class="fa fa-pencil-square" aria-hidden="true"></i> Enable </button>
-                                        <button class="btn btn-sm btn-danger m-1" onclick="Disable(@item.Id)"> <i class="fa fa-times-circle" aria-hidden="true"></i> Disable </button>
-                                    }
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
+                        </div>
+                    </div>
+                </td>
+            </tr>
 
 
 
