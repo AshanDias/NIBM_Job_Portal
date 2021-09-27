@@ -39,13 +39,13 @@ namespace NIBM_Job_Portal.Controllers
                 var user = _applicationDbContext.Users.FirstOrDefault(x => x.Id == id);
                 if (user.UserType == 1)
                 {
-                     jobs = _applicationDbContext.Job.Include(x => x.JobCategory).Include(x => x.Company).ToList();
+                     jobs = _applicationDbContext.Job.Include(x => x.JobCategory).Include(x => x.Company).OrderBy(x=>x.Status).ToList();
 
                    // return View(jobs);
                 }
                 else
                 {
-                     jobs = _applicationDbContext.Job.Include(x => x.JobCategory).Include(x => x.Company).Where(x => x.Status != (int)JobStatusEnum.AdminDisabled && x.Company.ApplicationUserId == user.Id).ToList();
+                     jobs = _applicationDbContext.Job.Include(x => x.JobCategory).Include(x => x.Company).Where(x => x.Status != (int)JobStatusEnum.AdminDisabled && x.Company.ApplicationUserId == user.Id).OrderBy(x=>x.Status).ToList();
 
                    // return View(jobs);
 
