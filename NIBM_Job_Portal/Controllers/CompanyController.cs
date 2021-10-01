@@ -24,7 +24,7 @@ namespace NIBM_Job_Portal.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var result =await _applicationDbContext.Company.ToListAsync();
+            var result =await _applicationDbContext.Company.OrderByDescending(x => x.Id).ToListAsync();
             List<AdminCompanyViewModel> model = new List<AdminCompanyViewModel>();
             foreach (var item in result)
             {
