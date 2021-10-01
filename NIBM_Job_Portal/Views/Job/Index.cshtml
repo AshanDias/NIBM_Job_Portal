@@ -116,6 +116,15 @@
 
 <script>
 
+    $(document).ready(function () {
+
+    
+        var data ='@ViewData["JobCeated"]';
+        if (data != "") {
+            swal("Success!", "Job Created!", "success");
+        }
+    });
+
     function  DeleteData(id){
 
         swal({

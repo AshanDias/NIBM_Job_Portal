@@ -33,8 +33,11 @@ namespace NIBM_Job_Portal.Controllers
             List<Job> jobs = null;
             try
             {
-
-              
+                var result = TempData["JobCeated"];
+                if (result != null)
+                {
+                    ViewData["JobCeated"] = "true";
+                }
                 var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 var user = _applicationDbContext.Users.FirstOrDefault(x => x.Id == id);
                 if (user.UserType == 1)
@@ -127,6 +130,8 @@ namespace NIBM_Job_Portal.Controllers
                 }
 
                 _applicationDbContext.SaveChanges();
+
+                TempData["JobCeated"] = "success";
                 return RedirectToAction("Index");
 
             }
@@ -238,45 +243,61 @@ namespace NIBM_Job_Portal.Controllers
         [HttpGet]
         public async Task<IActionResult> DownloadAll()
         {
-            int i = 0;
-            var studentPost = await _applicationDbContext.StudentJobPost.ToListAsync();
-            foreach (var item in studentPost)
+            try
             {
-                i++;
-                var client = new HttpClient();
-                var result = await client.GetAsync(item.CV);
-                byte[] filecontent = await result.Content.ReadAsByteArrayAsync();
-                string filepath = "TempCV/CV" + i + ".pdf";
-                System.IO.File.WriteAllBytes(filepath, filecontent);
-              
-            }
-            string startupPath = System.IO.Directory.GetCurrentDirectory();
-            string[] fileEntries = Directory.GetFiles(startupPath+"\\TempCV");
-            using (ZipFile zip = new ZipFile())
-            {
-                zip.AlternateEncodingUsage = ZipOption.AsNecessary;
-                zip.AddDirectoryByName("Student CV List");
-                foreach (var file in fileEntries)
-                {
-                   
-                        zip.AddFile(file, "Student CV List");
-                      
-                }
-                string zipName = String.Format("Students_CV_{0}.zip", DateTime.Now.ToString("yyyy-MMM-dd-HHmmss"));
-             
-                using (MemoryStream memoryStream = new MemoryStream())
-                {
-                    zip.Save(memoryStream);
 
-                    foreach (var item in fileEntries)
+
+                int i = 0;
+                var studentPost = await _applicationDbContext.StudentJobPost.ToListAsync();
+                if (studentPost.Count > 0)
+                {
+
+
+                    foreach (var item in studentPost)
                     {
-                        System.IO.File.Delete(item);
+                        i++;
+                        var client = new HttpClient();
+                        var result = await client.GetAsync(item.CV);
+                        byte[] filecontent = await result.Content.ReadAsByteArrayAsync();
+                        string filepath = "TempCV/CV" + i + ".pdf";
+                        System.IO.File.WriteAllBytes(filepath, filecontent);
+
                     }
-                    return File(memoryStream.ToArray(), "application/zip", zipName);
+                    string startupPath = System.IO.Directory.GetCurrentDirectory();
+                    string[] fileEntries = Directory.GetFiles(startupPath + "\\TempCV");
+                    using (ZipFile zip = new ZipFile())
+                    {
+                        zip.AlternateEncodingUsage = ZipOption.AsNecessary;
+                        zip.AddDirectoryByName("Student CV List");
+                        foreach (var file in fileEntries)
+                        {
+
+                            zip.AddFile(file, "Student CV List");
+
+                        }
+                        string zipName = String.Format("Students_CV_{0}.zip", DateTime.Now.ToString("yyyy-MMM-dd-HHmmss"));
+
+                        using (MemoryStream memoryStream = new MemoryStream())
+                        {
+                            zip.Save(memoryStream);
+
+                            foreach (var item in fileEntries)
+                            {
+                                System.IO.File.Delete(item);
+                            }
+                            return File(memoryStream.ToArray(), "application/zip", zipName);
+                        }
+
+                    }
                 }
+                else
+                {
+                    return null;
+                }
+            }catch
+            {
+                return null;
             }
-
-
         }
 
         [HttpPost]
