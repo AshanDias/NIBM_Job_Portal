@@ -22,14 +22,14 @@
 <div class="container" style="margin-left: 0px">
     <a class="btn btn-sm btn-primary mb-1" asp-area="" asp-controller="Company" asp-action="Create"> <i class="fa fa-plus-circle" aria-hidden="true"></i> Add New Profile</a>
 
-    <table class="table text-center">
+    <table class="table text-left">
         <thead>
             <tr>
                 <th>Company ID</th>
                 <th>Company Name</th>
                 <th>Company Email</th>
                 <th>Status</th>
-                <th>Profile State</th>
+                <th><span class="p-1">&nbsp;</span>Profile State</th>
             </tr>
         </thead>
         <tbody class="text-left">
@@ -49,7 +49,7 @@
                             <span class="text-danger">Disabled</span>
                         }
                     </td>
-                    <td class="text-center">
+                    <td class="text-left">
                         <div>
                             <button class="btn btn-sm btn-primary m-1" onclick="Enable(@item.Id)"> Enable </button>
                             <button class="btn btn-sm btn-danger m-1" onclick="Disable(@item.Id)"> Disable </button>
