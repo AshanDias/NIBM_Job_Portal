@@ -50,7 +50,7 @@
                 <th>Closing Date</th>
                 <th>Status</th>
                 @* <th>Count</th>*@
-                <th>Actions</th>
+                <th><span class="pl-5">&nbsp;</span>Actions</th>
             </tr>
         </thead>
         <tbody  >
@@ -93,8 +93,8 @@
                                     }
                                     else
                                     {
-                                        <button class="btn btn-sm btn-primary m-1" onclick="Enable(@item.Id)"> <i class="fa fa-pencil-square" aria-hidden="true"></i> Enable </button>
-                                        <button class="btn btn-sm btn-danger m-1" onclick="Disable(@item.Id)"> <i class="fa fa-times-circle" aria-hidden="true"></i> Disable </button>
+                                        <button class="btn btn-sm btn-primary m-1" onclick="Enable(@item.Id)"> Enable </button>
+                                        <button class="btn btn-sm btn-danger m-1" onclick="Disable(@item.Id)"> Disable </button>
                                     }
                                 </div>
                             </div>
