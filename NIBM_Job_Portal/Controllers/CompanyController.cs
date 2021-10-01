@@ -24,6 +24,12 @@ namespace NIBM_Job_Portal.Controllers
         }
         public async Task<IActionResult> Index()
         {
+            var data = TempData["company"];
+            if (data != null)
+            {
+                ViewData["company"] = "true";
+            }
+
             var result =await _applicationDbContext.Company.OrderByDescending(x => x.Id).ToListAsync();
             List<AdminCompanyViewModel> model = new List<AdminCompanyViewModel>();
             foreach (var item in result)
@@ -74,7 +80,7 @@ namespace NIBM_Job_Portal.Controllers
                     company.ApplicationUserId = user.Id;
                     _applicationDbContext.Company.Add(company);
                     _applicationDbContext.SaveChanges();
-
+                    TempData["company"] = "success";
                     return RedirectToAction("Index");
                 }
                 else

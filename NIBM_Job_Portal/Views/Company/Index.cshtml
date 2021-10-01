@@ -66,6 +66,15 @@
 
 <script>
 
+      $(document).ready(function () {
+
+
+        var data ='@ViewData["company"]';
+        if (data != "") {
+            swal("Success!", "Company Created!", "success");
+        }
+    });
+
     function Enable(id) {
 
            $.ajax({

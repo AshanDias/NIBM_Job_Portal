@@ -177,3 +177,15 @@
   
 </div>
 
+<script>
+
+     $(document).ready(function () {
+
+
+        var data ='@ViewData["profile"]';
+        if (data != "") {
+            swal("Success!", "Profile Updated!", "success");
+        }
+    });
+
+</script>

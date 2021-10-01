@@ -36,6 +36,11 @@ namespace NIBM_Job_Portal.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            var data = TempData["profile"];
+            if (data != null)
+            {
+                ViewData["profile"] = "true";
+            }
             var res = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var users =await _applicationDbContext.Users.FindAsync(res);
              if (users.UserType == (int)UserTypeEnum.Admin)
@@ -131,6 +136,7 @@ namespace NIBM_Job_Portal.Controllers
                 }
 
                 _applicationDbContext.SaveChanges();
+                TempData["profile"] = "success";
                 return RedirectToAction("Index");
             }
             else
