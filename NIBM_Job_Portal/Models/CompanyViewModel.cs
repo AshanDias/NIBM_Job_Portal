@@ -29,8 +29,9 @@ namespace NIBM_Job_Portal.Models
         public string Website { get; set; }
 
         public string Description { get; set; }
+
         [Required(ErrorMessage ="Please Select the industry")]
-        public int IndustryId { get; set; }
+        public Nullable<int> IndustryId { get; set; }
       
         public List<Industry> industryList { get; set; }
     }

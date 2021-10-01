@@ -40,66 +40,66 @@
         <a class="btn btn-sm btn-primary mb-1" asp-area="" asp-controller="Job" asp-action="Create"> <i class="fa fa-plus-circle" aria-hidden="true"></i> Post new Job</a>
     }
 
-    <table class="table text-center">
+    <table class="table text-left">
         <thead>
             <tr>
                 <th>Ref. No</th>
+                <th>Company</th>
                 <th>Position</th>
                 <th>Category</th>
                 <th>Closing Date</th>
                 <th>Status</th>
-                <th>Count</th>
+                @* <th>Count</th>*@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody  >
 
             @if (Model.Count() > 0)
             {
 
                 foreach (var item in Model)
                 {
-            <tr>
-                <td>@item.Id</td>
-                <td>@item.Position</td>
-                <td>@item.JobCategory.Name</td>
-                <td>@item.ClosingDate.ToShortDateString()</td>
-                <td>
-                    @if (item.Status == (int)JobStatusEnum.Active)
-                    {
-                        <span class="text-success">Active</span>
-                    }
-                    else if (item.Status == (int)JobStatusEnum.Expired)
-                    {
-                        <span class="text-danger">Archived</span>
-                    }
-                    else
-                    {
-                        <span class="text-danger">Disabled By Admin</span>
-                    }
-
-                </td>
-                <td>@item.count</td>
-                <td class="">
-                    <div class="row">
-                        <div class="col text-center">
-                            @if (user.UserType == (int)UserTypeEnum.User)
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.Company.Company_Name</td>
+                        <td>@item.Position</td>
+                        <td>@item.JobCategory.Name</td>
+                        <td>@item.ClosingDate.ToShortDateString()</td>
+                        <td>
+                            @if (item.Status == (int)JobStatusEnum.Active)
                             {
-                                <a class="btn btn-sm btn-primary m-1" href="@Url.Action("JobApplications", "Job", new { Id = @item.Id })"> <i class="fa fa-eye" aria-hidden="true"></i></a>
-                                <a class="btn btn-sm btn-primary m-1" href="@Url.Action("Create", "Job", new { Id = @item.Id })"> <i class="fa fa-pencil-square" aria-hidden="true"></i></a>
-                                <button class="btn btn-sm btn-danger m-1" onclick="DeleteData(@item.Id)">  <i class="fa fa-times-circle" aria-hidden="true"></i></button>
+                                <span class="text-success">Active</span>
+                            }
+                            else if (item.Status == (int)JobStatusEnum.Expired)
+                            {
+                                <span class="text-danger">Archived</span>
                             }
                             else
                             {
-                                <button class="btn btn-sm btn-primary m-1" onclick="Enable(@item.Id)"> <i class="fa fa-pencil-square" aria-hidden="true"></i> Enable </button>
-                                <button class="btn btn-sm btn-danger m-1" onclick="Disable(@item.Id)"> <i class="fa fa-times-circle" aria-hidden="true"></i> Disable </button>
+                                <span class="text-danger">Disabled By Admin</span>
                             }
-                        </div>
-                    </div>
-                </td>
-            </tr>
 
-
+                        </td>
+                        @*<td>@item.count</td>*@
+                        <td class="text-left">
+                            <div>
+                                <div class="col">
+                                    @if (user.UserType == (int)UserTypeEnum.User)
+                                    {
+                                        <a class="btn btn-sm btn-primary m-1" href="@Url.Action("JobApplications", "Job", new { Id = @item.Id })"> <i class="fa fa-eye" aria-hidden="true"></i></a>
+                                        <a class="btn btn-sm btn-primary m-1" href="@Url.Action("Create", "Job", new { Id = @item.Id })"> <i class="fa fa-pencil-square" aria-hidden="true"></i></a>
+                                        <button class="btn btn-sm btn-danger m-1" onclick="DeleteData(@item.Id)">  <i class="fa fa-times-circle" aria-hidden="true"></i></button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-sm btn-primary m-1" onclick="Enable(@item.Id)"> <i class="fa fa-pencil-square" aria-hidden="true"></i> Enable </button>
+                                        <button class="btn btn-sm btn-danger m-1" onclick="Disable(@item.Id)"> <i class="fa fa-times-circle" aria-hidden="true"></i> Disable </button>
+                                    }
+                                </div>
+                            </div>
+                        </td>
+                    </tr> 
 
                 }
             }
