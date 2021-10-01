@@ -96,8 +96,8 @@ namespace NIBM_Job_Portal.Controllers
         [Route("Identity/[controller]/Login")]
         public async Task<IActionResult> Login()
         {
-            
-            return View();
+            Login login = new Login();
+            return View(login);
         }
 
         [HttpPost]
@@ -128,7 +128,7 @@ namespace NIBM_Job_Portal.Controllers
                     else
                     {
                         ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                        return View("Login");
+                        return View("Login", login);
                     }
                 }
                 else
