@@ -68,7 +68,7 @@ namespace NIBM_Job_Portal.Controllers
                     
                     Company company = new Company();
                     company.Company_Name = model.Company_Name;
-                    company.IndustryId = model.IndustryId;
+                    company.IndustryId = (int)model.IndustryId;
                     company.IsEnable = (int)CompanyStatus.Enable;
                     company.Email = model.Email;
                     company.ApplicationUserId = user.Id;
@@ -86,11 +86,12 @@ namespace NIBM_Job_Portal.Controllers
             }
             else
             {
-                ModelState.AddModelError("", "error");
-            }
-            
+                ModelState.AddModelError(string.Empty, "Invalid Job Details."); 
+                return View("Create", model);
 
-            return View("Create", model);
+            }
+
+
         }
 
         [HttpPost]

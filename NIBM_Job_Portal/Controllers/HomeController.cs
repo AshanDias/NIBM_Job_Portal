@@ -117,7 +117,7 @@ namespace NIBM_Job_Portal.Controllers
                 company.Website = model.Website;
                 company.IsEnable =(int) CompanyStatus.Enable;
                 company.Contact_No = model.Contact_No;
-                company.IndustryId = model.IndustryId;
+                company.IndustryId = (int)model.IndustryId;
 
                
 
