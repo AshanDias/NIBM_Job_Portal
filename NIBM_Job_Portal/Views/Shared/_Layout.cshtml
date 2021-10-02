@@ -79,13 +79,13 @@
             <nav class="col-md-2 d-none d-md-block bg-light sidebar">
                 <div class="sidebar-sticky">
                     <ul class="nav flex-column mt-4">
-                        <a id="sidebar_dashboard" class="nav-link float-left " asp-area="" asp-controller="Home" asp-action="Dashboard">
+                        <a class="nav-link text-primary float-left " asp-area="" asp-controller="Home" asp-action="Dashboard">
                             <li class="nav-item btn btn-block btn-outline-secondary">
                                 <div class="row">
                                     <div class="col-3">
                                         <i class="fa fa-desktop mr-3" aria-hidden="true"></i>
                                     </div>
-                                    <div class="col-9 text-left">
+                                    <div  id="sidebar_dashboard"  class="col-9 text-left">
                                         Dashboard
                                     </div>
                                 </div> 
@@ -93,13 +93,13 @@
                         </a>
                         @if (user.UserType == (int)UserTypeEnum.User)
                         {
-                            <a id="sidebar_profile" class="nav-link  float-left" asp-area="" asp-controller="Home" asp-action="index">
+                            <a class="nav-link  float-left" asp-area="" asp-controller="Home" asp-action="index">
                             <li class="nav-item  btn btn-block btn-outline-secondary">
                                 <div class="row">
                                     <div class="col-3">
                                         <i class="fa fa-user mr-3" aria-hidden="true"></i>
                                     </div>
-                                    <div class="col-9 text-left">
+                                    <div id="sidebar_profile" class="col-9 text-left">
                                         Profile
                                     </div>
                                 </div>                                
@@ -108,13 +108,13 @@
                         }
                         @if (user.UserType == (int)UserTypeEnum.Admin)
                         {
-                            <a id="sidebar_company" class="nav-link  float-left" asp-area="" asp-controller="Company" asp-action="Index">
+                            <a  class="nav-link  float-left" asp-area="" asp-controller="Company" asp-action="Index">
                             <li class="nav-item  btn btn-block btn-outline-secondary">
                                 <div class="row">
                                     <div class="col-3">
                                         <i class="fa fa-briefcase mr-3" aria-hidden="true"></i>
                                     </div>
-                                    <div class="col-9 text-left">
+                                    <div id="sidebar_company" class="col-9 text-left">
                                         Company
                                     </div>
                                 </div>
@@ -123,13 +123,13 @@
                             </a>
                         }
 
-                        <a id="sidebar_job" class="nav-link  float-left" asp-area="" asp-controller="Job" asp-action="Index">
+                        <a  class="nav-link  float-left" asp-area="" asp-controller="Job" asp-action="Index">
                         <li class="nav-item  btn btn-block btn-outline-secondary">
                             <div class="row">
                                 <div class="col-3">
                                     <i class="fa fa-briefcase mr-3" aria-hidden="true"></i>
                                 </div>
-                                <div class="col-9 text-left">
+                                <div id="sidebar_job" class="col-9 text-left">
                                     Jobs
                                 </div>
                             </div>                           
