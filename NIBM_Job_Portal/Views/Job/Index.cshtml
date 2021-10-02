@@ -44,16 +44,22 @@
         <thead>
             <tr>
                 <th>Ref. No</th>
-                <th>Company</th>
+                @if (user.UserType == (int)UserTypeEnum.Admin)
+                {
+                    <th>Company</th>
+                }
                 <th>Position</th>
                 <th>Category</th>
                 <th>Closing Date</th>
                 <th>Status</th>
-                @* <th>Count</th>*@
+                @if (user.UserType == (int)UserTypeEnum.User)
+                {
+                    <th>Count</th>
+                }
                 <th><span class="pl-5">&nbsp;</span>Actions</th>
             </tr>
         </thead>
-        <tbody  >
+        <tbody>
 
             @if (Model.Count() > 0)
             {
@@ -62,7 +68,10 @@
                 {
                     <tr>
                         <td>@item.Id</td>
-                        <td>@item.Company.Company_Name</td>
+                        @if (user.UserType == (int)UserTypeEnum.Admin)
+                        {
+                            <td>@item.Company.Company_Name</td>
+                        }
                         <td>@item.Position</td>
                         <td>@item.JobCategory.Name</td>
                         <td>@item.ClosingDate.ToShortDateString()</td>
@@ -81,7 +90,10 @@
                             }
 
                         </td>
-                        @*<td>@item.count</td>*@
+                        @if (user.UserType == (int)UserTypeEnum.User)
+                        {
+                            <td>@item.count</td>
+                        }
                         <td class="text-left">
                             <div>
                                 <div class="col">
@@ -99,8 +111,7 @@
                                 </div>
                             </div>
                         </td>
-                    </tr> 
-
+                    </tr>
                 }
             }
             else
