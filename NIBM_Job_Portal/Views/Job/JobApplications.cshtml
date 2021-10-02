@@ -23,7 +23,7 @@
 </div>
 
 <div class="container" style="margin-left: 0px">
-    @if (Model.StudentJobPost.Count != 0)
+    @if (Model != null && Model.StudentJobPost.Count != 0)
     {
         <div class="container">
             <div class="row float-right">
@@ -44,7 +44,7 @@
             </tr>
         </thead>
         <tbody>
-            @if (Model.StudentJobPost.Count != 0)
+            @if (Model != null && Model.StudentJobPost.Count != 0)
             {
 
 
