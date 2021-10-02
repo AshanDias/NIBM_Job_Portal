@@ -40,9 +40,9 @@ namespace NIBM_Job_Portal.Controllers
                 }
                 var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 var user = _applicationDbContext.Users.FirstOrDefault(x => x.Id == id);
-                if (user.UserType == 1)
+                if (user.UserType == (int)UserTypeEnum.Admin)
                 {
-                     jobs = _applicationDbContext.Job.Include(x => x.JobCategory).Include(x => x.Company).OrderBy(x=>x.Status).ToList();
+                     jobs = _applicationDbContext.Job.Include(x => x.JobCategory).Include(x => x.Company).Where(x=>x.Company.IsEnable==(int)CompanyStatus.Enable).OrderBy(x=>x.Status).ToList();
 
                    // return View(jobs);
                 }
@@ -97,6 +97,7 @@ namespace NIBM_Job_Portal.Controllers
 
                 if (currentDate > closingDate)
                 {
+                    ModelState.ClearValidationState("ClosingDate");
                     ModelState.AddModelError("ClosingDate", "Closing date must be grater than 7 days after the current date.");
                     return View("Create", jobModel);
                 }
@@ -137,6 +138,13 @@ namespace NIBM_Job_Portal.Controllers
             }
             else
             {
+              
+                if(model.ClosingDate==Convert.ToDateTime("1/1/0001 12:00:00 AM"))
+                {
+                    ModelState.ClearValidationState("ClosingDate");
+                    ModelState.AddModelError("ClosingDate", "Closing date cannot be empty!");
+                }
+               
 
                 ModelState.AddModelError(string.Empty, "Invalid Job Details.");
 
@@ -180,25 +188,36 @@ namespace NIBM_Job_Portal.Controllers
         [HttpGet]
         public async Task<ActionResult> CreateAsync(int Id = 0)
         {
-            JobViewModel model = new JobViewModel();
-            var jobCategories = await _applicationDbContext.JobCategory.ToListAsync();
-            var companyList = await _applicationDbContext.Company.ToListAsync();
-            model.jobCategories = jobCategories;
-            model.companyList = companyList;
-            if (Id != 0)
+            var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var user = _applicationDbContext.Users.FirstOrDefault(x => x.Id == id);
+            if (user.UserType != (int)UserTypeEnum.Admin)
             {
-                Job job = await _applicationDbContext.Job.FindAsync(Id);
-                model.Id = job.Id;
-                model.Description = job.Description;
-                model.CompanyId = job.CompanyId;
-                model.JobCategoryId = job.JobCategoryId;
-                model.ClosingDate = job.ClosingDate;
-                model.jobFlyer = job.jobFlyer;
-                model.Position = job.Position;
+
+
+                JobViewModel model = new JobViewModel();
+                var jobCategories = await _applicationDbContext.JobCategory.ToListAsync();
+                var companyList = await _applicationDbContext.Company.ToListAsync();
+                model.jobCategories = jobCategories;
+                model.companyList = companyList;
+                if (Id != 0)
+                {
+                    Job job = await _applicationDbContext.Job.FindAsync(Id);
+                    model.Id = job.Id;
+                    model.Description = job.Description;
+                    model.CompanyId = job.CompanyId;
+                    model.JobCategoryId = job.JobCategoryId;
+                    model.ClosingDate = job.ClosingDate;
+                    model.jobFlyer = job.jobFlyer;
+                    model.Position = job.Position;
+                }
+
+
+                return View(model);
             }
-
-
-            return View(model);
+            else
+            {
+                return RedirectToAction("Index");
+            }
         }
 
 
