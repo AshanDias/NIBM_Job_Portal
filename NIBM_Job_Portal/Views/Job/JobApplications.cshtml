@@ -23,35 +23,37 @@
 </div>
 
 <div class="container" style="margin-left: 0px">
-   
+    @if (Model.StudentJobPost.Count != 0)
+    {
         <div class="container">
             <div class="row float-right">
                 <button type="button" onclick="DownloadSingle()" class="btn btn-sm btn-success text-light m-1"> <i class="fa fa-hand-pointer-o" aria-hidden="true"></i>Download Selected Items</button>
                 <a class="btn btn-sm btn-success text-light m-1" href="@Url.Action("DownloadAll","Job")"> <i class="fa fa-download" aria-hidden="true"></i> Download All</a>
             </div>
         </div>
-        <table class="table text-center">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Ref. No</th>
-                    <th>Applicant Name</th>
-                    <th>Applicant Email</th>
-                    <th>Applied Date</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model != null)
+    }
+    <table class="table text-center">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Ref. No</th>
+                <th>Applicant Name</th>
+                <th>Applicant Email</th>
+                <th>Applied Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.StudentJobPost.Count != 0)
+            {
+
+
+                foreach (var item in Model.StudentJobPost)
                 {
-
-
-                    foreach (var item in Model.StudentJobPost)
-                    {
 
                     <tr>
                         <td style="width:10px;" class="pl-5">
-                            <input type="checkbox" id="ch_@item.Id" value="" class="form-check-input" onclick="UpdateData('@item.Id')" >
+                            <input type="checkbox" id="ch_@item.Id" value="" class="form-check-input" onclick="UpdateData('@item.Id')">
                             <input type="hidden" asp-for="files" />
                         </td>
                         <td>@item.Id</td>
@@ -67,18 +69,20 @@
 
 
 
-                    }
+                }
 
 
             }
             else
             {
-                <p>Record Not found!</p>
+                <tr>
+                    <td colspan="6" class="text-center"><p>Record Not found!</p></td>
+                </tr>
             }
 
-            </tbody>
-        </table>
-   
+        </tbody>
+    </table>
+
 </div>
 
 <script>
