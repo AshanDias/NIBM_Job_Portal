@@ -88,10 +88,11 @@
             <div class="row">
                 <div class="col-lg-6">
                     <div class="form-group">
-                        <label for="">Job Position</label>
+                        <label for="">Job Position <small>(100CH)</small></label>
                         <input type="text"
                                class="form-control"
                                asp-for="Position"
+                               maxlength="100"
                                placeholder="Job Position" />
                         <span asp-validation-for="Position" class="form-text text-danger"></span>
                     </div>

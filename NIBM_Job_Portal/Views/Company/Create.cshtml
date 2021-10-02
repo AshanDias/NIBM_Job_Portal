@@ -32,8 +32,8 @@
             <div class="row">
                 <div class="col-lg-6">
                     <div class="form-group">
-                        <label for="">Company Name</label>
-                        <input type="text" asp-for="Company_Name" class="form-control" placeholder="Company Name">
+                        <label for="">Company Name <small>(100CH)</small></label>
+                        <input type="text" asp-for="Company_Name" class="form-control" maxlength="100" placeholder="Company Name">
                         <span asp-validation-for="Company_Name" class="form-text text-danger"></span>
                     </div>
                 </div>
@@ -73,10 +73,12 @@
             @*<label for="">Company ID</label>*@
             <input type="text" style="visibility:hidden" asp-for="Id" disabled placeholder="Company ID">
             @*<span class="form-text text-muted" asp-validation-for="Id"></span>*@
-            <div class="row float-right">
-                <button type="submit" class="btn btn-sm btn-primary mr-1">Add New</button>
-                <button type="reset" class="btn btn-sm btn-primary">Cancel</button>
-            </div>
+        <div class="row float-right">
+            <button type="submit" class="btn btn-sm btn-primary mr-1">Add New</button>
+            <a id="sidebar_profile" class="btn btn-sm btn-primary"  asp-area="" asp-controller="Home" asp-action="Dashboard">
+                Cancel
+            </a> 
+        </div>
 
         </form>
     </div>
