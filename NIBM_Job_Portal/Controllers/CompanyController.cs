@@ -92,7 +92,12 @@ namespace NIBM_Job_Portal.Controllers
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Invalid Job Details."); 
+                if (model.IndustryId == 0)
+                {
+                    ModelState.ClearValidationState("IndustryId");
+                    ModelState.AddModelError("IndustryId", "Select Industry");
+                }
+               
                 return View("Create", model);
 
             }

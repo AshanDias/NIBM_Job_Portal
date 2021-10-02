@@ -42,7 +42,7 @@ namespace NIBM_Job_Portal.Controllers
                 var user = _applicationDbContext.Users.FirstOrDefault(x => x.Id == id);
                 if (user.UserType == 1)
                 {
-                     jobs = _applicationDbContext.Job.Include(x => x.JobCategory).Include(x => x.Company).OrderBy(x=>x.Status).ToList();
+                     jobs = _applicationDbContext.Job.Include(x => x.JobCategory).Include(x => x.Company).Where(x=>x.Company.IsEnable==(int)CompanyStatus.Enable).OrderBy(x=>x.Status).ToList();
 
                    // return View(jobs);
                 }
