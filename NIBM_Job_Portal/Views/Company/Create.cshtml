@@ -7,6 +7,22 @@
         $('#txtEmail').keyup(function () {
 
         })
+
+        $("#btnShowAutoPassword").click(function () {
+            var allInputs = $("#autoPwd");
+
+            if (allInputs.attr('type') == "password") {
+                $('#autoPwd').prop("type", "text");
+                $("#btnShowAutoPassword").toggleClass("fa-eye fa-eye-slash")
+
+
+            }
+            else {
+                $('#autoPwd').prop("type", "password");
+                $("#btnShowAutoPassword").toggleClass("fa-eye-slash fa-eye")
+            }
+
+        })
     </script>
 }
 
@@ -27,8 +43,7 @@
 
     <div class="col-lg-8">
         <form method="post" asp-action="Create" asp-controller="Company">
-
-            <div asp-validation-summary="All" class="text-white"></div>
+ 
             <div class="row">
                 <div class="col-lg-6">
                     <div class="form-group">
@@ -64,8 +79,12 @@
                     <div class="form-group">
                         <label for="">Auto generated password</label>
                         <input type="hidden" asp-for="DefaultPasssword" />
-                        <input disabled type="text" asp-for="DefaultPasssword" id="autoPwd" value="@Model.DefaultPasssword" class="form-control">
-
+                        <div class="input-group mb-3">
+                            <input disabled type="password" asp-for="DefaultPasssword" id="autoPwd" value="@Model.DefaultPasssword" class="form-control">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button"><i class='fa fa-eye-slash' id="btnShowAutoPassword" aria-hidden='true'></i></button>
+                            </div>
+                        </div>                         
                         <span asp-validation-for="DefaultPasssword" class="form-text text-danger"></span>
                     </div>
                 </div>
