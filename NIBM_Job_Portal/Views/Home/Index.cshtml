@@ -18,7 +18,12 @@
                 }
 
                 $("#file").change(function () {
-                    readURL(this); 
+                    var ext = $('#file').val().split('.').pop().toLowerCase();
+                    if ($.inArray(ext, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+                        alert('Invalid file Type!');
+                    } else {
+                        readURL(this);
+                    }
                 });
             });
 
@@ -34,16 +39,7 @@
             }
         });
 
-/*
-        $("#txtTeleNo").on("input", function () { 
-            if (phone_validate($(this).val())) {
-               // $('.error_Msg').hide();  // hides error msg if validation is true
-            }
-            else {
-                $("#txtTeleNo") // shows validation msg if validation is false
-                event.preventDefault();
-            }
-        });*/
+
 
         function phone_validate(phno) {
             var regexPattern = new RegExp(/^[0-9-+]+$/);    // regular expression pattern
@@ -85,7 +81,7 @@
                     }
                     else
                     {
-                        <img id="profile" src="~/images/user.jpg" alt="..." accept="image/*" class="img-thumbnail" width="200px" height="auto">
+                        <img id="profile" src="~/images/comp.png" alt="..." accept="image/*" class="img-thumbnail" width="200px" height="auto">
                     }
 
                     <input type="hidden" class="form-control" asp-for="Logo_path">
@@ -94,15 +90,14 @@
                         align-items: center;">
                     <div class="file btn btn-primary " style="position: relative;overflow: hidden;">
                         Upload
-                        <input type="file" asp-for="Image" id="file" style="position: absolute; opacity: 0; right: 0; top: 0; background-color: #2F4189;" />
+                        <input type="file" asp-for="Image"  accept="image/png, image/gif, image/jpeg" id="file" style="position: absolute; opacity: 0; right: 0; top: 0; background-color: #2F4189;" />
                     </div>
-                    @*<input type="file" asp-for="Image" class="btn btn-sm text-light" style="background-color: #2F4189;" />*@
                     <span asp-validation-for="Image" class="form-text text-danger"></span>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-lg-6  mt-3">
+                <div class="col-lg-6">
                     <div class="form-group">
                         <label for="">Company Name</label>
                         <input type="text" disabled class="form-control" value="@Model.Company_Name" placeholder="Name">
