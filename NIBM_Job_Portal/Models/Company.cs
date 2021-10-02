@@ -21,6 +21,8 @@ namespace NIBM_Job_Portal.Models
         public string Contact_2 { get; set; }
         public string State { get; set; }
         public string Image { get; set; }
+
+        [Required(ErrorMessage = "Please Select the industry")]
         public int IndustryId { get; set; }
         public Industry Industry { get; set; }
 
