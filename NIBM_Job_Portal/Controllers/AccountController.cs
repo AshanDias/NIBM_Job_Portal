@@ -249,17 +249,25 @@ namespace NIBM_Job_Portal.Controllers
         public bool  MnageUser()
         {
             var user = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var result = _applicationDbContext.Company.Where(x => x.ApplicationUserId == user && x.IsEnable == (int)CompanyStatus.Disable).Any();
-            if (result)
+            if (user != null)
             {
-                _signInManager.SignOutAsync();
-                return true;
+
+
+                var result = _applicationDbContext.Company.Where(x => x.ApplicationUserId == user && x.IsEnable == (int)CompanyStatus.Disable).Any();
+                if (result)
+                {
+                    _signInManager.SignOutAsync();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
                 return false;
             }
-          
         }
 
 
