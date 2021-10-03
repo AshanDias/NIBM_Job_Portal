@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NIBM_Job_Portal.Interface;
 using NIBM_Job_Portal.Models;
 using NIBM_Job_Portal.Models.API;
 using System;
@@ -15,9 +16,12 @@ namespace NIBM_Job_Portal.Controllers.API
     public class StudentController : ControllerBase
     {
         private readonly ApplicationDbContext _applicationDbContext;
-        public StudentController(ApplicationDbContext applicationDbContext)
+        private readonly IEmailService _emailService;
+        string[] saAllowedCharacters = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" };
+        public StudentController(ApplicationDbContext applicationDbContext, IEmailService emailService)
         {
             _applicationDbContext = applicationDbContext;
+            _emailService = emailService;
         }
 
         [HttpPost]
@@ -31,15 +35,15 @@ namespace NIBM_Job_Portal.Controllers.API
                 model.name = request.name;
                 model.email = request.email;
                 model.password = request.password;
-               _applicationDbContext.Student.Add(model);
-               await _applicationDbContext.SaveChangesAsync();
+                _applicationDbContext.Student.Add(model);
+                await _applicationDbContext.SaveChangesAsync();
                 return Ok(model);
             }
             catch
             {
                 return StatusCode(500);
             }
-            
+
         }
 
 
@@ -47,10 +51,10 @@ namespace NIBM_Job_Portal.Controllers.API
         [Route("login")]
         public async Task<IActionResult> Login(StudentRequest request)
         {
-            bool IsUser =await _applicationDbContext.Student.Where(x => x.nic == request.nic && x.password == request.password).AnyAsync();
+            bool IsUser = await _applicationDbContext.Student.Where(x => x.nic == request.nic && x.password == request.password).AnyAsync();
             if (IsUser)
             {
-                var result =await _applicationDbContext.Student.Where(x => x.nic == request.nic && x.password == request.password).FirstOrDefaultAsync();
+                var result = await _applicationDbContext.Student.Where(x => x.nic == request.nic && x.password == request.password).FirstOrDefaultAsync();
                 return Ok(result);
             }
             else
@@ -81,14 +85,14 @@ namespace NIBM_Job_Portal.Controllers.API
 
         [HttpPost]
         [Route("profile")]
-        public async Task<IActionResult> profile(int id,StudentRequest request)
+        public async Task<IActionResult> profile(int id, StudentRequest request)
         {
             try
             {
                 var result = await _applicationDbContext.Student.FindAsync(id);
-                result.name = request.name!=null ? request.name : result.name;
-                result.email = request.email!=null ? request.email : result.email;
-                result.password = request.password!=null? request.password : result.password;
+                result.name = request.name != null ? request.name : result.name;
+                result.email = request.email != null ? request.email : result.email;
+                result.password = request.password != null ? request.password : result.password;
                 _applicationDbContext.Student.Update(result);
                 await _applicationDbContext.SaveChangesAsync();
                 return Ok(result);
@@ -97,9 +101,55 @@ namespace NIBM_Job_Portal.Controllers.API
             {
                 return NotFound();
             }
-            
+
         }
 
+        [HttpGet]
+        [Route("password")]
+        public async Task<IActionResult> password(int id)
+        {
+
+            var result = await _applicationDbContext.Student.FindAsync(id);
+            if (result != null)
+            {
+                string sRandomOTP = GenerateRandomOTP(4, saAllowedCharacters);
+                await _emailService.SendOtp(result.email, sRandomOTP);
+                
+                return Ok(sRandomOTP);
+            }
+            else
+            {
+                return NotFound();
+            }
+
+
+        }
+
+        private string GenerateRandomOTP(int iOTPLength, string[] saAllowedCharacters)
+
+        {
+
+            string sOTP = String.Empty;
+
+            string sTempChars = String.Empty;
+
+            Random rand = new Random();
+
+            for (int i = 0; i < iOTPLength; i++)
+
+            {
+
+                int p = rand.Next(0, saAllowedCharacters.Length);
+
+                sTempChars = saAllowedCharacters[rand.Next(0, saAllowedCharacters.Length)];
+
+                sOTP += sTempChars;
+
+            }
+
+            return sOTP;
+
+        }
 
 
     }
