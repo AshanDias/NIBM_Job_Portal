@@ -51,7 +51,7 @@ namespace ATM_Early_Detection.Service
                     smtp.Send(message);
                 }
             }
-            catch(Exception ex)
+            catch
             {
 
             }
@@ -95,7 +95,49 @@ namespace ATM_Early_Detection.Service
                     smtp.Send(message);
                 }
             }
-            catch (Exception ex)
+            catch 
+            {
+
+            }
+
+
+            return Task.CompletedTask;
+        }
+
+        public Task SendEmail(string email, string subject,string body)
+        {
+            var fromAddress = new MailAddress("nibmjobportal@gmail.com", "NIBM Job Portal");
+            var toAddress = new MailAddress(email, "User");
+            const string fromPassword = "NibmJob2021";
+
+
+            var smtp = new SmtpClient
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+            };
+
+            var builder = new BodyBuilder();
+            builder.HtmlBody = body;
+
+            try
+            {
+                using (var message = new MailMessage(fromAddress, toAddress)
+                {
+                    Subject = subject,
+                    Body = builder.ToMessageBody().ToString().Replace("Content-Type: text/html; charset=utf-8", ""),
+                    IsBodyHtml = true,
+                    BodyEncoding = Encoding.ASCII
+                })
+                {
+                    smtp.Send(message);
+                }
+            }
+            catch 
             {
 
             }
