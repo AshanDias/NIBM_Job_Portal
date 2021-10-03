@@ -26,6 +26,8 @@ namespace NIBM_Job_Portal.Models
         public DbSet<StudentDetails> StudentDetails { get; set; }
         public DbSet<AppliedJob> AppliedJob { get; set; }
         public DbSet<CVDocs> CVDocs { get; set; }
+        public DbSet<Skills> Skills { get; set; }
+        public DbSet<Category> Category { get; set; }
 
     }
 }

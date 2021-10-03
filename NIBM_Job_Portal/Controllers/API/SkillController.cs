@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NIBM_Job_Portal.Models;
 using System;
 using System.Collections.Generic;
@@ -27,8 +28,7 @@ namespace NIBM_Job_Portal.Controllers.API
         {
             try
             {
-
-                return Ok();
+                return Ok(await _applicationDbContext.Skills.ToListAsync());
             }
             catch
             {

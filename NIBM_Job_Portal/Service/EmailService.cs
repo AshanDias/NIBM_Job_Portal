@@ -9,7 +9,7 @@ using MimeKit;
 using System.Text;
 using System.Text.Encodings.Web;
 
-namespace ATM_Early_Detection.Service
+namespace NIBM_Job_Portal.Service
 {
     public class EmailService : IEmailService
     {

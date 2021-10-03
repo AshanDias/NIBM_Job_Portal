@@ -1,4 +1,4 @@
-using ATM_Early_Detection.Service;
+using NIBM_Job_Portal.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -9,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NIBM_Job_Portal.Interface;
 using NIBM_Job_Portal.Models;
-using NIBM_Job_Portal.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -102,6 +101,11 @@ namespace NIBM_Job_Portal
                     name: "default",
                     pattern: "{controller=Company}/{action=Index}/{id?}");
             });
+
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                DbSeed.DbSeed.Seed(serviceScope);
+            }
         }
     }
 }
