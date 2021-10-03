@@ -86,8 +86,9 @@ namespace NIBM_Job_Portal.Controllers.API
             try
             {
                 var result = await _applicationDbContext.Student.FindAsync(id);
-                result.name = request.name;
-                result.email = request.email;
+                result.name = request.name!=null ? request.name : result.name;
+                result.email = request.email!=null ? request.email : result.email;
+                result.password = request.password!=null? request.password : result.password;
                 _applicationDbContext.Student.Update(result);
                 await _applicationDbContext.SaveChangesAsync();
                 return Ok(result);
