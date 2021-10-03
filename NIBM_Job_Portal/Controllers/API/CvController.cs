@@ -41,7 +41,7 @@ namespace NIBM_Job_Portal.Models.API
             }
             catch
             {
-                return StatusCode(500);
+                return NotFound();
             }
 
         }
@@ -52,17 +52,37 @@ namespace NIBM_Job_Portal.Models.API
         {
             try
             {
-                List<string> vcs = new List<string>();
+                List<Dictionary<int, string>> cvs = new List<Dictionary<int, string>>();
                 var students = await _applicationDbContext.CVDocs.Where(x => x.StudentId == id).ToListAsync();
                 foreach (var item in students)
                 {
-                    vcs.Add(item.document_url);
+                    Dictionary<int, string> obj = new Dictionary<int, string>();
+                    obj.Add(item.Id, item.document_url);
+                    cvs.Add(obj);
                 }
-                return Ok(vcs);
+                return Ok(cvs);
             }
             catch
             {
-                return StatusCode(500);
+                return NotFound();
+            }
+
+        }
+
+        [HttpGet]
+        [Route("deletecv")]
+        public async Task<IActionResult> DeleteCv(int id)
+        {
+            try
+            {
+                var res=await _applicationDbContext.CVDocs.Where(x => x.Id == id).FirstOrDefaultAsync();
+                _applicationDbContext.CVDocs.Remove(res);
+                await _applicationDbContext.SaveChangesAsync();
+                return Ok("success");
+            }
+            catch
+            {
+                return NotFound();
             }
 
         }
