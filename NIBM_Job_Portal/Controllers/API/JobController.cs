@@ -96,6 +96,23 @@ namespace NIBM_Job_Portal.Controllers.API
 
 
 
+        [HttpPost]
+        [Route("checkstatus")]
+        public async Task<IActionResult> CheckStatus(JobRequest request)
+        {
+            try
+            {
+                return Ok(await _applicationDbContext.AppliedJob.AnyAsync(x => x.studentId == request.id && x.jobId == request.job_post));
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+
+        }
+
+
+
 
     }
 }
