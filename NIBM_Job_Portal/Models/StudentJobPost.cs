@@ -36,6 +36,8 @@ namespace NIBM_Job_Portal.Models
         public int Age { get; set; }
         public string CV { get; set; }
         public int JobId { get; set; }
+        public int StudentId { get; set; }
         public Job Job { get; set; }
+        public Student Student { get; set; }
     }
 }

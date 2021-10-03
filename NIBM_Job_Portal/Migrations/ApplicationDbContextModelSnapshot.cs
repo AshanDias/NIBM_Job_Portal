@@ -343,6 +343,29 @@ namespace NIBM_Job_Portal.Migrations
                     b.ToTable("JobCategory");
                 });
 
+            modelBuilder.Entity("NIBM_Job_Portal.Models.Student", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("email")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("name")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("nic")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("password")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Student");
+                });
+
             modelBuilder.Entity("NIBM_Job_Portal.Models.StudentJobPost", b =>
                 {
                     b.Property<int>("Id")
@@ -412,9 +435,14 @@ namespace NIBM_Job_Portal.Migrations
                     b.Property<string>("Sk9")
                         .HasColumnType("longtext");
 
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("JobId");
+
+                    b.HasIndex("StudentId");
 
                     b.ToTable("StudentJobPost");
                 });
@@ -514,7 +542,15 @@ namespace NIBM_Job_Portal.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("NIBM_Job_Portal.Models.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Job");
+
+                    b.Navigation("Student");
                 });
 #pragma warning restore 612, 618
         }
