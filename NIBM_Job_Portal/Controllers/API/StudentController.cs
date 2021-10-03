@@ -126,7 +126,45 @@ namespace NIBM_Job_Portal.Controllers.API
 
         }
 
-     
+
+        [HttpGet]
+        [Route("categories")]
+        public async Task<IActionResult> categories(int id)
+        {
+
+            var result = await _applicationDbContext.StudentDetails.Where(x => x.StudentId == id).FirstOrDefaultAsync();
+            if (result != null)
+            {
+                return Ok(result.categories.Split(',').ToArray());
+            }
+            else
+            {
+                return NotFound();
+            }
+
+
+        }
+
+
+         [HttpGet]
+        [Route("skills")]
+        public async Task<IActionResult> skills(int id)
+        {
+
+            var result = await _applicationDbContext.StudentDetails.Where(x => x.StudentId == id).FirstOrDefaultAsync();
+            if (result != null)
+            {
+                return Ok(result.skills.Split(',').ToArray());
+            }
+            else
+            {
+                return NotFound();
+            }
+
+
+        }
+
+
 
 
     }
