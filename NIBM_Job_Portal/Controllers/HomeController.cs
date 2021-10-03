@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 
 namespace NIBM_Job_Portal.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize]
     
     public class HomeController : Controller

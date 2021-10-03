@@ -12,7 +12,9 @@ using System.Threading.Tasks;
 
 namespace NIBM_Job_Portal.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize]
+
     public class CompanyController : Controller
     {
         private readonly ApplicationDbContext _applicationDbContext;

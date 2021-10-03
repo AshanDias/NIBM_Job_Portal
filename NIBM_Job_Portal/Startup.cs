@@ -49,7 +49,7 @@ namespace NIBM_Job_Portal
             services.AddScoped<IEmailService, EmailService>();
 
             services.AddAuthentication();
-
+            services.AddSwaggerGen();
             //services.ConfigureApplicationCookie(options =>
             //{
             //    // Cookie settings
@@ -79,8 +79,12 @@ namespace NIBM_Job_Portal
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-       
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "NIBM Job Portal API V1");
+            });
             app.UseRouting();
 
             app.UseHttpsRedirection();

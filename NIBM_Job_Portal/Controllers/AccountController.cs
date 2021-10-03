@@ -21,7 +21,7 @@ using NIBM_Job_Portal.Helpers;
 
 namespace NIBM_Job_Portal.Controllers
 {
-
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class AccountController : Controller
     {
         private readonly SignInManager<ApplicationUser> _signInManager;

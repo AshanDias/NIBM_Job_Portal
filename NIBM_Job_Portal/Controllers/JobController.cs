@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace NIBM_Job_Portal.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize]
     public class JobController : Controller
     {
