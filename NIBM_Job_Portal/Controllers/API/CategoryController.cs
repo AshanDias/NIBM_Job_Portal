@@ -20,8 +20,7 @@ namespace NIBM_Job_Portal.Controllers.API
             _applicationDbContext = applicationDbContext;
         }
 
-
-
+     
         [HttpGet]
         [Route("get")]
         public async Task<IActionResult> Get()
