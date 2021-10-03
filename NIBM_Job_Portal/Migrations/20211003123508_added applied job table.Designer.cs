@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NIBM_Job_Portal.Models;
 
 namespace NIBM_Job_Portal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211003123508_added applied job table")]
+    partial class addedappliedjobtable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -228,17 +230,10 @@ namespace NIBM_Job_Portal.Migrations
                     b.Property<string>("cv_url")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("jobId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("studentId")
-                        .HasColumnType("int");
+                    b.Property<string>("jobId")
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("jobId");
-
-                    b.HasIndex("studentId");
 
                     b.ToTable("AppliedJob");
                 });
@@ -560,25 +555,6 @@ namespace NIBM_Job_Portal.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("NIBM_Job_Portal.Models.AppliedJob", b =>
-                {
-                    b.HasOne("NIBM_Job_Portal.Models.Job", "Job")
-                        .WithMany()
-                        .HasForeignKey("jobId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("NIBM_Job_Portal.Models.Student", "Student")
-                        .WithMany()
-                        .HasForeignKey("studentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Job");
-
-                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("NIBM_Job_Portal.Models.Company", b =>

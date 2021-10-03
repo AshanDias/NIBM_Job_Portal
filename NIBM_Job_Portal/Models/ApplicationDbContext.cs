@@ -24,6 +24,7 @@ namespace NIBM_Job_Portal.Models
         public DbSet<StudentJobPost> StudentJobPost { get; set; }
         public DbSet<Student> Student { get; set; }
         public DbSet<StudentDetails> StudentDetails { get; set; }
+        public DbSet<AppliedJob> AppliedJob { get; set; }
 
     }
 }

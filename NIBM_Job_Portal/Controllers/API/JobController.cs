@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NIBM_Job_Portal.Interface;
 using NIBM_Job_Portal.Models;
 using NIBM_Job_Portal.Models.API;
@@ -17,37 +18,51 @@ namespace NIBM_Job_Portal.Controllers.API
     [ApiController]
     public class JobController : ControllerBase
     {
-        private readonly IJobService _jobService;
-        public JobController(IJobService jobService)
+        private readonly ApplicationDbContext _applicationDbContext;
+
+        public JobController(ApplicationDbContext applicationDbContext)
         {
-            _jobService = jobService;
+            _applicationDbContext = applicationDbContext;
         }
-        
-        /// <summary>
-        /// Search the job by job title
-        /// </summary>
-        /// <param name="request">Required the job titile</param>
-        /// <returns></returns>
+
         [HttpGet]
-        [Route("SearchJobByTitle")]
-        public async Task<List<Job>> SearchJobByTitle(string title)
+        [Route("category")]
+        public async Task<IActionResult> Category(int id)
         {
-            return await _jobService.SearchJobByTitle(title);
+            try
+            {
+                return Ok(await _applicationDbContext.Job.Where(x => x.JobCategoryId == id).ToListAsync());
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
 
         }
 
-        /// <summary>
-        /// Search the job by job category
-        /// </summary>
-        /// <param name="request">Required the category id</param>
-        /// <returns></returns>
-        [HttpGet]
-        [Route("SearchJobByCategory")]
-        public async Task<List<Job>> SearchJobByCategory(int categoryId)
-        {
-            return await _jobService.SearchJobByCategory(categoryId);
-        }
 
+        [HttpPost]
+        [Route("apply")]
+        public async Task<IActionResult> Apply(JobRequest request)
+        {
+            try
+            {
+                AppliedJob model = new AppliedJob();
+                model.cv_url = request.cv_url;
+                model.jobId = request.job_post;
+                model.studentId = request.id;
+
+                _applicationDbContext.AppliedJob.Add(model);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return Ok(request);
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+
+        }
 
     }
 }

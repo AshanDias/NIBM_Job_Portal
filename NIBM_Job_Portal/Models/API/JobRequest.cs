@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 
 namespace NIBM_Job_Portal.Models.API
 {
-    public class JobRequestModel
+    public class JobRequest
     {
-        public string title { get; set; }
-        public int categoryId { get; set; }
+        public int id { get; set; }
+        public string cv_url { get; set; }
+        public int job_post { get; set; }
     }
 }
