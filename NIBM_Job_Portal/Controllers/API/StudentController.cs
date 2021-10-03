@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NIBM_Job_Portal.Helpers;
 using NIBM_Job_Portal.Interface;
 using NIBM_Job_Portal.Models;
 using NIBM_Job_Portal.Models.API;
@@ -112,7 +113,7 @@ namespace NIBM_Job_Portal.Controllers.API
             var result = await _applicationDbContext.Student.FindAsync(id);
             if (result != null)
             {
-                string sRandomOTP = GenerateRandomOTP(4, saAllowedCharacters);
+                string sRandomOTP = Helper.GenerateRandomOTP(4, saAllowedCharacters);
                 await _emailService.SendOtp(result.email, sRandomOTP);
                 
                 return Ok(sRandomOTP);
@@ -125,31 +126,7 @@ namespace NIBM_Job_Portal.Controllers.API
 
         }
 
-        private string GenerateRandomOTP(int iOTPLength, string[] saAllowedCharacters)
-
-        {
-
-            string sOTP = String.Empty;
-
-            string sTempChars = String.Empty;
-
-            Random rand = new Random();
-
-            for (int i = 0; i < iOTPLength; i++)
-
-            {
-
-                int p = rand.Next(0, saAllowedCharacters.Length);
-
-                sTempChars = saAllowedCharacters[rand.Next(0, saAllowedCharacters.Length)];
-
-                sOTP += sTempChars;
-
-            }
-
-            return sOTP;
-
-        }
+     
 
 
     }
