@@ -127,6 +127,7 @@ namespace NIBM_Job_Portal.Controllers
                 }
                 else
                 {
+                    job.posted_date = System.DateTime.Today;
                     _applicationDbContext.Job.Add(job);
                 }
 
