@@ -64,5 +64,38 @@ namespace NIBM_Job_Portal.Controllers.API
 
         }
 
+
+
+        [HttpGet]
+        [Route("getbycategory")]
+        public async Task<IActionResult> GetByategory(int id)
+        {
+            try
+            {
+              var student=  await _applicationDbContext.StudentDetails.Where(x => x.StudentId == id).FirstOrDefaultAsync();
+
+                List<string> categories = new List<string>();
+                categories = student.categories.Split(',').ToList();
+                var jobs = await _applicationDbContext.Job.Include(x => x.JobCategory).ToListAsync();
+                List<Job> result = new List<Job>();
+                foreach (var item in jobs)
+                {
+                    if (categories.Any(x => x.Contains(item.JobCategory.Name)))
+                    {
+                        result.Add(item);
+                    }
+                }
+                return Ok(result);
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+
+        }
+
+
+
+
     }
 }
