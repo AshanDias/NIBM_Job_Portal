@@ -13,9 +13,11 @@
 
                 <div class="span4"></div>
                 <div class="span4">
-                    <img src="~/images/logo2.png" width="180px" height="auto" style="display: block; margin-top: 20%;
+                    <a asp-controller="Account"  asp-action="Login">
+                        <img src="~/images/logo2.png" width="180px" height="auto" style="display: block; margin-top: 20%;
                                 margin-left: auto;
                                 margin-right: auto;">
+                        </a>
                 </div>
                 <div class="span4"></div>
 
@@ -72,7 +74,7 @@
                     @*<a class="nav-link text-white" asp-area="" asp-controller="AdminAccount" asp-action="Login">Admin Login</a>*@
                     <span>
                         <a class="text-light" asp-area="" asp-controller="TNC" asp-action="index">Terms and Condition</a> &nbsp;
-                        <a href="" class="text-light">Privacy Policy</a>
+                        <a class="text-light"  asp-controller="TNC" asp-action="PrivacyPolicy">Privacy Policy</a>
                     </span>
                 </div>                 
             </div>
