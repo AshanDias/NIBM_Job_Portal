@@ -70,7 +70,7 @@ namespace NIBM_Job_Portal.Controllers
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = register.Email, Email = register.Email };
+                var user = new ApplicationUser { UserName = register.Email, Email = register.Email,UserType=(int)UserTypeEnum.Admin };
                 var result = await _userManager.CreateAsync(user, register.Password);
                 if (result.Succeeded)
                 {
