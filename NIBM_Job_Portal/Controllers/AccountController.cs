@@ -96,6 +96,10 @@ namespace NIBM_Job_Portal.Controllers
         [Route("Identity/[controller]/Login")]
         public async Task<IActionResult> Login()
         {
+            if (TempData["pwd"] != null)
+            {
+                ViewData["password"] = "Password reset success. Please login!";
+            }
             Login login = new Login();
             return View(login);
         }
@@ -213,8 +217,8 @@ namespace NIBM_Job_Portal.Controllers
         }
 
         [HttpPost]
-        [Route("ResetPasswordPost")]
-        public async Task<IActionResult> ResetPasswordPost(ResetPasswordModel model)
+        [Route("ResetPassword")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordModel model)
         {
             if (ModelState.IsValid)
             {
@@ -222,25 +226,29 @@ namespace NIBM_Job_Portal.Controllers
                 if (user == null)
                 {
                     ModelState.AddModelError("", "User not found");
-                    return RedirectToAction("ResetPassword", model);
+                    return View("ResetPassword", model);
                 }
 
                 var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
                 if (result.Succeeded)
                 {
+                    TempData["pwd"] = "1";
                     return RedirectToAction("Login");
                 }
                 else
                 {
                     ModelState.AddModelError("", "Unable reset password!");
-                    return RedirectToAction("ResetPassword", model);
+                    return View("ResetPassword", model);
                 }
               
             }
             else
             {
-                ModelState.AddModelError("","Error");
-                return RedirectToAction("ResetPassword", model);
+                if (model.Password == model.ConfirmPassword)
+                {
+                    ModelState.AddModelError("", "Unable to proces. Please enter the valid input!");
+                }
+                return View("ResetPassword", model);
             }
         }
 

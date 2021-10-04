@@ -26,9 +26,11 @@
         <div class="col-md-6 login-form-2">
  
             <h3>Sign In <sup><i class="fa fa-user"  aria-hidden="true"></i></sup></h3>
- 
+           
             <form id="account" method="post" asp-action="OnLogin" asp-controller="Account">
                 <hr />
+                <div class="text-white">@ViewData["password"]</div>
+                <br />
                 <div asp-validation-summary="ModelOnly" class="text-white"></div>
                 <div class="form-group">
                     <input asp-for="Email" placeholder="Email" class="form-control" />
