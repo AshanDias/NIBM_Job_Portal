@@ -13,5 +13,10 @@ namespace NIBM_Job_Portal.Controllers
         {
             return View();
         }
+
+        public IActionResult PrivacyPolicy()
+        {
+            return View();
+        }
     }
 }
