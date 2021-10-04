@@ -71,6 +71,7 @@ namespace NIBM_Job_Portal.Controllers
 
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email,TemporyPassword=model.DefaultPasssword };
                 var result = await _userManager.CreateAsync(user, model.DefaultPasssword);
+                var res=await _userManager.FindByEmailAsync(model.Email);
                 if (result.Succeeded)
                 {
                     
@@ -87,7 +88,15 @@ namespace NIBM_Job_Portal.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "error");
+                    if (res != null)
+                    {
+                        ModelState.AddModelError("", "User already exist!");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Unable to create user!");
+                    }
+                   
                     return View("Create", model);
                 }
 

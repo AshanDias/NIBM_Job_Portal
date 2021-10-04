@@ -43,13 +43,12 @@
 
     <div class="col-lg-8">
         <form method="post" asp-action="Create" asp-controller="Company">
- 
+            <div asp-validation-summary="All" class="text-danger"></div>
             <div class="row">
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label for="">Company Name <small>(60CH)</small></label>
                         <input type="text" asp-for="Company_Name" class="form-control" maxlength="60" placeholder="Company Name">
-                        <span asp-validation-for="Company_Name" class="form-text text-danger"></span>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -59,7 +58,6 @@
                             <option selected value="">Choose</option>
                         </select>
                         <input type="hidden" asp-for="IndustryId" />
-                        <span asp-validation-for="IndustryId" class="form-text text-danger"></span>
                     </div>
                 </div>
             </div>
@@ -72,7 +70,6 @@
 
                         <input asp-for="Email" id="txtEmail" type="email" class="form-control" placeholder="Email">
 
-                        <span asp-validation-for="Email" class="form-text text-danger"></span>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -84,20 +81,19 @@
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary" type="button"><i class='fa fa-eye-slash' id="btnShowAutoPassword" aria-hidden='true'></i></button>
                             </div>
-                        </div>                         
-                        <span asp-validation-for="DefaultPasssword" class="form-text text-danger"></span>
+                        </div>
                     </div>
                 </div>
             </div>
             @*<label for="">Company ID</label>*@
             <input type="text" style="visibility:hidden" asp-for="Id" disabled placeholder="Company ID">
             @*<span class="form-text text-muted" asp-validation-for="Id"></span>*@
-        <div class="row float-right">
-            <button type="submit" class="btn btn-sm btn-primary mr-1">Add New</button>
-            <a id="sidebar_profile" class="btn btn-sm btn-primary"  asp-area="" asp-controller="Company" asp-action="Index">
-                Cancel
-            </a> 
-        </div>
+            <div class="row float-right">
+                <button type="submit" class="btn btn-sm btn-primary mr-1">Add New</button>
+                <a id="sidebar_profile" class="btn btn-sm btn-primary" asp-area="" asp-controller="Company" asp-action="Index">
+                    Cancel
+                </a>
+            </div>
 
         </form>
     </div>
