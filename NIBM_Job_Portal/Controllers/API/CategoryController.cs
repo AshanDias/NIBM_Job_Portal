@@ -27,7 +27,7 @@ namespace NIBM_Job_Portal.Controllers.API
         {
             try
             {
-                return Ok(await _applicationDbContext.Category.ToListAsync());
+                return Ok(await _applicationDbContext.JobCategory.ToListAsync());
             }
             catch
             {

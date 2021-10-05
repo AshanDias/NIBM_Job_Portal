@@ -15,19 +15,19 @@ namespace NIBM_Job_Portal.DbSeed
             var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             context.Database.Migrate();
 
-            if (!context.Category.Any())
+            if (!context.JobCategory.Any())
             {
-                context.Category.Add(new Category { Id = 1, name = "Quality Assurance" });
-                context.Category.Add(new Category { Id = 2, name = "Data Scientist" });
-                context.Category.Add(new Category { Id = 3, name = "Software Development" });
-                context.Category.Add(new Category { Id = 4, name = "Dev Ops" });
-                context.Category.Add(new Category { Id = 5, name = "Business Analyst" });
-                context.Category.Add(new Category { Id = 6, name = "Project Manager" });
-                context.Category.Add(new Category { Id = 7, name = "Graphics Designer" });
-                context.Category.Add(new Category { Id = 8, name = "Data Entry" });
-                context.Category.Add(new Category { Id = 9, name = "Implementation" });
-                context.Category.Add(new Category { Id = 10, name = "Tech Lead" });
-                context.Category.Add(new Category { Id = 11, name = "Software Architect" });
+                context.JobCategory.Add(new JobCategory { Id = 1, Name = "Quality Assurance" });
+                context.JobCategory.Add(new JobCategory { Id = 2, Name = "Data Scientist" });
+                context.JobCategory.Add(new JobCategory { Id = 3, Name = "Software Development" });
+                context.JobCategory.Add(new JobCategory { Id = 4, Name = "Dev Ops" });
+                context.JobCategory.Add(new JobCategory { Id = 5, Name = "Business Analyst" });
+                context.JobCategory.Add(new JobCategory { Id = 6, Name = "Project Manager" });
+                context.JobCategory.Add(new JobCategory { Id = 7, Name = "Graphics Designer" });
+                context.JobCategory.Add(new JobCategory { Id = 8, Name = "Data Entry" });
+                context.JobCategory.Add(new JobCategory { Id = 9, Name = "Implementation" });
+                context.JobCategory.Add(new JobCategory { Id = 10, Name = "Tech Lead" });
+                context.JobCategory.Add(new JobCategory { Id = 11, Name = "Software Architect" });
                 context.SaveChanges();
             }
             
