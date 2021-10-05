@@ -4,9 +4,11 @@
     <script src="@Url.Content("~/js/sideBar.js")" type="text/javascript"></script>
     <script>
         changeSideBarButtonStatus("sidebar_company");
-        $('#txtEmail').keyup(function () {
 
+        $(document).ready(function () {
+            $("#btnAddNew").attr("disabled", true);
         })
+
 
         $("#btnShowAutoPassword").click(function () {
             var allInputs = $("#autoPwd");
@@ -14,12 +16,14 @@
             if (allInputs.attr('type') == "password") {
                 $('#autoPwd').prop("type", "text");
                 $("#autoPWDIcon").toggleClass("fa-eye fa-eye-slash")
-
+                $("#btnAddNew").attr("disabled", false);
 
             }
             else {
                 $('#autoPwd').prop("type", "password");
                 $("#autoPWDIcon").toggleClass("fa-eye-slash fa-eye")
+                $("#btnAddNew").attr("disabled", true);
+
             }
 
         })
@@ -44,6 +48,9 @@
     <div class="col-lg-8">
         <form method="post" asp-action="Create" asp-controller="Company">
             <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="alert alert-warning" role="alert">
+                Please complete form and show the password for active the Add New button
+            </div>
             <div class="row">
                 <div class="col-lg-6">
                     <div class="form-group">
@@ -79,7 +86,7 @@
                         <div class="input-group mb-3">
                             <input disabled type="password" asp-for="DefaultPasssword" id="autoPwd" value="@Model.DefaultPasssword" class="form-control">
                             <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" id="btnShowAutoPassword"  type="button"><i class='fa fa-eye-slash' id="autoPWDIcon"  aria-hidden='true'></i></button>
+                                <button class="btn btn-outline-secondary" id="btnShowAutoPassword" type="button"><i class='fa fa-eye-slash' id="autoPWDIcon" aria-hidden='true'></i></button>
                             </div>
                         </div>
                     </div>
@@ -89,7 +96,7 @@
             <input type="text" style="visibility:hidden" asp-for="Id" disabled placeholder="Company ID">
             @*<span class="form-text text-muted" asp-validation-for="Id"></span>*@
             <div class="row float-right">
-                <button type="submit" class="btn btn-sm btn-primary mr-1">Add New</button>
+                <button type="submit" id="btnAddNew" class="btn btn-sm btn-primary mr-1">Add New</button>
                 <a id="sidebar_profile" class="btn btn-sm btn-primary" asp-area="" asp-controller="Company" asp-action="Index">
                     Cancel
                 </a>
