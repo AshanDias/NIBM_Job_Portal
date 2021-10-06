@@ -14,7 +14,7 @@
               mb-3
               border-bottom
             ">
-    <h1 class="h2">Applicant Summery</h1>  
+    <h1 class="h2">Applicant Summary</h1>  
     @*<a href="@Url.Action("JobApplications", "Job", new { Id = 1})"class="btn btn-primary btn-sm">
         <i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i>  back
     </a>*@
@@ -69,7 +69,7 @@
                         <div class="col-lg-6">
                             @foreach (var item in Model.Skills)
                             {
-                                 <span class="badge badge-success ml-1 shadow-lg"
+                                 <span class="badge badge-primary ml-1 shadow-lg"
                                   style="min-width: 3rem">@item</span>
                             }
                            
@@ -82,10 +82,10 @@
     <br />
     <div class="row">
         <div class="col">
-            <h6 for="">Height Qualifications</h6>
+            <h6 for="">Highest Qualifications</h6>
             <div class="col">
                 <div class="row">
-                    <div class="alert alert-success ml-1" role="alert">
+                    <div class="alert alert-primary ml-1" role="alert">
                         @Model.StudentDetails.highest_qualification
                     </div>
                 </div>
