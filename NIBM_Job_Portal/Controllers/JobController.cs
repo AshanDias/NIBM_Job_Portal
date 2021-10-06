@@ -58,7 +58,7 @@ namespace NIBM_Job_Portal.Controllers
 
                 foreach (var item in jobs)
                 {
-                    item.count = _applicationDbContext.StudentJobPost.Where(x => x.JobId == item.Id).Count();
+                    item.count = _applicationDbContext.AppliedJob.Where(x => x.jobId == item.Id).Count();
                 }
                 
                 return View(jobs);
