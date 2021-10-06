@@ -114,6 +114,33 @@ namespace NIBM_Job_Portal.Controllers.API
         }
 
         [HttpPost]
+        [Route("updateprofile")]
+        public async Task<IActionResult> UpdateProfile(StudentFormRequest request)
+        {
+            try
+            {
+                Student student = await _applicationDbContext.Student.Where(x => x.Id == request.id).FirstOrDefaultAsync();
+                student.name = request.name;
+                student.email = request.email;
+                _applicationDbContext.Student.Update(student);
+
+                StudentDetails studentDetails = await _applicationDbContext.StudentDetails.Where(x => x.StudentId == request.id).FirstOrDefaultAsync();
+                studentDetails.highest_qualification = request.highest_qualification;
+                studentDetails.qualified_year = request.qualified_year;
+                _applicationDbContext.StudentDetails.Update(studentDetails);
+
+                await _applicationDbContext.SaveChangesAsync();
+
+
+                return Ok("success");
+            }
+            catch
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpPost]
         [Route("profile")]
         public async Task<IActionResult> profile(int id, StudentRequest request)
         {
