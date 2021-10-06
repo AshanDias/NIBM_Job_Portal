@@ -1,4 +1,4 @@
-﻿@model StudentJobPost
+﻿@model StudentDetailsViewModel
 @{
     ViewData["Title"] = "ApplicationDetails";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -19,7 +19,7 @@
         <i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i>  back
     </a>*@
 </div>
-@if (Model != null)
+@if (Model.StudentDetails != null)
 {
 <div class="container">
     <div class="row">
@@ -63,40 +63,22 @@
                                 <tbody>
                                     <tr>
                                         <td>Name</td>
-                                        <td>@Model.Name</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Age</td>
-                                        <td>@Model.Age</td>
+                                        <td>@Model.StudentDetails.Student.name</td>
                                     </tr>
                                     <tr>
                                         <td>Email</td>
-                                        <td>@Model.Email</td>
+                                        <td>@Model.StudentDetails.Student.email</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                         <div class="col-lg-6">
-                            <span class="badge badge-success ml-1 shadow-lg"
-                                  style="min-width: 3rem">@Model.Sk1</span>
-                            <span class="badge badge-success ml-1 shadow-lg"
-                                  style="min-width: 3rem">@Model.Sk2</span>
-                            <span class="badge badge-success ml-1 shadow-lg"
-                                  style="min-width: 3rem">@Model.Sk3</span>
-                            <span class="badge badge-success ml-1 shadow-lg"
-                                  style="min-width: 3rem">@Model.Sk4</span>
-                            <span class="badge badge-success ml-1 shadow-lg"
-                                  style="min-width: 3rem">@Model.Sk5</span>
-                            <span class="badge badge-success ml-1 shadow-lg"
-                                  style="min-width: 3rem">@Model.Sk6</span>
-                            <span class="badge badge-success ml-1 shadow-lg"
-                                  style="min-width: 3rem">@Model.Sk7</span>
-                            <span class="badge badge-success ml-1 shadow-lg"
-                                  style="min-width: 3rem">@Model.Sk8</span>
-                            <span class="badge badge-success ml-1 shadow-lg"
-                                  style="min-width: 3rem">@Model.Sk9</span>
-                            <span class="badge badge-success ml-1 shadow-lg"
-                                  style="min-width: 3rem">@Model.Sk10</span>
+                            @foreach (var item in Model.Skills)
+                            {
+                                 <span class="badge badge-success ml-1 shadow-lg"
+                                  style="min-width: 3rem">@item</span>
+                            }
+                           
                         </div>
                     </div>
                 </div>
@@ -110,16 +92,7 @@
             <div class="col">
                 <div class="row">
                     <div class="alert alert-success ml-1" role="alert">
-                        @Model.Ql1
-                    </div>
-                    <div class="alert alert-success ml-1" role="alert">
-                        @Model.Ql2
-                    </div>
-                    <div class="alert alert-success ml-1" role="alert">
-                        @Model.Ql3
-                    </div>
-                    <div class="alert alert-success ml-1" role="alert">
-                        @Model.Ql4
+                        @Model.StudentDetails.highest_qualification
                     </div>
                 </div>
             </div>
@@ -132,7 +105,7 @@
                 <h6 for="">Description</h6>
                 <textarea class="form-control shadow-md"
                           name="" disabled
-                          id="" asp-for="Description"
+                          id="" asp-for="StudentDetails.about"
                           rows="4"></textarea>
             </div>
         </div>
