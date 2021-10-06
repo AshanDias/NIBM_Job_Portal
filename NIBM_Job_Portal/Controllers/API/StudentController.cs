@@ -31,14 +31,24 @@ namespace NIBM_Job_Portal.Controllers.API
         {
             try
             {
-                Student model = new Student();
-                model.nic = request.nic;
-                model.name = request.name;
-                model.email = request.email;
-                model.password = request.password;
-                _applicationDbContext.Student.Add(model);
-                await _applicationDbContext.SaveChangesAsync();
-                return Ok(model);
+                var result = await _applicationDbContext.Student.AnyAsync(x => x.nic == request.nic || x.email==request.email);
+                if (!result)
+                {
+                    Student model = new Student();
+                    model.nic = request.nic;
+                    model.name = request.name;
+                    model.email = request.email;
+                    model.password = request.password;
+                    _applicationDbContext.Student.Add(model);
+                    await _applicationDbContext.SaveChangesAsync();
+                    return Ok(model);
+                }
+                else
+                {
+                    return NotFound("User Already Exist!");
+                }
+               
+               
             }
             catch
             {
