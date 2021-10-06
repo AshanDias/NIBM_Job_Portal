@@ -32,7 +32,7 @@ namespace NIBM_Job_Portal.Controllers.API
             try
             {
                 Student model = new Student();
-                model.nic = request.email;
+                model.nic = request.nic;
                 model.name = request.name;
                 model.email = request.email;
                 model.password = request.password;
