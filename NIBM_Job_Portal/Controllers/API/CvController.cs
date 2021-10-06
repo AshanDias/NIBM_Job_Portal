@@ -54,13 +54,7 @@ namespace NIBM_Job_Portal.Models.API
             {
                 List<Dictionary<int, string>> cvs = new List<Dictionary<int, string>>();
                 var students = await _applicationDbContext.CVDocs.Where(x => x.StudentId == id).ToListAsync();
-                foreach (var item in students)
-                {
-                    Dictionary<int, string> obj = new Dictionary<int, string>();
-                    obj.Add(item.Id, item.document_url);
-                    cvs.Add(obj);
-                }
-                return Ok(cvs);
+                return Ok(students);
             }
             catch
             {
