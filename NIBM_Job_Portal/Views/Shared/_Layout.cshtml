@@ -8,6 +8,11 @@
 @{
     var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
     var user = _applicationDbContext.Users.FirstOrDefault(x => x.Id == id);
+    if (user == null)
+    {
+        Context.Response.Clear();
+        Context.Response.Redirect("Identity/Account/Login");
+    }
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -31,29 +36,33 @@
         <div class="collapse navbar-collapse form-inline my-2 my-lg-0" id="navbarText">
             <ul class="navbar-nav flex-grow-1  d-flex flex-row-reverse">
                 <li class="nav-item">
-                    @if (_signManager.IsSignedIn(User))
-                    {
 
-                        <form asp-action="Logout" asp-controller="Account" method="post">
-                            <button class="nav-link text-dark btn btn-link" style="font-size:13px;text-decoration:none;" type="submit">SignOut</button>
-                        </form>
+                        @if (_signManager.IsSignedIn(User))
+                        {
 
-                    }
-                    else
-                    {
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">SignIn</a>
-                    }
+                            <form asp-action="Logout" asp-controller="Account" method="post">
+                                <button class="nav-link text-dark btn btn-link" style="font-size:13px;text-decoration:none;" type="submit">SignOut</button>
+                            </form>
+
+                        }
+                        else
+                        {
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">SignIn</a>
+                        }
                 </li>
 
                 <li class="nav-item">
-                    @if (user.UserType == (int)UserTypeEnum.User)
-                    {
-                        <a class="nav-link text-dark"><i class="fa fa-university" aria-hidden="true"></i> User</a>
-                    }
-                    else
-                    {
-                        <a class="nav-link text-dark"><i class="fa fa-user" aria-hidden="true"></i> Admin</a>
-                    }
+                 
+
+                        @if (user.UserType == (int)UserTypeEnum.User)
+                        {
+                            <a class="nav-link text-dark"><i class="fa fa-university" aria-hidden="true"></i> User</a>
+                        }
+                        else
+                        {
+                            <a class="nav-link text-dark"><i class="fa fa-user" aria-hidden="true"></i> Admin</a>
+                        }
+                   
                 </li>
 
                 <li class="nav-item">
