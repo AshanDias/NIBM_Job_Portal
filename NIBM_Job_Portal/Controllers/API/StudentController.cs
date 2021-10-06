@@ -41,11 +41,16 @@ namespace NIBM_Job_Portal.Controllers.API
                     model.password = request.password;
                     _applicationDbContext.Student.Add(model);
                     await _applicationDbContext.SaveChangesAsync();
+
+                    StudentDetails obj = new StudentDetails();
+                    obj.StudentId = model.Id;
+                    _applicationDbContext.StudentDetails.Add(obj);
+                    await _applicationDbContext.SaveChangesAsync();
                     return Ok(model);
                 }
                 else
                 {
-                    return NotFound("User Already Exist!");
+                    return StatusCode(401,"User Already Exist!");
                 }
                
                
@@ -62,11 +67,25 @@ namespace NIBM_Job_Portal.Controllers.API
         [Route("login")]
         public async Task<IActionResult> Login(StudentRequest request)
         {
+            StudentResponse response = new StudentResponse();
+            response.Student = new Student();
             bool IsUser = await _applicationDbContext.Student.Where(x => x.nic == request.nic && x.password == request.password).AnyAsync();
             if (IsUser)
             {
-                var result = await _applicationDbContext.Student.Where(x => x.nic == request.nic && x.password == request.password).FirstOrDefaultAsync();
-                return Ok(result);
+                response.Student = await _applicationDbContext.Student.Where(x => x.nic == request.nic && x.password == request.password).FirstOrDefaultAsync();
+                var res = await _applicationDbContext.StudentDetails.Where(x => x.StudentId == response.Student.Id).FirstOrDefaultAsync();
+
+                if (res!=null && response.Student != null)
+                {
+                    response.git_url = res.github_url;
+                    response.higst_ql = res.highest_qualification;
+                    response.image_url = res.image_url;
+                    response.likedin_url = res.linkedin_url;
+                    response.qulified_year = res.qualified_year;
+                    response.about = res.about;
+                }
+              
+                return Ok(response);
             }
             else
             {
