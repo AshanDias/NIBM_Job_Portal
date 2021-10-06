@@ -187,11 +187,18 @@ namespace NIBM_Job_Portal.Controllers.API
         [Route("categories")]
         public async Task<IActionResult> categories(int id)
         {
-
+            List<CategoriesResponse> categories = new List<CategoriesResponse>();
             var result = await _applicationDbContext.StudentDetails.Where(x => x.StudentId == id).FirstOrDefaultAsync();
             if (result != null)
             {
-                return Ok(result.categories.Split(',').ToArray());
+                List<string> cat = result.categories.Split(',').ToList();
+                foreach (var item in cat)
+                {
+                    CategoriesResponse res = new CategoriesResponse();
+                    res.name = item;
+                    categories.Add(res);
+                }
+                return Ok(categories);
             }
             else
             {
@@ -206,11 +213,18 @@ namespace NIBM_Job_Portal.Controllers.API
         [Route("skills")]
         public async Task<IActionResult> skills(int id)
         {
-
+            List<SkillsResponse> skillsResponses = new List<SkillsResponse>();
             var result = await _applicationDbContext.StudentDetails.Where(x => x.StudentId == id).FirstOrDefaultAsync();
             if (result != null)
             {
-                return Ok(result.skills.Split(',').ToArray());
+                List<string> skills = result.skills.Split(',').ToList();
+                foreach (var item in skills)
+                {
+                    SkillsResponse res = new SkillsResponse();
+                    res.name = item;
+                    skillsResponses.Add(res);
+                }
+                return Ok(skillsResponses);
             }
             else
             {
