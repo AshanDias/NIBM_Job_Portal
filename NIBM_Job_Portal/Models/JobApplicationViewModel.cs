@@ -7,7 +7,7 @@ namespace NIBM_Job_Portal.Models
 {
     public class JobApplicationViewModel
     {
-        public List<StudentJobPost> StudentJobPost { get; set; }
+        public List<StudentDetails> StudentJobPost { get; set; }
 
         public List<FileModel> files { get; set; }
 

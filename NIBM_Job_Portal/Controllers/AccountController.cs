@@ -93,6 +93,7 @@ namespace NIBM_Job_Portal.Controllers
         }
 
         [HttpGet]
+        [Route("Home/Identity/[controller]/Login")]
         [Route("Identity/[controller]/Login")]
         public async Task<IActionResult> Login()
         {

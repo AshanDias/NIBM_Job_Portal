@@ -239,7 +239,9 @@ namespace NIBM_Job_Portal.Controllers
             {
                 Job job = await _applicationDbContext.Job.FirstOrDefaultAsync(x => x.Id == id);
                 JobApplicationViewModel model = new JobApplicationViewModel();
-                model.StudentJobPost = await _applicationDbContext.StudentJobPost.Include(x => x.Job).Where(x => x.JobId == id).ToListAsync();
+
+                var appliedJob = await _applicationDbContext.AppliedJob.Where(x => x.jobId == id).FirstOrDefaultAsync();
+                model.StudentJobPost = await _applicationDbContext.StudentDetails.Include(x=>x.Student).Where(x => x.StudentId == appliedJob.studentId).ToListAsync();
                 model.files = new List<FileModel>();
                 ViewBag.Title = job.Position;
                 return View(model);
@@ -255,7 +257,10 @@ namespace NIBM_Job_Portal.Controllers
 
         public async Task<IActionResult> ApplicationDetails(int id)
         {
-            StudentJobPost model = await _applicationDbContext.StudentJobPost.FirstOrDefaultAsync(x => x.Id == id);
+            StudentDetailsViewModel model = new StudentDetailsViewModel();
+            model.StudentDetails = new StudentDetails();
+             model.StudentDetails = await _applicationDbContext.StudentDetails.Include(x=>x.Student).FirstOrDefaultAsync(x => x.Id == id);
+            model.Skills = model.StudentDetails.skills.Split(',').ToList();
             return View(model);
 
         }
