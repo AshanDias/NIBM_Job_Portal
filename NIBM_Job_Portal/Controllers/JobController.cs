@@ -249,7 +249,7 @@ namespace NIBM_Job_Portal.Controllers
             }
             catch
             {
-                return null;
+                return View();
             }
           
 
