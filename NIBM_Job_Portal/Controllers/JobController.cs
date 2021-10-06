@@ -259,7 +259,7 @@ namespace NIBM_Job_Portal.Controllers
         {
             StudentDetailsViewModel model = new StudentDetailsViewModel();
             model.StudentDetails = new StudentDetails();
-             model.StudentDetails = await _applicationDbContext.StudentDetails.Include(x=>x.Student).FirstOrDefaultAsync(x => x.Id == id);
+             model.StudentDetails = await _applicationDbContext.StudentDetails.Include(x=>x.Student).FirstOrDefaultAsync(x => x.StudentId == id);
             model.Skills = model.StudentDetails.skills.Split(',').ToList();
             return View(model);
 
