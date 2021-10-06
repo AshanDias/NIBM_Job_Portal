@@ -24,7 +24,7 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-3">
-            <img src="~/images/user.jpg"
+            <img src="@Model.StudentDetails.image_url"
                  alt="..."
                  class="img-thumbnail" />
         </div>
@@ -36,20 +36,14 @@
                             <h4 class="card-title">Applicant Details & Skils</h4>
                         </div>
                         <div class="col-lg-6 float-right">
-                            <a href="https://www.facebook.com/" target="_blank">
-                                <img src="~/images/logos/fblogo.png"
-                                     alt="fblogo"
-                                     width="40px;"
-                                     class="img-fluid p-1" />
-                            </a>
-
-                            <a href="https://www.linkedin.com/" target="_blank">
+                           
+                            <a href="@Model.StudentDetails.linkedin_url" target="_blank">
                                 <img src="~/images/logos/in.png"
                                      alt="fblogo"
                                      width="40px;"
                                      class="img-fluid p-1" />
                             </a>
-                            <a href="https://github.com/" target="_blank">
+                            <a href="@Model.StudentDetails.github_url" target="_blank">
                                 <img src="~/images/logos/github.png"
                                      alt="fblogo"
                                      width="40px;"
