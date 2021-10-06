@@ -163,16 +163,18 @@ namespace NIBM_Job_Portal.Controllers.API
 
         [HttpGet]
         [Route("password")]
-        public async Task<IActionResult> password(int id)
+        public async Task<IActionResult> password(string nic)
         {
 
-            var result = await _applicationDbContext.Student.FindAsync(id);
+            var result = await _applicationDbContext.Student.Where(x => x.nic == nic).FirstOrDefaultAsync();
             if (result != null)
             {
                 string sRandomOTP = Helper.GenerateRandomOTP(4, saAllowedCharacters);
                 await _emailService.SendOtp(result.email, sRandomOTP);
-                
-                return Ok(sRandomOTP);
+                PasswordResetResponse res = new PasswordResetResponse();
+                res.email = result.email;
+                res.otp = sRandomOTP;
+                return Ok(res);
             }
             else
             {
