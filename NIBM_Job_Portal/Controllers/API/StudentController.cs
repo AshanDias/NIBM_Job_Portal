@@ -86,21 +86,28 @@ namespace NIBM_Job_Portal.Controllers.API
                     response.likedin_url = res.linkedin_url;
                     response.qulified_year = res.qualified_year;
                     response.about = res.about;
-                    var skil= res.skills.Split(',').ToList();
-                    var cat= res.categories.Split(',').ToList();
-                    foreach (var item in cat)
+                    if (res.categories != null)
                     {
-                        Category categories = new Category();
-                        categories.name = item;
-                        response.Category.Add(categories);
+                        var cat = res.categories.Split(',').ToList();
+                        foreach (var item in cat)
+                        {
+                            Category categories = new Category();
+                            categories.name = item;
+                            response.Category.Add(categories);
+                        }
                     }
 
-                    foreach (var item in skil)
+                    if (res.skills != null)
                     {
-                        Skills skills = new Skills();
-                        skills.name = item;
-                        response.Skills.Add(skills);
+                        var skil = res.skills.Split(',').ToList();
+                        foreach (var item in skil)
+                        {
+                            Skills skills = new Skills();
+                            skills.name = item;
+                            response.Skills.Add(skills);
+                        }
                     }
+                   
                 }
               
                 return Ok(response);
