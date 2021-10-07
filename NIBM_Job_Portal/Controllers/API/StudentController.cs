@@ -69,6 +69,9 @@ namespace NIBM_Job_Portal.Controllers.API
         {
             StudentResponse response = new StudentResponse();
             response.Student = new Student();
+            response.Category = new List<Category>();
+            response.Skills = new List<Skills>();
+
             bool IsUser = await _applicationDbContext.Student.Where(x => x.nic == request.nic && x.password == request.password).AnyAsync();
             if (IsUser)
             {
@@ -83,6 +86,21 @@ namespace NIBM_Job_Portal.Controllers.API
                     response.likedin_url = res.linkedin_url;
                     response.qulified_year = res.qualified_year;
                     response.about = res.about;
+                    var skil= res.skills.Split(',').ToList();
+                    var cat= res.categories.Split(',').ToList();
+                    foreach (var item in cat)
+                    {
+                        Category categories = new Category();
+                        categories.name = item;
+                        response.Category.Add(categories);
+                    }
+
+                    foreach (var item in skil)
+                    {
+                        Skills skills = new Skills();
+                        skills.name = item;
+                        response.Skills.Add(skills);
+                    }
                 }
               
                 return Ok(response);

@@ -14,5 +14,8 @@ namespace NIBM_Job_Portal.Models
         public string image_url { get; set; }
         public string higst_ql{ get; set; }
         public string qulified_year { get; set; }
+
+        public List<Category> Category { get; set; }
+        public List<Skills> Skills { get; set; }
     }
 }
