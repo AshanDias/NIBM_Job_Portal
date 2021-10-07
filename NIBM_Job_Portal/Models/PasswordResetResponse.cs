@@ -9,5 +9,6 @@ namespace NIBM_Job_Portal.Models
     {
         public string otp { get; set; }
         public string email { get; set; }
+        public int id { get; set; }
     }
 }

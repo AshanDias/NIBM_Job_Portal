@@ -192,6 +192,7 @@ namespace NIBM_Job_Portal.Controllers.API
                 PasswordResetResponse res = new PasswordResetResponse();
                 res.email = result.email;
                 res.otp = sRandomOTP;
+                res.id = result.Id;
                 return Ok(res);
             }
             else
