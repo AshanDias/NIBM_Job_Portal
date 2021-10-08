@@ -247,6 +247,7 @@ namespace NIBM_Job_Portal.Controllers
                 }
                 model.files = new List<FileModel>();
                 ViewBag.Title = job.Position;
+                ViewData["jobId"] = id;
                 return View(model);
 
             }
@@ -270,14 +271,14 @@ namespace NIBM_Job_Portal.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> DownloadAll()
+        public async Task<IActionResult> DownloadAll(int jobId)
         {
             try
             {
 
 
                 int i = 0;
-                var studentPost = await _applicationDbContext.StudentJobPost.ToListAsync();
+                var studentPost = await _applicationDbContext.AppliedJob.Where(x=>x.jobId==jobId).ToListAsync();
                 if (studentPost.Count > 0)
                 {
 
@@ -286,7 +287,7 @@ namespace NIBM_Job_Portal.Controllers
                     {
                         i++;
                         var client = new HttpClient();
-                        var result = await client.GetAsync(item.CV);
+                        var result = await client.GetAsync(item.cv_url);
                         byte[] filecontent = await result.Content.ReadAsByteArrayAsync();
                         string filepath = "TempCV/CV" + i + ".pdf";
                         System.IO.File.WriteAllBytes(filepath, filecontent);
@@ -339,8 +340,9 @@ namespace NIBM_Job_Portal.Controllers
             List<string> studentPost = new List<string>();
             foreach (var item in data)
             {
-             var res= await _applicationDbContext.StudentJobPost.Where(x => x.Id == Convert.ToInt32(item)).FirstOrDefaultAsync();
-                studentPost.Add(res.CV);
+                var studntId = await _applicationDbContext.StudentDetails.Where(x => x.Id == Convert.ToInt32(item)).Select(x => x.StudentId).FirstOrDefaultAsync();
+             var res= await _applicationDbContext.AppliedJob.Where(x => x.studentId == studntId).FirstOrDefaultAsync();
+                studentPost.Add(res.cv_url);
             }
 
 
