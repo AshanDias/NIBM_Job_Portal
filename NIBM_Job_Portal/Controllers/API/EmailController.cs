@@ -28,7 +28,10 @@ namespace NIBM_Job_Portal.Controllers.API
             {
 
                 await _emailService.SendEmail(request.reciever, request.email_subject, request.email_body);
-                return Ok("success");
+                Responses response = new Responses();
+                response.Message = "Success";
+                response.StatusCode = "200";
+                return Ok(response);
             }
             catch
             {

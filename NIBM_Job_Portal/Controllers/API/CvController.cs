@@ -72,7 +72,10 @@ namespace NIBM_Job_Portal.Models.API
                 var res=await _applicationDbContext.CVDocs.Where(x => x.Id == id).FirstOrDefaultAsync();
                 _applicationDbContext.CVDocs.Remove(res);
                 await _applicationDbContext.SaveChangesAsync();
-                return Ok("success");
+                Responses response = new Responses();
+                response.Message = "Success";
+                response.StatusCode = "200";
+                return Ok(response);
             }
             catch
             {
