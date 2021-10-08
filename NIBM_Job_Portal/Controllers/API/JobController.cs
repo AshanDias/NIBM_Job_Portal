@@ -31,7 +31,7 @@ namespace NIBM_Job_Portal.Controllers.API
         {
             try
             {
-                return Ok(await _applicationDbContext.Job.Where(x => x.JobCategoryId == id).ToListAsync());
+                return Ok(await _applicationDbContext.Job.Include(x => x.Company).Where(x => x.JobCategoryId == id).ToListAsync());
             }
             catch
             {
