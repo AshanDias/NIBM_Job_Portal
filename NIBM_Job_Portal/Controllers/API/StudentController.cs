@@ -243,6 +243,7 @@ namespace NIBM_Job_Portal.Controllers.API
                             jobCount = 0;
                         }
                         CategoriesResponse res = new CategoriesResponse();
+                        res.id = cat_id.Id;
                         res.count = jobCount;
                         res.name = item;
                         categories.Add(res);
