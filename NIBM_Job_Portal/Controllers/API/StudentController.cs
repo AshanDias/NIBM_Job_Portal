@@ -131,7 +131,7 @@ namespace NIBM_Job_Portal.Controllers.API
                 _applicationDbContext.StudentDetails.Update(result);
                 await _applicationDbContext.SaveChangesAsync();
                 Responses responses = new Responses();
-                responses.StatusCode = StatusCode(200).ToString();
+                responses.StatusCode = "200";
                 responses.Message = "Success";
                 return Ok(responses);
             }
@@ -160,7 +160,7 @@ namespace NIBM_Job_Portal.Controllers.API
                 await _applicationDbContext.SaveChangesAsync();
 
                 Responses responses = new Responses();
-                responses.StatusCode = StatusCode(200).ToString();
+                responses.StatusCode = "200";
                 responses.Message = "Success";
 
                 return Ok(responses);
