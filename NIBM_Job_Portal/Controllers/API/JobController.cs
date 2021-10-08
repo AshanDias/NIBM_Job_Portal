@@ -35,7 +35,7 @@ namespace NIBM_Job_Portal.Controllers.API
             }
             catch
             {
-                return StatusCode(500);
+                return NotFound();
             }
 
         }
@@ -59,7 +59,7 @@ namespace NIBM_Job_Portal.Controllers.API
             }
             catch
             {
-                return StatusCode(500);
+                return NotFound();
             }
 
         }
@@ -89,7 +89,7 @@ namespace NIBM_Job_Portal.Controllers.API
             }
             catch
             {
-                return StatusCode(500);
+                return NotFound();
             }
 
         }
@@ -106,7 +106,7 @@ namespace NIBM_Job_Portal.Controllers.API
             }
             catch
             {
-                return StatusCode(500);
+                return NotFound();
             }
 
         }
