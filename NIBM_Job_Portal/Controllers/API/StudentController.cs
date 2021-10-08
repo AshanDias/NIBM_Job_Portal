@@ -130,7 +130,10 @@ namespace NIBM_Job_Portal.Controllers.API
                 result.GetType().GetProperty(request.key).SetValue(result, request.value);
                 _applicationDbContext.StudentDetails.Update(result);
                 await _applicationDbContext.SaveChangesAsync();
-                return Ok("success");
+                Responses responses = new Responses();
+                responses.StatusCode = StatusCode(200).ToString();
+                responses.Message = "Success";
+                return Ok(responses);
             }
             catch
             {
@@ -156,8 +159,11 @@ namespace NIBM_Job_Portal.Controllers.API
 
                 await _applicationDbContext.SaveChangesAsync();
 
+                Responses responses = new Responses();
+                responses.StatusCode = StatusCode(200).ToString();
+                responses.Message = "Success";
 
-                return Ok("success");
+                return Ok(responses);
             }
             catch
             {
