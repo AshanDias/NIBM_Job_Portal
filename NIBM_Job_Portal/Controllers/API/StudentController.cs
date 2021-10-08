@@ -155,6 +155,7 @@ namespace NIBM_Job_Portal.Controllers.API
                 StudentDetails studentDetails = await _applicationDbContext.StudentDetails.Where(x => x.StudentId == request.id).FirstOrDefaultAsync();
                 studentDetails.highest_qualification = request.highest_qualification;
                 studentDetails.qualified_year = request.qualified_year;
+                studentDetails.about = request.about;
                 _applicationDbContext.StudentDetails.Update(studentDetails);
 
                 await _applicationDbContext.SaveChangesAsync();
