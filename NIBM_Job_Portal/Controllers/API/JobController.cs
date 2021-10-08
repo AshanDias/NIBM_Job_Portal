@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NIBM_Job_Portal.Helpers;
 using NIBM_Job_Portal.Interface;
 using NIBM_Job_Portal.Models;
 using NIBM_Job_Portal.Models.API;
@@ -31,7 +32,7 @@ namespace NIBM_Job_Portal.Controllers.API
         {
             try
             {
-                return Ok(await _applicationDbContext.Job.Include(x => x.Company).Where(x => x.JobCategoryId == id).ToListAsync());
+                return Ok(await _applicationDbContext.Job.Include(x => x.Company).Where(x => x.JobCategoryId == id).Where(x=>x.Status==(int)JobStatusEnum.Active&& x.Company.IsEnable==(int)CompanyStatus.Enable).ToListAsync());
             }
             catch
             {
@@ -76,7 +77,7 @@ namespace NIBM_Job_Portal.Controllers.API
 
                 List<string> categories = new List<string>();
                 categories = student.categories.Split(',').ToList();
-                var jobs = await _applicationDbContext.Job.Include(x=>x.Company).Include(x => x.JobCategory).ToListAsync();
+                var jobs = await _applicationDbContext.Job.Include(x=>x.Company).Include(x => x.JobCategory).Where(x => x.Status == (int)JobStatusEnum.Active && x.Company.IsEnable == (int)CompanyStatus.Enable).ToListAsync();
                 List<Job> result = new List<Job>();
                 foreach (var item in jobs)
                 {

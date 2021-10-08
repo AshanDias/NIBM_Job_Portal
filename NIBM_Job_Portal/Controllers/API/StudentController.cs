@@ -236,7 +236,7 @@ namespace NIBM_Job_Portal.Controllers.API
                         var cat_id = await _applicationDbContext.JobCategory.Where(x => x.Name.Contains(item)).FirstOrDefaultAsync();
                         if (cat_id != null)
                         {
-                            var count = await _applicationDbContext.Job.Where(x => x.JobCategoryId == cat_id.Id).CountAsync();
+                            var count = await _applicationDbContext.Job.Include(x=>x.Company).Where(x => x.JobCategoryId == cat_id.Id).Where(x => x.Status == (int)JobStatusEnum.Active && x.Company.IsEnable == (int)CompanyStatus.Enable).CountAsync();
                             jobCount = count;
                         }
                         else
