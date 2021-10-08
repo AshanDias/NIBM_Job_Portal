@@ -76,7 +76,7 @@ namespace NIBM_Job_Portal.Controllers.API
 
                 List<string> categories = new List<string>();
                 categories = student.categories.Split(',').ToList();
-                var jobs = await _applicationDbContext.Job.Include(x => x.JobCategory).ToListAsync();
+                var jobs = await _applicationDbContext.Job.Include(x=>x.Company).Include(x => x.JobCategory).ToListAsync();
                 List<Job> result = new List<Job>();
                 foreach (var item in jobs)
                 {

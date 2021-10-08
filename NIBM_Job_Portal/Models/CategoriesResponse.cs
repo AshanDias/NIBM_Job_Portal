@@ -8,5 +8,6 @@ namespace NIBM_Job_Portal.Models
     public class CategoriesResponse
     {
         public string name { get; set; }
+        public int count { get; set; }
     }
 }

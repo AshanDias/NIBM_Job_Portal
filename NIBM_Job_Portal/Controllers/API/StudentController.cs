@@ -222,7 +222,19 @@ namespace NIBM_Job_Portal.Controllers.API
                 List<string> cat = result.categories.Split(',').ToList();
                 foreach (var item in cat)
                 {
+                    int jobCount = 0;
+                    var cat_id = await _applicationDbContext.JobCategory.Where(x => x.Name.Contains(item)).FirstOrDefaultAsync();
+                    if (cat_id != null)
+                    {
+                        var count = await _applicationDbContext.Job.Where(x => x.JobCategoryId == cat_id.Id).CountAsync();
+                        jobCount = count;
+                    }
+                    else
+                    {
+                        jobCount = 0;
+                    }
                     CategoriesResponse res = new CategoriesResponse();
+                    res.count = jobCount;
                     res.name = item;
                     categories.Add(res);
                 }
