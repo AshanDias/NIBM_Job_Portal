@@ -267,24 +267,32 @@ namespace NIBM_Job_Portal.Controllers.API
         [Route("skills")]
         public async Task<IActionResult> skills(int id)
         {
-            List<SkillsResponse> skillsResponses = new List<SkillsResponse>();
-            var result = await _applicationDbContext.StudentDetails.Where(x => x.StudentId == id).FirstOrDefaultAsync();
-            if (result != null)
+            try
             {
-                List<string> skills = result.skills.Split(',').ToList();
-                foreach (var item in skills)
+
+
+                List<SkillsResponse> skillsResponses = new List<SkillsResponse>();
+                var result = await _applicationDbContext.StudentDetails.Where(x => x.StudentId == id).FirstOrDefaultAsync();
+                if (result != null)
                 {
-                    SkillsResponse res = new SkillsResponse();
-                    res.name = item;
-                    skillsResponses.Add(res);
+                    List<string> skills = result.skills.Split(',').ToList();
+                    foreach (var item in skills)
+                    {
+                        SkillsResponse res = new SkillsResponse();
+                        res.name = item;
+                        skillsResponses.Add(res);
+                    }
+                    return Ok(skillsResponses);
                 }
-                return Ok(skillsResponses);
+                else
+                {
+                    return NotFound();
+                }
             }
-            else
+            catch
             {
                 return NotFound();
             }
-
 
         }
 
