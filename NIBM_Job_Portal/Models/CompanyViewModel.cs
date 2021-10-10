@@ -20,6 +20,7 @@ namespace NIBM_Job_Portal.Models
         public string Contact_2 { get; set; }
         public string State { get; set; }
         
+
         public IFormFile Image { get; set; }
         [Required]
         public string Contact_No { get; set; }

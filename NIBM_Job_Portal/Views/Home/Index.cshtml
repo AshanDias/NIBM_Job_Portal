@@ -20,8 +20,11 @@
                 $("#file").change(function () {
                     var ext = $('#file').val().split('.').pop().toLowerCase();
                     if ($.inArray(ext, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
-                        alert('Invalid file Type!');
+                        $("#btnUpdate").attr("disabled",true); 
+                        swal("Error!", "Please select an image!", "error");
+
                     } else {
+                        $("#btnUpdate").attr("disabled", false);
                         readURL(this);
                     }
                 });
@@ -162,8 +165,8 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-12 text-right">
-                    <button type="submit" class="btn btn-sm text-light" style="background-color: #2F4189;">Update</button>
+                <div class="col-12 text-right">                   
+                        <button type="submit" id="btnUpdate" class="btn btn-sm text-light" style="background-color: #2F4189;">Update</button>
                 </div>
             </div>
         </form>

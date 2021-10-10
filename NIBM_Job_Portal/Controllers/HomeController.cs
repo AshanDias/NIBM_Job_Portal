@@ -142,7 +142,12 @@ namespace NIBM_Job_Portal.Controllers
             }
             else
             {
-                model.industryList =await _applicationDbContext.Industry.ToListAsync();
+                model.industryList = await _applicationDbContext.Industry.ToListAsync();
+                if (model.IndustryId == 0)
+                {
+                    ModelState.ClearValidationState("IndustryId");
+                    ModelState.AddModelError("IndustryId", "Please select the industry");
+                }
                 return View(model);
 
             }
