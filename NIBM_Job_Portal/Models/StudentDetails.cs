@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,5 +22,8 @@ namespace NIBM_Job_Portal.Models
         public string categories { get; set; }
         public int StudentId { get; set; }
         public Student Student { get; set; }
+
+        [NotMapped]
+        public string date { get; set; }      
     }
 }

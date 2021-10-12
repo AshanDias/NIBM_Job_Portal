@@ -39,6 +39,7 @@
                 <th>Ref. No</th>
                 <th>Applicant Name</th>
                 <th>Applicant Email</th>
+                <th>Applied Date</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -58,6 +59,7 @@
                         <td>@item.Id</td>
                         <td>@item.Student.name</td>
                         <td>@item.Student.email</td>
+                        <td>@item.date</td>
                         <td>
                             <div class="row justify-content-center">
                                 <a class="btn btn-sm btn-primary m-1" href="@Url.Action("ApplicationDetails", "Job", new { Id = item.StudentId })"> <i class="fa fa-eye" aria-hidden="true"></i></a>

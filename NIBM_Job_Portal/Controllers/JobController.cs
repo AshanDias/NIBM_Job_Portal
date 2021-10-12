@@ -243,7 +243,10 @@ namespace NIBM_Job_Portal.Controllers
                 var appliedJob = await _applicationDbContext.AppliedJob.Where(x => x.jobId == id).ToListAsync();
                 foreach (var item in appliedJob)
                 {
-                    model.StudentJobPost.Add(await _applicationDbContext.StudentDetails.Include(x => x.Student).Where(x => x.StudentId == item.studentId).FirstOrDefaultAsync());
+                  var res=  await _applicationDbContext.StudentDetails.Include(x => x.Student)
+                        .Where(x => x.StudentId == item.studentId).FirstOrDefaultAsync();
+                  res.date = item.date;
+                    model.StudentJobPost.Add(res);
                 }
                 model.files = new List<FileModel>();
                 ViewBag.Title = job.Position;

@@ -13,6 +13,7 @@ namespace NIBM_Job_Portal.Models
         public string cv_url { get; set; }
         public int jobId { get; set; }
         public int studentId { get; set; }
+        public string date { get; set; }
         public Student Student { get; set; }
         public Job Job { get; set; }
     }

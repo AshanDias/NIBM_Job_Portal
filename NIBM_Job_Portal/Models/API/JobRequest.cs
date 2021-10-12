@@ -10,5 +10,6 @@ namespace NIBM_Job_Portal.Models.API
         public int id { get; set; }
         public string cv_url { get; set; }
         public int job_post { get; set; }
+        public string date { get; set; }
     }
 }

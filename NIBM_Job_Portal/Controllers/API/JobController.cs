@@ -52,6 +52,7 @@ namespace NIBM_Job_Portal.Controllers.API
                 model.cv_url = request.cv_url;
                 model.jobId = request.job_post;
                 model.studentId = request.id;
+                model.date = request.date;
 
                 _applicationDbContext.AppliedJob.Add(model);
                 await _applicationDbContext.SaveChangesAsync();
