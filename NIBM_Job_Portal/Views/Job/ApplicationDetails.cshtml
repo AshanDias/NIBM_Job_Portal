@@ -36,19 +36,27 @@
                             <h4 class="card-title">Applicant Details & Skils</h4>
                         </div>
                         <div class="col-lg-6 float-right">
-                           
-                            <a href="@Model.StudentDetails.linkedin_url" target="_blank">
-                                <img src="~/images/logos/in.png"
-                                     alt="fblogo"
-                                     width="40px;"
-                                     class="img-fluid p-1" />
-                            </a>
-                            <a href="@Model.StudentDetails.github_url" target="_blank">
-                                <img src="~/images/logos/github.png"
-                                     alt="fblogo"
-                                     width="40px;"
-                                     class="img-fluid p-1" />
-                            </a>
+
+                            @if (Model.StudentDetails.linkedin_url != null || Model.StudentDetails.linkedin_url != "")
+                            {
+                                <a href="@Model.StudentDetails.linkedin_url" target="_blank">
+                                    <img src="~/images/logos/in.png"
+                                         alt="fblogo"
+                                         width="40px;"
+                                         class="img-fluid p-1" />
+                                </a>
+
+                            }
+
+                            @if (Model.StudentDetails.github_url != null || Model.StudentDetails.github_url != "")
+                            {
+                                <a href="@Model.StudentDetails.github_url" target="_blank">
+                                    <img src="~/images/logos/github.png"
+                                         alt="fblogo"
+                                         width="40px;"
+                                         class="img-fluid p-1" />
+                                </a>
+                            }
                         </div>
                     </div>
                     <div class="row">
