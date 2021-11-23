@@ -46,17 +46,18 @@
         <tbody>
             @if (Model != null && Model.StudentJobPost.Count != 0)
             {
-
+                int count = 0;
 
                 foreach (var item in Model.StudentJobPost)
                 {
+                    count++;
 
                     <tr>
                         <td style="width:10px;" class="pl-5">
                             <input type="checkbox" id="ch_@item.Id" value="" class="form-check-input" onclick="UpdateData('@item.Id')">
                             <input type="hidden" asp-for="files" />
                         </td>
-                        <td>@item.Id</td>
+                        <td>@count</td>
                         <td>@item.Student.name</td>
                         <td>@item.Student.email</td>
                         <td>@item.date</td>

@@ -9,7 +9,8 @@ namespace NIBM_Job_Portal.Helpers
     {
         Active=0,
         Expired= 1,
-        AdminDisabled=2
+        AdminDisabled=2,
+        Archived=3
     }
 
     public enum CompanyStatus {
