@@ -80,9 +80,13 @@
                             {
                                 <span class="text-success">Active</span>
                             }
-                            else if (item.Status == (int)JobStatusEnum.Expired)
+                            else if (item.Status == (int)JobStatusEnum.Archived)
                             {
                                 <span class="text-danger">Archived</span>
+                            }
+                            else if (item.Status == (int)JobStatusEnum.Expired)
+                            {
+                                <span class="text-danger">Expired</span>
                             }
                             else
                             {

@@ -16,6 +16,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Ionic.Zip;
 using Microsoft.AspNetCore.Authorization;
+using System.Globalization;
 
 namespace NIBM_Job_Portal.Controllers
 {
@@ -59,6 +60,21 @@ namespace NIBM_Job_Portal.Controllers
                 foreach (var item in jobs)
                 {
                     item.count = _applicationDbContext.AppliedJob.Where(x => x.jobId == item.Id).Count();
+                    try
+                    {
+                        
+                        var parameterDate = DateTime.ParseExact(item.ClosingDate.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                        var todaysDate = DateTime.Today;
+
+                        if (parameterDate < todaysDate)
+                        {
+                            item.Status =(int) JobStatusEnum.Expired;
+                        }
+                    }
+                    catch
+                    {
+
+                    }
                 }
                 
                 return View(jobs);
@@ -227,7 +243,7 @@ namespace NIBM_Job_Portal.Controllers
         public string Delete(int id)
         {
             var data = _applicationDbContext.Job.Where(x => x.Id == id).FirstOrDefault();
-            data.Status = (int)JobStatusEnum.Expired;
+            data.Status = (int)JobStatusEnum.Archived;
             _applicationDbContext.Job.Update(data);
             _applicationDbContext.SaveChanges();
             return "success";
