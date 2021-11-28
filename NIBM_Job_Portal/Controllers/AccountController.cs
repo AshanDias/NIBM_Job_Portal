@@ -21,7 +21,7 @@ using NIBM_Job_Portal.Helpers;
 
 namespace NIBM_Job_Portal.Controllers
 {
-
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class AccountController : Controller
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -70,7 +70,7 @@ namespace NIBM_Job_Portal.Controllers
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = register.Email, Email = register.Email };
+                var user = new ApplicationUser { UserName = register.Email, Email = register.Email,UserType=(int)UserTypeEnum.Admin };
                 var result = await _userManager.CreateAsync(user, register.Password);
                 if (result.Succeeded)
                 {
@@ -93,11 +93,16 @@ namespace NIBM_Job_Portal.Controllers
         }
 
         [HttpGet]
+        [Route("Home/Identity/[controller]/Login")]
         [Route("Identity/[controller]/Login")]
         public async Task<IActionResult> Login()
         {
-            
-            return View();
+            if (TempData["pwd"] != null)
+            {
+                ViewData["password"] = "Password reset success. Please login!";
+            }
+            Login login = new Login();
+            return View(login);
         }
 
         [HttpPost]
@@ -128,7 +133,7 @@ namespace NIBM_Job_Portal.Controllers
                     else
                     {
                         ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                        return View("Login");
+                        return View("Login", login);
                     }
                 }
                 else
@@ -213,8 +218,8 @@ namespace NIBM_Job_Portal.Controllers
         }
 
         [HttpPost]
-        [Route("ResetPasswordPost")]
-        public async Task<IActionResult> ResetPasswordPost(ResetPasswordModel model)
+        [Route("ResetPassword")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordModel model)
         {
             if (ModelState.IsValid)
             {
@@ -222,25 +227,29 @@ namespace NIBM_Job_Portal.Controllers
                 if (user == null)
                 {
                     ModelState.AddModelError("", "User not found");
-                    return RedirectToAction("ResetPassword", model);
+                    return View("ResetPassword", model);
                 }
 
                 var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
                 if (result.Succeeded)
                 {
+                    TempData["pwd"] = "1";
                     return RedirectToAction("Login");
                 }
                 else
                 {
                     ModelState.AddModelError("", "Unable reset password!");
-                    return RedirectToAction("ResetPassword", model);
+                    return View("ResetPassword", model);
                 }
               
             }
             else
             {
-                ModelState.AddModelError("","Error");
-                return RedirectToAction("ResetPassword", model);
+                if (model.Password == model.ConfirmPassword)
+                {
+                    ModelState.AddModelError("", "Unable to proces. Please enter the valid input!");
+                }
+                return View("ResetPassword", model);
             }
         }
 
@@ -249,17 +258,25 @@ namespace NIBM_Job_Portal.Controllers
         public bool  MnageUser()
         {
             var user = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var result = _applicationDbContext.Company.Where(x => x.ApplicationUserId == user && x.IsEnable == (int)CompanyStatus.Disable).Any();
-            if (result)
+            if (user != null)
             {
-                _signInManager.SignOutAsync();
-                return true;
+
+
+                var result = _applicationDbContext.Company.Where(x => x.ApplicationUserId == user && x.IsEnable == (int)CompanyStatus.Disable).Any();
+                if (result)
+                {
+                    _signInManager.SignOutAsync();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
                 return false;
             }
-          
         }
 
 

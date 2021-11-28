@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace NIBM_Job_Portal.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class AdminAccountController : Controller
     {
         private readonly SignInManager<ApplicationUser> _signInManager;

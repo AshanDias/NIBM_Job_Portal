@@ -12,7 +12,9 @@ using System.Threading.Tasks;
 
 namespace NIBM_Job_Portal.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize]
+
     public class CompanyController : Controller
     {
         private readonly ApplicationDbContext _applicationDbContext;
@@ -24,7 +26,13 @@ namespace NIBM_Job_Portal.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var result =await _applicationDbContext.Company.ToListAsync();
+            var data = TempData["company"];
+            if (data != null)
+            {
+                ViewData["company"] = "true";
+            }
+
+            var result =await _applicationDbContext.Company.OrderByDescending(x => x.Id).ToListAsync();
             List<AdminCompanyViewModel> model = new List<AdminCompanyViewModel>();
             foreach (var item in result)
             {
@@ -63,34 +71,49 @@ namespace NIBM_Job_Portal.Controllers
 
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email,TemporyPassword=model.DefaultPasssword };
                 var result = await _userManager.CreateAsync(user, model.DefaultPasssword);
+                var res=await _userManager.FindByEmailAsync(model.Email);
                 if (result.Succeeded)
                 {
                     
                     Company company = new Company();
                     company.Company_Name = model.Company_Name;
-                    company.IndustryId = model.IndustryId;
+                    company.IndustryId = (int)model.IndustryId;
                     company.IsEnable = (int)CompanyStatus.Enable;
                     company.Email = model.Email;
                     company.ApplicationUserId = user.Id;
                     _applicationDbContext.Company.Add(company);
                     _applicationDbContext.SaveChanges();
-
+                    TempData["company"] = "success";
                     return RedirectToAction("Index");
                 }
                 else
                 {
-                    ModelState.AddModelError("", "error");
+                    if (res != null)
+                    {
+                        ModelState.AddModelError("", "User already exist!");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Unable to create user!");
+                    }
+                   
                     return View("Create", model);
                 }
 
             }
             else
             {
-                ModelState.AddModelError("", "error");
-            }
-            
+                if (model.IndustryId == 0)
+                {
+                    ModelState.ClearValidationState("IndustryId");
+                    ModelState.AddModelError("IndustryId", "Select Industry");
+                }
+               
+                return View("Create", model);
 
-            return View("Create", model);
+            }
+
+
         }
 
         [HttpPost]

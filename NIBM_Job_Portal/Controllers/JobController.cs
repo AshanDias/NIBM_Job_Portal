@@ -16,9 +16,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Ionic.Zip;
 using Microsoft.AspNetCore.Authorization;
+using System.Globalization;
 
 namespace NIBM_Job_Portal.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize]
     public class JobController : Controller
     {
@@ -33,13 +35,16 @@ namespace NIBM_Job_Portal.Controllers
             List<Job> jobs = null;
             try
             {
-
-              
+                var result = TempData["JobCeated"];
+                if (result != null)
+                {
+                    ViewData["JobCeated"] = "true";
+                }
                 var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 var user = _applicationDbContext.Users.FirstOrDefault(x => x.Id == id);
-                if (user.UserType == 1)
+                if (user.UserType == (int)UserTypeEnum.Admin)
                 {
-                     jobs = _applicationDbContext.Job.Include(x => x.JobCategory).Include(x => x.Company).OrderBy(x=>x.Status).ToList();
+                     jobs = _applicationDbContext.Job.Include(x => x.JobCategory).Include(x => x.Company).Where(x=>x.Company.IsEnable==(int)CompanyStatus.Enable).OrderBy(x=>x.Status).ToList();
 
                    // return View(jobs);
                 }
@@ -54,7 +59,22 @@ namespace NIBM_Job_Portal.Controllers
 
                 foreach (var item in jobs)
                 {
-                    item.count = _applicationDbContext.StudentJobPost.Where(x => x.JobId == item.Id).Count();
+                    item.count = _applicationDbContext.AppliedJob.Where(x => x.jobId == item.Id).Count();
+                    try
+                    {
+                        
+                        var parameterDate = DateTime.ParseExact(item.ClosingDate.ToString("MM/dd/yyyy"), "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                        var todaysDate = DateTime.Today;
+
+                        if (parameterDate < todaysDate)
+                        {
+                            item.Status =(int) JobStatusEnum.Expired;
+                        }
+                    }
+                    catch
+                    {
+
+                    }
                 }
                 
                 return View(jobs);
@@ -94,6 +114,7 @@ namespace NIBM_Job_Portal.Controllers
 
                 if (currentDate > closingDate)
                 {
+                    ModelState.ClearValidationState("ClosingDate");
                     ModelState.AddModelError("ClosingDate", "Closing date must be grater than 7 days after the current date.");
                     return View("Create", jobModel);
                 }
@@ -123,15 +144,25 @@ namespace NIBM_Job_Portal.Controllers
                 }
                 else
                 {
+                    job.posted_date = System.DateTime.Today;
                     _applicationDbContext.Job.Add(job);
                 }
 
                 _applicationDbContext.SaveChanges();
+
+                TempData["JobCeated"] = "success";
                 return RedirectToAction("Index");
 
             }
             else
             {
+              
+                if(model.ClosingDate==Convert.ToDateTime("1/1/0001 12:00:00 AM"))
+                {
+                    ModelState.ClearValidationState("ClosingDate");
+                    ModelState.AddModelError("ClosingDate", "Closing date cannot be empty!");
+                }
+               
 
                 ModelState.AddModelError(string.Empty, "Invalid Job Details.");
 
@@ -175,25 +206,36 @@ namespace NIBM_Job_Portal.Controllers
         [HttpGet]
         public async Task<ActionResult> CreateAsync(int Id = 0)
         {
-            JobViewModel model = new JobViewModel();
-            var jobCategories = await _applicationDbContext.JobCategory.ToListAsync();
-            var companyList = await _applicationDbContext.Company.ToListAsync();
-            model.jobCategories = jobCategories;
-            model.companyList = companyList;
-            if (Id != 0)
+            var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var user = _applicationDbContext.Users.FirstOrDefault(x => x.Id == id);
+            if (user.UserType != (int)UserTypeEnum.Admin)
             {
-                Job job = await _applicationDbContext.Job.FindAsync(Id);
-                model.Id = job.Id;
-                model.Description = job.Description;
-                model.CompanyId = job.CompanyId;
-                model.JobCategoryId = job.JobCategoryId;
-                model.ClosingDate = job.ClosingDate;
-                model.jobFlyer = job.jobFlyer;
-                model.Position = job.Position;
+
+
+                JobViewModel model = new JobViewModel();
+                var jobCategories = await _applicationDbContext.JobCategory.ToListAsync();
+                var companyList = await _applicationDbContext.Company.ToListAsync();
+                model.jobCategories = jobCategories;
+                model.companyList = companyList;
+                if (Id != 0)
+                {
+                    Job job = await _applicationDbContext.Job.FindAsync(Id);
+                    model.Id = job.Id;
+                    model.Description = job.Description;
+                    model.CompanyId = job.CompanyId;
+                    model.JobCategoryId = job.JobCategoryId;
+                    model.ClosingDate = job.ClosingDate;
+                    model.jobFlyer = job.jobFlyer;
+                    model.Position = job.Position;
+                }
+
+
+                return View(model);
             }
-
-
-            return View(model);
+            else
+            {
+                return RedirectToAction("Index");
+            }
         }
 
 
@@ -201,7 +243,7 @@ namespace NIBM_Job_Portal.Controllers
         public string Delete(int id)
         {
             var data = _applicationDbContext.Job.Where(x => x.Id == id).FirstOrDefault();
-            data.Status = (int)JobStatusEnum.Expired;
+            data.Status = (int)JobStatusEnum.Archived;
             _applicationDbContext.Job.Update(data);
             _applicationDbContext.SaveChanges();
             return "success";
@@ -213,15 +255,24 @@ namespace NIBM_Job_Portal.Controllers
             {
                 Job job = await _applicationDbContext.Job.FirstOrDefaultAsync(x => x.Id == id);
                 JobApplicationViewModel model = new JobApplicationViewModel();
-                model.StudentJobPost = await _applicationDbContext.StudentJobPost.Include(x => x.Job).Where(x => x.JobId == id).ToListAsync();
+                model.StudentJobPost = new List<StudentDetails>();
+                var appliedJob = await _applicationDbContext.AppliedJob.Where(x => x.jobId == id).ToListAsync();
+                foreach (var item in appliedJob)
+                {
+                  var res=  await _applicationDbContext.StudentDetails.Include(x => x.Student)
+                        .Where(x => x.StudentId == item.studentId).FirstOrDefaultAsync();
+                  res.date = item.date;
+                    model.StudentJobPost.Add(res);
+                }
                 model.files = new List<FileModel>();
                 ViewBag.Title = job.Position;
+                ViewData["jobId"] = id;
                 return View(model);
 
             }
             catch
             {
-                return null;
+                return View();
             }
           
 
@@ -229,54 +280,73 @@ namespace NIBM_Job_Portal.Controllers
 
         public async Task<IActionResult> ApplicationDetails(int id)
         {
-            StudentJobPost model = await _applicationDbContext.StudentJobPost.FirstOrDefaultAsync(x => x.Id == id);
+            StudentDetailsViewModel model = new StudentDetailsViewModel();
+            model.StudentDetails = new StudentDetails();
+             model.StudentDetails = await _applicationDbContext.StudentDetails.Include(x=>x.Student).FirstOrDefaultAsync(x => x.StudentId == id);
+            model.Skills = model.StudentDetails.skills.Split(',').ToList();
             return View(model);
 
         }
 
 
         [HttpGet]
-        public async Task<IActionResult> DownloadAll()
+        public async Task<IActionResult> DownloadAll(int jobId)
         {
-            int i = 0;
-            var studentPost = await _applicationDbContext.StudentJobPost.ToListAsync();
-            foreach (var item in studentPost)
+            try
             {
-                i++;
-                var client = new HttpClient();
-                var result = await client.GetAsync(item.CV);
-                byte[] filecontent = await result.Content.ReadAsByteArrayAsync();
-                string filepath = "TempCV/CV" + i + ".pdf";
-                System.IO.File.WriteAllBytes(filepath, filecontent);
-              
-            }
-            string startupPath = System.IO.Directory.GetCurrentDirectory();
-            string[] fileEntries = Directory.GetFiles(startupPath+"\\TempCV");
-            using (ZipFile zip = new ZipFile())
-            {
-                zip.AlternateEncodingUsage = ZipOption.AsNecessary;
-                zip.AddDirectoryByName("Student CV List");
-                foreach (var file in fileEntries)
-                {
-                   
-                        zip.AddFile(file, "Student CV List");
-                      
-                }
-                string zipName = String.Format("Students_CV_{0}.zip", DateTime.Now.ToString("yyyy-MMM-dd-HHmmss"));
-             
-                using (MemoryStream memoryStream = new MemoryStream())
-                {
-                    zip.Save(memoryStream);
 
-                    foreach (var item in fileEntries)
+
+                int i = 0;
+                var studentPost = await _applicationDbContext.AppliedJob.Where(x=>x.jobId==jobId).ToListAsync();
+                if (studentPost.Count > 0)
+                {
+
+
+                    foreach (var item in studentPost)
                     {
-                        System.IO.File.Delete(item);
+                        i++;
+                        var client = new HttpClient();
+                        var result = await client.GetAsync(item.cv_url);
+                        byte[] filecontent = await result.Content.ReadAsByteArrayAsync();
+                        string filepath = "TempCV/CV" + i + ".pdf";
+                        System.IO.File.WriteAllBytes(filepath, filecontent);
+
                     }
-                    return File(memoryStream.ToArray(), "application/zip", zipName);
+                    string startupPath = System.IO.Directory.GetCurrentDirectory();
+                    string[] fileEntries = Directory.GetFiles(startupPath + "\\TempCV");
+                    using (ZipFile zip = new ZipFile())
+                    {
+                        zip.AlternateEncodingUsage = ZipOption.AsNecessary;
+                        zip.AddDirectoryByName("Student CV List");
+                        foreach (var file in fileEntries)
+                        {
+
+                            zip.AddFile(file, "Student CV List");
+
+                        }
+                        string zipName = String.Format("Students_CV_{0}.zip", DateTime.Now.ToString("yyyy-MMM-dd-HHmmss"));
+
+                        using (MemoryStream memoryStream = new MemoryStream())
+                        {
+                            zip.Save(memoryStream);
+
+                            foreach (var item in fileEntries)
+                            {
+                                System.IO.File.Delete(item);
+                            }
+                            return File(memoryStream.ToArray(), "application/zip", zipName);
+                        }
+
+                    }
                 }
+                else
+                {
+                    return null;
+                }
+            }catch
+            {
+                return null;
             }
-
-
         }
 
         [HttpPost]
@@ -289,8 +359,9 @@ namespace NIBM_Job_Portal.Controllers
             List<string> studentPost = new List<string>();
             foreach (var item in data)
             {
-             var res= await _applicationDbContext.StudentJobPost.Where(x => x.Id == Convert.ToInt32(item)).FirstOrDefaultAsync();
-                studentPost.Add(res.CV);
+                var studntId = await _applicationDbContext.StudentDetails.Where(x => x.Id == Convert.ToInt32(item)).Select(x => x.StudentId).FirstOrDefaultAsync();
+             var res= await _applicationDbContext.AppliedJob.Where(x => x.studentId == studntId).FirstOrDefaultAsync();
+                studentPost.Add(res.cv_url);
             }
 
 

@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 
 namespace NIBM_Job_Portal.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize]
     
     public class HomeController : Controller
@@ -36,6 +37,11 @@ namespace NIBM_Job_Portal.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            var data = TempData["profile"];
+            if (data != null)
+            {
+                ViewData["profile"] = "true";
+            }
             var res = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var users =await _applicationDbContext.Users.FindAsync(res);
              if (users.UserType == (int)UserTypeEnum.Admin)
@@ -117,7 +123,7 @@ namespace NIBM_Job_Portal.Controllers
                 company.Website = model.Website;
                 company.IsEnable =(int) CompanyStatus.Enable;
                 company.Contact_No = model.Contact_No;
-                company.IndustryId = model.IndustryId;
+                company.IndustryId = (int)model.IndustryId;
 
                
 
@@ -131,11 +137,17 @@ namespace NIBM_Job_Portal.Controllers
                 }
 
                 _applicationDbContext.SaveChanges();
+                TempData["profile"] = "success";
                 return RedirectToAction("Index");
             }
             else
             {
-                model.industryList =await _applicationDbContext.Industry.ToListAsync();
+                model.industryList = await _applicationDbContext.Industry.ToListAsync();
+                if (model.IndustryId == 0)
+                {
+                    ModelState.ClearValidationState("IndustryId");
+                    ModelState.AddModelError("IndustryId", "Please select the industry");
+                }
                 return View(model);
 
             }

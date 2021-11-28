@@ -12,16 +12,16 @@ namespace NIBM_Job_Portal.Models
         public int Id { get; set; }
 
         [Required]
-        [Display(Name = "Company name is required")]
+        [Display(Name ="Company name")]
         public string Company_Name { get; set; }
 
-        [Required(ErrorMessage = "Please choose industry")]
+        [Required(ErrorMessage ="Please choose industry")]
         public int IndustryId { get; set; }
  
         public List<Industry> Industry { get; set; }
 
-        [Required]
-        [Display(Name = "Email is required")]
+        [Required(ErrorMessage ="Email is required")]
+        [Display(Name = "Email")]
         public string Email { get; set; }
  
         public string DefaultPasssword { get; set; }

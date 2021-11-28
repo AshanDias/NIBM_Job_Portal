@@ -8,6 +8,11 @@
 @{
     var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
     var user = _applicationDbContext.Users.FirstOrDefault(x => x.Id == id);
+    if (user == null)
+    {
+        Context.Response.Clear();
+        Context.Response.Redirect("Identity/Account/Login");
+    }
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -24,36 +29,40 @@
 </head>
 <body>
     <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light border-bottom">
-        <a class="navbar" href="#"> <img src="~/images/logo2.png" alt="..." width="100px" height="auto"></a>
+        <a class="navbar" asp-controller="Home" asp-action="Index" > <img src="~/images/logo2.png" alt="..." width="100px" height="auto"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse form-inline my-2 my-lg-0" id="navbarText">
             <ul class="navbar-nav flex-grow-1  d-flex flex-row-reverse">
                 <li class="nav-item">
-                    @if (_signManager.IsSignedIn(User))
-                    {
 
-                        <form asp-action="Logout" asp-controller="Account" method="post">
-                            <button class="nav-link text-dark btn btn-link" style="font-size:14px;text-decoration:none;" type="submit"><i class="fa fa-sign-out text-primary" aria-hidden="true"></i> &nbsp; SignOut</button>
-                        </form>
+                        @if (_signManager.IsSignedIn(User))
+                        {
 
-                    }
-                    else
-                    {
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">SignIn</a>
-                    }
+                            <form asp-action="Logout" asp-controller="Account" method="post">
+                                <button class="nav-link text-dark btn btn-link" style="font-size:13px;text-decoration:none;" type="submit">SignOut</button>
+                            </form>
+
+                        }
+                        else
+                        {
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">SignIn</a>
+                        }
                 </li>
 
                 <li class="nav-item">
-                    @if (user.UserType == (int)UserTypeEnum.User)
-                    {
-                        <a class="nav-link text-dark"><i class="fa fa-university" aria-hidden="true"></i> User</a>
-                    }
-                    else
-                    {
-                        <a class="nav-link text-dark"><i class="fa fa-user" aria-hidden="true"></i> Admin</a>
-                    }
+                 
+
+                        @if (user.UserType == (int)UserTypeEnum.User)
+                        {
+                            <a class="nav-link text-dark"><i class="fa fa-university" aria-hidden="true"></i> User</a>
+                        }
+                        else
+                        {
+                            <a class="nav-link text-dark"><i class="fa fa-user" aria-hidden="true"></i> Admin</a>
+                        }
+                   
                 </li>
 
                 <li class="nav-item">
@@ -61,14 +70,14 @@
                 </li>
 
 
-                @if (User.Identity.IsAuthenticated)
+                @*@if (User.Identity.IsAuthenticated)
                 {
                     <li class="nav-item">
                         <a class="nav-link text-dark">
-                            <span class="badge badge-success h-75">Hello @User.Identity.Name</span>
+                            <span class="badge badge-success h-75">Hello @User.Identity.Name.Split('@')[0]</span>
                         </a>
                     </li>
-                }
+                }*@
             </ul>
 
         </div>
@@ -78,29 +87,63 @@
         <div class="row">
             <nav class="col-md-2 d-none d-md-block bg-light sidebar">
                 <div class="sidebar-sticky">
-                    <ul class="nav flex-column mt-3">
-
-                        <li class="nav-item btn btn-block btn-outline-secondary">
-                            <a id="sidebar_dashboard" class="nav-link float-left " asp-area="" asp-controller="Home" asp-action="Dashboard">  <i class="fa fa-desktop mr-3" aria-hidden="true"></i>Dashboard</a>
-                        </li>
-                        <li class="nav-item  btn btn-block btn-outline-secondary">
-                            <a id="sidebar_job" class="nav-link  float-left" asp-area="" asp-controller="Job" asp-action="Index"> <i class="fa fa-briefcase mr-3" aria-hidden="true"></i>Jobs</a>
-                        </li>
-
+                    <ul class="nav flex-column mt-4">
+                        <a class="nav-link text-primary float-left " asp-area="" asp-controller="Home" asp-action="Dashboard">
+                            <li class="nav-item btn btn-block btn-outline-secondary">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <i class="fa fa-desktop mr-3" aria-hidden="true"></i>
+                                    </div>
+                                    <div  id="sidebar_dashboard"  class="col-9 text-left">
+                                        Dashboard
+                                    </div>
+                                </div> 
+                            </li>
+                        </a>
                         @if (user.UserType == (int)UserTypeEnum.User)
                         {
+                            <a class="nav-link  float-left" asp-area="" asp-controller="Home" asp-action="index">
                             <li class="nav-item  btn btn-block btn-outline-secondary">
-                                <a id="sidebar_profile" class="nav-link  float-left" asp-area="" asp-controller="Home" asp-action="index">
-                                    <i class="fa fa-user mr-3" aria-hidden="true"></i>Profile
-                                </a>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <i class="fa fa-user mr-3" aria-hidden="true"></i>
+                                    </div>
+                                    <div id="sidebar_profile" class="col-9 text-left">
+                                        Profile
+                                    </div>
+                                </div>                                
                             </li>
+                            </a>
                         }
                         @if (user.UserType == (int)UserTypeEnum.Admin)
                         {
+                            <a  class="nav-link  float-left" asp-area="" asp-controller="Company" asp-action="Index">
                             <li class="nav-item  btn btn-block btn-outline-secondary">
-                                <a id="sidebar_company" class="nav-link  float-left" asp-area="" asp-controller="Company" asp-action="Index"> <i class="fa fa-briefcase mr-3" aria-hidden="true"></i>Company</a>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <i class="fa fa-building mr-3" aria-hidden="true"></i>
+                                    </div>
+                                    <div id="sidebar_company" class="col-9 text-left">
+                                        Company
+                                    </div>
+                                </div>
+                                
                             </li>
+                            </a>
                         }
+
+                        <a  class="nav-link  float-left" asp-area="" asp-controller="Job" asp-action="Index">
+                        <li class="nav-item  btn btn-block btn-outline-secondary">
+                            <div class="row">
+                                <div class="col-3">
+                                    <i class="fa fa-briefcase mr-3" aria-hidden="true"></i>
+                                </div>
+                                <div id="sidebar_job" class="col-9 text-left">
+                                    Jobs
+                                </div>
+                            </div>                           
+                        </li>
+                        </a>
                     </ul>
                 </div>
             </nav>

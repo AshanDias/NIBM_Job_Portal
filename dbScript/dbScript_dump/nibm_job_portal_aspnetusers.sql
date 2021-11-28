@@ -1,0 +1,68 @@
+-- MySQL dump 10.13  Distrib 8.0.26, for Win64 (x86_64)
+--
+-- Host: nibmdb.mysql.database.azure.com    Database: nibm_job_portal
+-- ------------------------------------------------------
+-- Server version	5.6.47.0
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `aspnetusers`
+--
+
+DROP TABLE IF EXISTS `aspnetusers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `aspnetusers` (
+  `Id` varchar(255) NOT NULL,
+  `UserType` int(11) NOT NULL,
+  `TemporyPassword` longtext,
+  `UserName` varchar(256) DEFAULT NULL,
+  `NormalizedUserName` varchar(256) DEFAULT NULL,
+  `Email` varchar(256) DEFAULT NULL,
+  `NormalizedEmail` varchar(256) DEFAULT NULL,
+  `EmailConfirmed` tinyint(1) NOT NULL,
+  `PasswordHash` longtext,
+  `SecurityStamp` longtext,
+  `ConcurrencyStamp` longtext,
+  `PhoneNumber` longtext,
+  `PhoneNumberConfirmed` tinyint(1) NOT NULL,
+  `TwoFactorEnabled` tinyint(1) NOT NULL,
+  `LockoutEnd` datetime(6) DEFAULT NULL,
+  `LockoutEnabled` tinyint(1) NOT NULL,
+  `AccessFailedCount` int(11) NOT NULL,
+  PRIMARY KEY (`Id`),
+  UNIQUE KEY `UserNameIndex` (`NormalizedUserName`),
+  KEY `EmailIndex` (`NormalizedEmail`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `aspnetusers`
+--
+
+LOCK TABLES `aspnetusers` WRITE;
+/*!40000 ALTER TABLE `aspnetusers` DISABLE KEYS */;
+INSERT INTO `aspnetusers` VALUES ('1fafe919-4954-451d-81fa-ae20b6976e6c',0,'zkuz2@LC','marshmallow.yongshin@gmail.com','MARSHMALLOW.YONGSHIN@GMAIL.COM','marshmallow.yongshin@gmail.com','MARSHMALLOW.YONGSHIN@GMAIL.COM',0,'AQAAAAEAACcQAAAAEKNt65YjNMw8hCZCvOBy7sNc0R1xhotDYY9iLot0iqoOl7s1eXumhSAexOiNB7vt5g==','B2EP4QQ77HQEZG7N3BZ2VGT2QDI6KJVP','1deeffd2-561c-4774-bc8d-881d3cd55741',NULL,0,0,NULL,1,0),('2b7c8cdc-5e1d-473f-b8c7-52e9b1c60935',0,'nlve3@NQ','nibm1@gmail.com','NIBM1@GMAIL.COM','nibm1@gmail.com','NIBM1@GMAIL.COM',0,'AQAAAAEAACcQAAAAEGIz9wd8STcfTam/EZ3hyI681QjIGn8GuVhAe1p/x5Zm5kRx++U8/X+8matKC7sHgQ==','3MTOTHZ7CPO7SUSLYUOLKQLFGQSTUPXV','85130073-156f-4aed-86b6-4804d3fc4109',NULL,0,0,NULL,1,0),('4e6b982b-818e-4178-bf08-d32642d2c130',0,'ccpe8@HM','icta@gmail.com','ICTA@GMAIL.COM','icta@gmail.com','ICTA@GMAIL.COM',0,'AQAAAAEAACcQAAAAEE46aqtJKSCn83e13zpMMrzG7Ak1lFjAxgtpnE8KfrDkTwHLnqkM7S6AvYeDza//AQ==','64SXO2FMRKSFPHFFV2H6YCDKOTZ3FTSQ','36ee5f60-48f1-40c5-a3e9-4ad683b7567e',NULL,0,0,NULL,1,0),('5ae2fa62-7b98-4e2c-a4bd-9591f66acf79',0,'aycq7@PW','1234@gmail.com','1234@GMAIL.COM','1234@gmail.com','1234@GMAIL.COM',0,'AQAAAAEAACcQAAAAEF264WF+2JY+iSxZQCl+4H+8cUx0MtGKVaoOk1bq4BjdcezRrBYWhbZQhr8FjlgiLw==','EMXW7MTA4AJZ2ISRXA2FH7C5KQWIQLB7','f893c7e3-8173-4f75-9d35-32e96ad7320d',NULL,0,0,NULL,1,0),('6a5a795d-c31e-4591-81b9-d1b70cdb927b',0,'qmzs3@QQ','aaaa@gmail.com','AAAA@GMAIL.COM','aaaa@gmail.com','AAAA@GMAIL.COM',0,'AQAAAAEAACcQAAAAEF1C8Eju70kg19A4cB1xL09hfoBRglLHMxcn/2fHHx+02cM8MAvRd4jAJtMlRk+qsw==','ODJF6L2R35DRB5RPGKLHFDBFKWT5CRB6','b8e7f58a-48d1-4097-8213-2cbbaf38cca6',NULL,0,0,NULL,1,0),('7c979933-57af-4d93-9837-6499cd9cb99b',1,NULL,'admin@gmail.com','ADMIN@GMAIL.COM','admin@gmail.com','ADMIN@GMAIL.COM',0,'AQAAAAEAACcQAAAAEKeRbklJIXFW1JDBjeaJBYrXzGEBF3o13+r2GDJPE4QoaZR+GWIHlkrKHFNBJHdX1w==','ZPFVU4JP6MGQPSL4EXQGB73HSSIGGAFZ','6531d210-e24a-4e9a-860a-be506e0324c6',NULL,0,0,NULL,1,0),('a64a9431-d28c-4cbc-89f9-097862b402ec',0,'ugca1@TJ','dms.info@gmail.com','DMS.INFO@GMAIL.COM','dms.info@gmail.com','DMS.INFO@GMAIL.COM',0,'AQAAAAEAACcQAAAAELjos/nRihjHk+7us+JvQDuZh/MYQjaJzLGAsm3N7jI3X7n+JFeagl/gx/go0+mEeA==','3OCFLPB6BABMJ3C5OYHGRSFAKUZE422Q','6da85c99-8f83-48cb-bc83-a011251df7c4',NULL,0,0,NULL,1,0),('a9dfbdeb-60b0-4fe6-a7b0-b4c2d0f48a66',0,'ybub8@IE','ert@gmail.com','ERT@GMAIL.COM','ert@gmail.com','ERT@GMAIL.COM',0,'AQAAAAEAACcQAAAAEL0TtC98PhNLfZKyHI1uh8IC+bzUP5t3KsZBnK0Pf+gb7HGi5I/+3HeTFNpfDlN4IQ==','TU7LCEKJCABSJ5G2W6KTKUFYBSVXKNWZ','218e097f-171f-47f6-91e0-3686e6324120',NULL,0,0,NULL,1,0),('ab7aa22e-a7a1-418f-bce7-fa8ae175e9e3',0,'bdlf9@CL','hisharadilshan2@gmail.com','HISHARADILSHAN2@GMAIL.COM','hisharadilshan2@gmail.com','HISHARADILSHAN2@GMAIL.COM',0,'AQAAAAEAACcQAAAAEJh3MQNnyGMGWvg4YvvLfbaJcVy/3OO5GbjVI895KWWqJtVM+LMY4yQqMjoigiQQyQ==','FMR7J2SZDA6VEO4PDZSDTDMDLH3EOUDI','96314309-303f-465a-af84-0f628aab751f',NULL,0,0,NULL,1,0),('c07ce0b1-1bc1-4b40-8485-5b6e5170dbd7',0,'gtfs5@WP','rusira986@gmail.com','RUSIRA986@GMAIL.COM','rusira986@gmail.com','RUSIRA986@GMAIL.COM',0,'AQAAAAEAACcQAAAAEMXAMKGBVsw6n4cQYuLEvLxwCST327GIIp1YUvr0Dq80NGA579ofucDzjAUq2wgybg==','53M6WGDGLU4RMQKSXCX7Y4L4A7LHC5PE','4611e2b9-ef5f-4210-8541-8c88b3d43246',NULL,0,0,NULL,1,0),('d9c35517-fbeb-495b-8f7c-711d34efc604',0,'yxms7@ZW','qsd@gmail.com','QSD@GMAIL.COM','qsd@gmail.com','QSD@GMAIL.COM',0,'AQAAAAEAACcQAAAAEMK2ngn5FQ8zMZBdjh/Xtwj1Q/oxnAdtO2XT9Aw8A2ENmfRydrJRmstlFcOl8p8ehw==','TQS3NSBVMUQ6TSLBOLND746GZPU2YMGZ','d528c0d0-3df8-43e5-ae70-322a342b137f',NULL,0,0,NULL,1,0),('e8cb89db-d6d8-4bf8-b16a-b31b4c645e65',0,'hwup6@LA','ashandias.info@gmail.com','ASHANDIAS.INFO@GMAIL.COM','ashandias.info@gmail.com','ASHANDIAS.INFO@GMAIL.COM',0,'AQAAAAEAACcQAAAAEKd/0itvslT0seMAocxgFUXk56vwdWJ1DQK2XALHZfXi59aQs+kwZUvHd9yddJrR1A==','HH3C4CRHNEGP7KAHT6FHEXVQ6A5JTVT7','96c561c2-6a91-4be5-9a4a-b81d41d7d99a',NULL,0,0,NULL,1,0),('faf15ca7-2032-4a60-8b06-4ffea6c16cd1',0,'neyt9@MM','w.l.n.ishara@gmail.com','W.L.N.ISHARA@GMAIL.COM','w.l.n.ishara@gmail.com','W.L.N.ISHARA@GMAIL.COM',0,'AQAAAAEAACcQAAAAEKUt+7dAliJ+iVXFUv8MiqqChZhRcFgbSU9ctscPtcqQ2T9oWlLciKIeamkJI+sUPg==','L4P7QLAWUQKLGWP74X77CM2SRXPFHS2O','c9891228-05eb-40ca-bd1a-1f2db26d0bb3',NULL,0,0,NULL,1,0);
+/*!40000 ALTER TABLE `aspnetusers` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2021-10-29 12:51:17

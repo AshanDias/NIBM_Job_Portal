@@ -1,4 +1,4 @@
-using ATM_Early_Detection.Service;
+using NIBM_Job_Portal.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -9,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NIBM_Job_Portal.Interface;
 using NIBM_Job_Portal.Models;
-using NIBM_Job_Portal.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,7 +49,7 @@ namespace NIBM_Job_Portal
             services.AddScoped<IEmailService, EmailService>();
 
             services.AddAuthentication();
-
+            services.AddSwaggerGen();
             //services.ConfigureApplicationCookie(options =>
             //{
             //    // Cookie settings
@@ -80,8 +79,12 @@ namespace NIBM_Job_Portal
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-       
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "NIBM Job Portal API V1");
+            });
             app.UseRouting();
 
             app.UseHttpsRedirection();
@@ -102,6 +105,11 @@ namespace NIBM_Job_Portal
                     name: "default",
                     pattern: "{controller=Company}/{action=Index}/{id?}");
             });
+
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                DbSeed.DbSeed.Seed(serviceScope);
+            }
         }
     }
 }

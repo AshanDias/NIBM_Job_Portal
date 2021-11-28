@@ -219,6 +219,75 @@ namespace NIBM_Job_Portal.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("NIBM_Job_Portal.Models.AppliedJob", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("cv_url")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("date")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("jobId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("studentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("jobId");
+
+                    b.HasIndex("studentId");
+
+                    b.ToTable("AppliedJob");
+                });
+
+            modelBuilder.Entity("NIBM_Job_Portal.Models.CVDocs", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("added_date")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("alias")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("document_url")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("file_name")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("CVDocs");
+                });
+
+            modelBuilder.Entity("NIBM_Job_Portal.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("name")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Category");
+                });
+
             modelBuilder.Entity("NIBM_Job_Portal.Models.Company", b =>
                 {
                     b.Property<int>("Id")
@@ -317,6 +386,9 @@ namespace NIBM_Job_Portal.Migrations
                     b.Property<string>("jobFlyer")
                         .HasColumnType("longtext");
 
+                    b.Property<DateTime?>("posted_date")
+                        .HasColumnType("datetime(6)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
@@ -338,6 +410,83 @@ namespace NIBM_Job_Portal.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("JobCategory");
+                });
+
+            modelBuilder.Entity("NIBM_Job_Portal.Models.Skills", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("name")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Skills");
+                });
+
+            modelBuilder.Entity("NIBM_Job_Portal.Models.Student", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("email")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("name")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("nic")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("password")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Student");
+                });
+
+            modelBuilder.Entity("NIBM_Job_Portal.Models.StudentDetails", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("about")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("categories")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("github_url")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("highest_qualification")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("image_url")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("linkedin_url")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("qualified_year")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("skills")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("StudentDetails");
                 });
 
             modelBuilder.Entity("NIBM_Job_Portal.Models.StudentJobPost", b =>
@@ -409,9 +558,14 @@ namespace NIBM_Job_Portal.Migrations
                     b.Property<string>("Sk9")
                         .HasColumnType("longtext");
 
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("JobId");
+
+                    b.HasIndex("StudentId");
 
                     b.ToTable("StudentJobPost");
                 });
@@ -467,6 +621,36 @@ namespace NIBM_Job_Portal.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("NIBM_Job_Portal.Models.AppliedJob", b =>
+                {
+                    b.HasOne("NIBM_Job_Portal.Models.Job", "Job")
+                        .WithMany()
+                        .HasForeignKey("jobId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("NIBM_Job_Portal.Models.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("studentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Job");
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("NIBM_Job_Portal.Models.CVDocs", b =>
+                {
+                    b.HasOne("NIBM_Job_Portal.Models.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("NIBM_Job_Portal.Models.Company", b =>
                 {
                     b.HasOne("NIBM_Job_Portal.Models.ApplicationUser", "ApplicationUser")
@@ -503,6 +687,17 @@ namespace NIBM_Job_Portal.Migrations
                     b.Navigation("JobCategory");
                 });
 
+            modelBuilder.Entity("NIBM_Job_Portal.Models.StudentDetails", b =>
+                {
+                    b.HasOne("NIBM_Job_Portal.Models.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("NIBM_Job_Portal.Models.StudentJobPost", b =>
                 {
                     b.HasOne("NIBM_Job_Portal.Models.Job", "Job")
@@ -511,7 +706,15 @@ namespace NIBM_Job_Portal.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("NIBM_Job_Portal.Models.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Job");
+
+                    b.Navigation("Student");
                 });
 #pragma warning restore 612, 618
         }

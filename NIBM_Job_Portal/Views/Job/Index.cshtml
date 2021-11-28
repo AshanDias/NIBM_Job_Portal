@@ -40,16 +40,23 @@
         <a class="btn btn-sm btn-primary mb-1" asp-area="" asp-controller="Job" asp-action="Create"> <i class="fa fa-plus-circle" aria-hidden="true"></i> Post new Job</a>
     }
 
-    <table class="table text-center">
+    <table class="table text-left">
         <thead>
             <tr>
                 <th>Ref. No</th>
+                @if (user.UserType == (int)UserTypeEnum.Admin)
+                {
+                    <th>Company</th>
+                }
                 <th>Position</th>
                 <th>Category</th>
                 <th>Closing Date</th>
                 <th>Status</th>
-                <th>Count</th>
-                <th>Actions</th>
+                @if (user.UserType == (int)UserTypeEnum.User)
+                {
+                    <th>Count</th>
+                }
+                <th><span class="pl-5">&nbsp;</span>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -59,48 +66,56 @@
 
                 foreach (var item in Model)
                 {
-            <tr>
-                <td>@item.Id</td>
-                <td>@item.Position</td>
-                <td>@item.JobCategory.Name</td>
-                <td>@item.ClosingDate.ToShortDateString()</td>
-                <td>
-                    @if (item.Status == (int)JobStatusEnum.Active)
-                    {
-                        <span class="text-success">Active</span>
-                    }
-                    else if (item.Status == (int)JobStatusEnum.Expired)
-                    {
-                        <span class="text-danger">Archived</span>
-                    }
-                    else
-                    {
-                        <span class="text-danger">Disabled By Admin</span>
-                    }
-
-                </td>
-                <td>@item.count</td>
-                <td class="">
-                    <div class="row">
-                        <div class="col text-center">
-                            @if (user.UserType == (int)UserTypeEnum.User)
+                    <tr>
+                        <td>@item.Id</td>
+                        @if (user.UserType == (int)UserTypeEnum.Admin)
+                        {
+                            <td>@item.Company.Company_Name</td>
+                        }
+                        <td>@item.Position</td>
+                        <td>@item.JobCategory.Name</td>
+                        <td>@item.ClosingDate.ToShortDateString()</td>
+                        <td>
+                            @if (item.Status == (int)JobStatusEnum.Active)
                             {
-                                <a class="btn btn-sm btn-primary m-1" href="@Url.Action("JobApplications", "Job", new { Id = @item.Id })"> <i class="fa fa-eye" aria-hidden="true"></i></a>
-                                <a class="btn btn-sm btn-primary m-1" href="@Url.Action("Create", "Job", new { Id = @item.Id })"> <i class="fa fa-pencil-square" aria-hidden="true"></i></a>
-                                <button class="btn btn-sm btn-danger m-1" onclick="DeleteData(@item.Id)">  <i class="fa fa-times-circle" aria-hidden="true"></i></button>
+                                <span class="text-success">Active</span>
+                            }
+                            else if (item.Status == (int)JobStatusEnum.Archived)
+                            {
+                                <span class="text-danger">Archived</span>
+                            }
+                            else if (item.Status == (int)JobStatusEnum.Expired)
+                            {
+                                <span class="text-danger">Expired</span>
                             }
                             else
                             {
-                                <button class="btn btn-sm btn-primary m-1" onclick="Enable(@item.Id)"> <i class="fa fa-pencil-square" aria-hidden="true"></i> Enable </button>
-                                <button class="btn btn-sm btn-danger m-1" onclick="Disable(@item.Id)"> <i class="fa fa-times-circle" aria-hidden="true"></i> Disable </button>
+                                <span class="text-danger">Disabled By Admin</span>
                             }
-                        </div>
-                    </div>
-                </td>
-            </tr>
 
-
-
+                        </td>
+                        @if (user.UserType == (int)UserTypeEnum.User)
+                        {
+                            <td>@item.count</td>
+                        }
+                        <td class="text-left">
+                            <div>
+                                <div class="col">
+                                    @if (user.UserType == (int)UserTypeEnum.User)
+                                    {
+                                        <a class="btn btn-sm btn-primary m-1" href="@Url.Action("JobApplications", "Job", new { Id = @item.Id })"> <i class="fa fa-eye" aria-hidden="true"></i></a>
+                                        <a class="btn btn-sm btn-primary m-1" href="@Url.Action("Create", "Job", new { Id = @item.Id })"> <i class="fa fa-pencil-square" aria-hidden="true"></i></a>
+                                        <button class="btn btn-sm btn-danger m-1" onclick="DeleteData(@item.Id)">  <i class="fa fa-times-circle" aria-hidden="true"></i></button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-sm btn-primary m-1" onclick="Enable(@item.Id)"> Enable </button>
+                                        <button class="btn btn-sm btn-danger m-1" onclick="Disable(@item.Id)"> Disable </button>
+                                    }
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
                 }
             }
             else
@@ -116,11 +131,20 @@
 
 <script>
 
+    $(document).ready(function () {
+
+    
+        var data ='@ViewData["JobCeated"]';
+        if (data != "") {
+            swal("Success!", "", "success");
+        }
+    });
+
     function  DeleteData(id){
 
         swal({
             title: "Are you sure?",
-            text: "Once deleted, you will not be able to recover !",
+            text: "Once deleted, this Job post will be archived and it wont be visible for the application users!",
             icon: "warning",
             buttons: true,
             dangerMode: true,
